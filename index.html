@@ -254,7 +254,8 @@ a { color: inherit; text-decoration: none; }
 /* ==========================================================================
    01 NOW — 큰 좌측 프레임 + 우측 텍스트
    ========================================================================== */
-.now { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 64px); align-items: center; }
+/* 본문이 길어졌으므로 상단 정렬 — 가운데 정렬이면 이미지와 텍스트가 어긋나 보인다 */
+.now { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(20px, 4vw, 64px); align-items: start; }
 .now__title { font-size: clamp(1.8rem, 4.6vw, 3.75rem); margin: 0 0 16px; }
 .now__kicker { display: flex; align-items: center; gap: 9px; margin: 0 0 16px; }
 .now__pulse { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: pulse 2.4s var(--ease) infinite; }
@@ -503,27 +504,30 @@ a { color: inherit; text-decoration: none; }
   <!-- ================= INTRO ================= -->
   <section class="intro">
     <div>
-      <p class="micro" style="margin:0">(Europe Tour 2026)</p>
+      <p class="micro" style="margin:0">(About)</p>
     </div>
     <div class="intro__body">
       <p class="intro__lead lines" data-reveal>
-        <span><i>For the first time in Europe.</i></span>
+        <span><i>사람과 음악이 만나는 곳.</i></span>
       </p>
       <p class="body-lg" data-reveal>
-        가호와 KAVE가 2026년 4월, 7개 도시를 도는 첫 유럽 투어에 나섭니다.
-        로잔에서 시작해 바르샤바 · 베를린 · 쾰른 · 파리 · 암스테르담을 거쳐 런던에서 막을 내립니다.
+        PLAN-G Entertainment는 음악과 진정성 있는 아티스트를 발굴하고
+        그들의 잠재력을 극대화하는 뮤직 레이블입니다.
       </p>
       <p class="body-lg" data-reveal>
-        &lt;이태원 클라쓰&gt; OST로 이름을 알린 가호는 2024년 밴드 KAVE를 결성해
-        록과 EDM, 얼터너티브를 오가는 새로운 방향을 탐색해 왔습니다.
-        이번 투어의 이름 &lt;Cityscapes — New Horizons&gt;는 그 여정을 도시의 풍경에 겹쳐 놓은 것입니다.
+        우리는 독창적인 예술성과 혁신적인 사운드가 가진 힘을 믿습니다.
+        아티스트와 팬 사이의 깊이 있는 유대감을 형성하고,
+        음악 본연의 진정성을 지키며 새로운 가능성을 열어갑니다.
+      </p>
+      <p class="body-lg" data-reveal>
+        음악 제작부터 글로벌 유통에 이르기까지, PLAN-G는 아티스트의 창작 여정 전반을 함께하며
+        그들의 목소리가 전 세계로 뻗어나갈 수 있도록 든든한 파트너가 되겠습니다.
       </p>
 
       <div class="credits" data-reveal style="margin-top:34px">
-        <p style="margin:0">Label _ PLAN-G Entertainment</p>
-        <p style="margin:0">Promoter _ Envol Productions</p>
-        <p style="margin:0">Photography _ [ ]</p>
-        <p style="margin:0">Video _ [ ] — Berlin, Columbia Theater</p>
+        <p style="margin:0">Artist Management _ Gaho, KAVE</p>
+        <p style="margin:0">Business _ contact@plan-g.io</p>
+        <p style="margin:0">Video _ [ ] — Berlin, Columbia Theater, Europe Tour 2026</p>
       </div>
     </div>
   </section>
@@ -555,14 +559,35 @@ a { color: inherit; text-decoration: none; }
       <div class="ph" data-label="투어 키비주얼 / 포스터 · 4:3" style="--ar:4/3" data-reveal></div>
       <div data-reveal>
         <p class="now__kicker micro"><span class="now__pulse" aria-hidden="true"></span> 진행 중 — 유럽 투어</p>
+
+        <p class="micro" style="color:var(--grey);margin:0 0 8px">Gaho &amp; KAVE — Europe Tour 2026</p>
         <h3 class="display now__title">Cityscapes<br>— New Horizons</h3>
-        <p class="body-lg micro--plain" style="margin:0">
-          가호와 KAVE의 첫 유럽 투어. 2026년 4월 5일 로잔에서 시작해 4월 18일 런던에서 마무리됩니다.
+
+        <p class="intro__lead lines" style="margin:0 0 18px">
+          <span><i>For the first time in Europe.</i></span>
+        </p>
+
+        <p class="body-lg" style="margin:0 0 16px">
+          가호와 KAVE가 2026년 4월, 7개 도시를 도는 첫 유럽 투어에 나섭니다.
+          로잔에서 시작해 바르샤바 · 베를린 · 쾰른 · 파리 · 암스테르담을 거쳐 런던에서 막을 내립니다.
+        </p>
+        <p class="body-lg" style="margin:0 0 16px">
+          &lt;이태원 클라쓰&gt; OST로 이름을 알린 가호는 2024년 밴드 KAVE를 결성해
+          록과 EDM, 얼터너티브를 오가는 새로운 방향을 탐색해 왔습니다.
+          이번 투어의 이름 &lt;Cityscapes — New Horizons&gt;는 그 여정을 도시의 풍경에 겹쳐 놓은 것입니다.
+        </p>
+        <p class="body-lg" style="margin:0">
           티켓은 2026년 3월 12일부터 판매 중입니다.
         </p>
+
+        <div class="credits" style="margin-top:24px">
+          <p style="margin:0">Promoter _ Envol Productions</p>
+          <p style="margin:0">Label _ PLAN-G Entertainment</p>
+        </div>
+
         <div class="now__meta micro">
-          <span>Europe Tour</span><span>05—18 APR 2026</span><span>Gaho &amp; KAVE</span>
-          <a href="#stage" style="margin-left:auto">일정 보기 ↗</a>
+          <span>7 Cities</span><span>05—18 APR 2026</span>
+          <a href="#stage" style="margin-left:auto">전체 일정 ↗</a>
         </div>
       </div>
     </div>
