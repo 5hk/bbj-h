@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLAN-G — Layout Type 1</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Black+Han+Sans&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   PLAN-G — Layout Type 1 (skeleton)
+
+   정보구조를 새로 설계했다. 기존 사이트의 About/Artists/Releases/News/Contact를
+   따르지 않는다. 레이블·매니지먼트사의 실제 자산 순서로 재배열:
+
+     00 OPENING   브랜드 선언 (포스터)
+     01 NOW       "지금" 한 가지 — 최신 릴리즈/화보/공연 중 하나가 자동 승격
+     02 ROSTER    아티스트. 카드가 아니라 전면 편집형 밴드 — 아티스트가 곧 상품
+     03 CATALOG   음원 카탈로그 (검색 자산)
+     04 STAGE     공연·출연 일정 — 위치기반 인터랙션이 실제로 쓸모있는 유일한 지점
+     05 PRESS     화보·매거진·미디어 — 비주얼 자산 전용
+     06 STUDIO    IP 스튜디오로서 하는 일 (모호한 About 대체)
+     07 INQUIRY   목적별 문의
+
+   모든 이미지 영역은 라벨이 붙은 플레이스홀더 프레임이다. 실제 에셋이 나오면
+   해당 프레임만 <img>로 교체하면 되고 나머지는 손대지 않는다.
+   ========================================================================== */
+
+:root {
+  --black:  #111111;
+  --bone:   #f4f2ed;
+  --white:  #ffffff;
+
+  /* 액센트 — 임시값. 브랜드 컬러 확정 시 이 4개만 교체하면 전체가 따라온다. */
+  --accent:  #ff4a17;
+  --accent2: #c6f24e;
+  --accent3: #ffc22b;
+  --deep:    #17402c;
+
+  --font-display: 'Anton', 'Black Han Sans', Impact, sans-serif;
+  --font-ko:      'Black Han Sans', 'Anton', sans-serif;
+  --font-body:    'Inter', -apple-system, 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+
+  --gut:  clamp(16px, 3.4vw, 56px);
+  --maxw: 1560px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  html { scroll-behavior: auto !important; }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0; background: var(--black); color: var(--black);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.35;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ---------- Type ---------- */
+.display { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; letter-spacing: -.005em; line-height: .9; margin: 0; }
+/* 한글 디스플레이 서체는 전각이라 0.96 미만이면 행이 겹친다. */
+.display--ko { font-family: var(--font-ko); line-height: .98; letter-spacing: -.02em; }
+
+.anno { font-family: var(--font-body); font-size: .26em; font-weight: 700; line-height: 1; letter-spacing: .02em; text-transform: uppercase; vertical-align: .9em; padding: 0 .15em; white-space: nowrap; }
+
+.micro { font-size: .75rem; font-weight: 700; line-height: 1.35; letter-spacing: .03em; text-transform: uppercase; }
+.micro--plain { font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+.mark--dot::before  { content: '●'; }
+.mark--ring::before { content: '◎'; }
+.mark--star::before { content: '✳'; }
+
+.arrow-btn { display: grid; place-items: center; width: clamp(38px, 3.6vw, 58px); aspect-ratio: 1; border: 2px solid currentColor; border-radius: 50%; font-size: 1.05rem; transition: transform .4s var(--ease); }
+a:hover > .arrow-btn, li:hover .arrow-btn { transform: rotate(45deg); }
+
+/* ---------- Placeholder frame ---------- */
+.ph {
+  --ar: 1; position: relative; aspect-ratio: var(--ar);
+  background:
+    repeating-linear-gradient(45deg, rgba(17,17,17,.055) 0 10px, rgba(17,17,17,.11) 10px 20px),
+    var(--ph-bg, #cfccc5);
+  border: 1px solid rgba(17,17,17,.35);
+  display: grid; place-items: center; overflow: hidden;
+}
+.ph::after {
+  content: attr(data-label);
+  font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(17,17,17,.62); text-align: center; padding: 6px 10px;
+  background: rgba(244,242,237,.85); max-width: 88%;
+}
+.ph--dark { --ph-bg: #262626; border-color: rgba(244,242,237,.28);
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 10px, rgba(255,255,255,.09) 10px 20px), var(--ph-bg); }
+.ph--dark::after { color: rgba(244,242,237,.72); background: rgba(17,17,17,.7); }
+.ph--fill { height: 100%; aspect-ratio: auto; }
+
+/* ---------- Nav ---------- */
+.nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px var(--gut); background: var(--bone); border-bottom: 2px solid var(--black); }
+.nav__brand { font-family: var(--font-display); font-size: clamp(1.2rem, 2.1vw, 1.7rem); color: var(--accent); }
+.nav__links { display: flex; gap: clamp(9px, 1.6vw, 24px); list-style: none; margin: 0; padding: 0; }
+.nav__links a { font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding-bottom: 2px; border-bottom: 2px solid transparent; transition: border-color .25s var(--ease); }
+.nav__links a:hover { border-color: var(--black); }
+.nav__links .idx { opacity: .45; margin-right: 4px; }
+@media (max-width: 860px) { .nav__links { display: none; } }
+
+/* ---------- Colour block shell ---------- */
+.block { padding: clamp(44px, 6.5vw, 100px) var(--gut); }
+.block--bone { background: var(--bone); color: var(--black); }
+.block--black { background: var(--black); color: var(--bone); }
+.block--accent { background: var(--accent); color: var(--black); }
+.block--accent2 { background: var(--accent2); color: var(--black); }
+.block--accent3 { background: var(--accent3); color: var(--black); }
+.block__inner { max-width: var(--maxw); margin-inline: auto; }
+.block__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-bottom: 12px; border-bottom: 2px solid currentColor; margin-bottom: clamp(22px, 3.5vw, 48px); }
+.block__head .display { font-size: clamp(1.8rem, 5.2vw, 4.25rem); }
+.block__num { font-family: var(--font-display); opacity: .5; }
+
+/* ==========================================================================
+   00 OPENING
+   ========================================================================== */
+.open { position: relative; background: var(--bone); padding-top: clamp(18px, 3vw, 40px); overflow: hidden; }
+.open__grid { display: grid; grid-template-columns: minmax(140px, 1fr) minmax(0, 1.9fr) minmax(140px, 1fr); padding-inline: var(--gut); }
+.open__aside { padding: 6px 18px 24px 0; border-right: 1px solid rgba(17,17,17,.22); }
+.open__aside--r { border-right: 0; border-left: 1px solid rgba(17,17,17,.22); padding: 6px 0 24px 18px; text-align: right; display: flex; flex-direction: column; justify-content: space-between; }
+.open__aside p { margin: 0 0 16px; }
+.open__portrait { position: relative; z-index: 2; }
+.open__portrait .ph { --ar: 1/1; max-height: 58vh; }
+.open__type { position: relative; z-index: 1; margin-top: -6.5vw; color: var(--accent); font-size: clamp(3rem, 10vw, 9rem); line-height: .96; white-space: nowrap; text-align: center; }
+.open__type span { display: block; }
+.open__type span:nth-child(2) { margin-left: -6vw; }
+.open__type span:nth-child(3) { margin-left: 5vw; }
+.open__badge { position: absolute; left: 68%; top: 57%; transform: translate(-50%, -50%); z-index: 3; width: clamp(78px, 9.5vw, 132px); aspect-ratio: 1; border-radius: 50%; background: var(--bone); display: grid; place-items: center; font-size: clamp(1rem, 1.9vw, 1.7rem); }
+@media (max-width: 860px) {
+  .open__grid { grid-template-columns: 1fr; }
+  .open__aside, .open__aside--r { border: 0; padding: 0 0 16px; text-align: left; }
+  .open__portrait .ph { max-height: none; --ar: 4/5; }
+  .open__type { margin-top: 10px; padding-inline: var(--gut); text-align: left; font-size: clamp(2.1rem, 12.5vw, 5rem); }
+  .open__type span:nth-child(2), .open__type span:nth-child(3) { margin-left: 0; }
+  .open__badge { display: none; }
+}
+
+/* ==========================================================================
+   01 NOW — 지금 가장 중요한 한 가지. 릴리즈·화보·공연 중 하나가 올라온다.
+   ========================================================================== */
+.now { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .85fr); background: var(--accent); }
+.now__body { padding: clamp(28px, 4.2vw, 64px) var(--gut); display: flex; flex-direction: column; justify-content: space-between; gap: 24px; }
+.now__kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; }
+.now__pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--black); animation: pulse 2.4s var(--ease) infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.72); } }
+.now__title { font-size: clamp(1.9rem, 5.4vw, 4.5rem); margin: 0 0 14px; }
+.now__meta { display: flex; gap: clamp(14px, 2.6vw, 40px); flex-wrap: wrap; border-top: 1px solid rgba(17,17,17,.4); padding-top: 14px; }
+.now__frame .ph { height: 100%; aspect-ratio: auto; border: 0; border-left: 2px solid var(--black); }
+@media (max-width: 800px) { .now { grid-template-columns: 1fr; } .now__frame .ph { aspect-ratio: 16/10; border-left: 0; border-top: 2px solid var(--black); } }
+
+/* ==========================================================================
+   02 ROSTER — 아티스트 1인 = 전면 밴드 1개. 카드로 축소하지 않는다.
+   ========================================================================== */
+.artist { border-bottom: 1px solid rgba(17,17,17,.25); padding: clamp(26px, 4vw, 56px) 0; }
+.artist:last-of-type { border-bottom: 0; padding-bottom: 0; }
+.artist__row { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.6fr); gap: clamp(18px, 3vw, 48px); align-items: start; }
+.artist__name { font-size: clamp(2.2rem, 6.5vw, 6rem); margin: 0 0 8px; }
+.artist__name .ko { display: block; font-family: var(--font-ko); font-size: .34em; line-height: 1.1; opacity: .62; }
+.artist__role { margin: 0 0 16px; }
+.artist__rel { display: inline-flex; align-items: center; gap: 8px; border: 1px solid currentColor; padding: 6px 12px; margin-bottom: 16px; }
+.artist__members { list-style: none; margin: 0 0 18px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.artist__members li { font-size: .8125rem; font-weight: 700; text-transform: uppercase; }
+.artist__members li + li::before { content: '/ '; opacity: .45; }
+.artist__links { display: flex; gap: 8px; flex-wrap: wrap; }
+.artist__links a { border: 1px solid currentColor; padding: 6px 12px; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; transition: background .25s var(--ease), color .25s var(--ease); }
+.artist__links a:hover { background: var(--black); color: var(--bone); }
+.artist__gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+@media (max-width: 800px) { .artist__row { grid-template-columns: 1fr; } .artist__gallery { grid-template-columns: repeat(2, 1fr); } }
+
+/* ==========================================================================
+   03 CATALOG
+   ========================================================================== */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: clamp(18px, 2.6vw, 32px); }
+.filters button { font: inherit; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 7px 14px; border: 1px solid currentColor; background: none; color: inherit; cursor: pointer; transition: background .25s var(--ease), color .25s var(--ease); }
+.filters button[aria-pressed="true"], .filters button:hover { background: var(--black); color: var(--bone); }
+
+.discs { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: clamp(10px, 1.4vw, 20px); }
+.disc__art { border: 2px solid var(--black); }
+.disc__art .ph { border: 0; }
+.disc__title { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(.95rem, 1.4vw, 1.3rem); line-height: 1; margin: 10px 0 4px; }
+.disc__meta { margin: 0; }
+
+/* ==========================================================================
+   04 STAGE — 공연 일정. 위치기반 인터랙션의 유일한 정당한 자리.
+   ========================================================================== */
+.geo {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  border: 1px solid currentColor; padding: 12px 16px; margin-bottom: clamp(18px, 2.6vw, 32px);
+}
+.geo button { font: inherit; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 7px 14px; border: 2px solid currentColor; background: none; color: inherit; cursor: pointer; }
+.geo button:hover { background: var(--bone); color: var(--black); }
+
+.stage { list-style: none; margin: 0; padding: 0; }
+.stage li { display: grid; grid-template-columns: minmax(84px, 130px) minmax(0, 1fr) minmax(0, .8fr) auto; gap: clamp(12px, 2.2vw, 36px); align-items: center; padding: clamp(14px, 2vw, 26px) 0; border-top: 1px solid currentColor; }
+.stage li:last-child { border-bottom: 1px solid currentColor; }
+.stage h3 { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1rem, 2vw, 1.75rem); line-height: 1; margin: 0; }
+.stage p { margin: 0; }
+@media (max-width: 720px) { .stage li { grid-template-columns: 1fr auto; } .stage__date, .stage__place { grid-column: 1 / -1; } }
+
+/* ==========================================================================
+   05 PRESS — 비주얼 자산. 크기가 제각각인 편집형 그리드.
+   ========================================================================== */
+.press { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(8px, 1vw, 16px); }
+.press__item { position: relative; }
+.press__item .ph { height: 100%; aspect-ratio: auto; }
+.press__item--tall { grid-row: span 2; }
+.press__item--wide { grid-column: span 2; }
+.press__cap { position: absolute; left: 0; bottom: 0; right: 0; padding: 10px 12px; background: rgba(17,17,17,.72); color: var(--bone); }
+.press > .press__item { min-height: clamp(150px, 17vw, 260px); }
+@media (max-width: 860px) { .press { grid-template-columns: repeat(2, 1fr); } .press__item--wide { grid-column: span 2; } }
+
+/* ==========================================================================
+   06 STUDIO — 무엇을 하는 회사인지. 서비스 라인 4개.
+   ========================================================================== */
+.studio { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; border-top: 1px solid currentColor; }
+.studio__cell { padding: clamp(20px, 3vw, 40px) clamp(16px, 2vw, 28px); border-bottom: 1px solid currentColor; border-right: 1px solid currentColor; }
+.studio__cell:last-child { border-right: 0; }
+.studio__no { display: block; font-family: var(--font-display); font-size: 1.5rem; opacity: .45; margin-bottom: 10px; }
+.studio__cell h3 { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.1rem, 2vw, 1.6rem); line-height: 1; margin: 0 0 10px; }
+.studio__cell p { margin: 0; }
+
+/* ==========================================================================
+   07 INQUIRY / FOOTER
+   ========================================================================== */
+.foot { background: var(--accent); padding: clamp(28px, 4.5vw, 64px) var(--gut); }
+.foot__inner { max-width: var(--maxw); margin-inline: auto; }
+.foot__top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: start; border-bottom: 1px solid rgba(17,17,17,.45); padding-bottom: 18px; }
+.foot__mark { font-family: var(--font-display); font-size: clamp(2.4rem, 9.5vw, 7.5rem); line-height: .82; text-transform: uppercase; margin: 0; }
+.foot__cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, auto)); gap: clamp(18px, 3.5vw, 52px); text-align: right; }
+.foot__cols a { display: block; }
+.foot__bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 14px; }
+@media (max-width: 700px) { .foot__top { grid-template-columns: 1fr; } .foot__cols { text-align: left; } }
+
+/* ---------- Reveal (progressive enhancement) ---------- */
+[data-reveal] { opacity: 1; transform: none; }
+.js [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.js [data-reveal][data-shown="true"] { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<a href="#main" class="sr-only">본문으로 건너뛰기</a>
+
+<nav class="nav">
+  <a class="nav__brand" href="#top">PLAN-G</a>
+  <ul class="nav__links">
+    <li><a href="#now"><span class="idx">01</span>Now</a></li>
+    <li><a href="#roster"><span class="idx">02</span>Roster</a></li>
+    <li><a href="#catalog"><span class="idx">03</span>Catalog</a></li>
+    <li><a href="#stage"><span class="idx">04</span>Stage</a></li>
+    <li><a href="#press"><span class="idx">05</span>Press</a></li>
+    <li><a href="#studio"><span class="idx">06</span>Studio</a></li>
+    <li><a href="#inquiry"><span class="idx">07</span>Inquiry</a></li>
+  </ul>
+  <p class="micro" style="margin:0">KO / EN / ES</p>
+</nav>
+
+<main id="main">
+
+  <!-- ================= 00 OPENING ================= -->
+  <header class="open" id="top">
+    <div class="open__grid">
+      <div class="open__aside">
+        <p class="micro">[ 좌측 주석 · 2~3줄<br>브랜드 한 줄 정의 ]</p>
+        <span class="mark--ring" aria-hidden="true"></span>
+      </div>
+      <div class="open__portrait">
+        <div class="ph" data-label="오프닝 인물 / 화보 · 1:1 (1600×1600)"></div>
+      </div>
+      <div class="open__aside open__aside--r">
+        <span class="mark--star" aria-hidden="true" style="color:var(--deep); align-self:flex-end"></span>
+        <p class="micro">[ 우측 주석 · 2~3줄<br>보조 메시지 ]</p>
+      </div>
+    </div>
+    <div class="open__badge" aria-hidden="true">↗</div>
+    <h1 class="display display--ko open__type">
+      <span>메인 카피 1행</span>
+      <span>메인 카피 2행</span>
+      <span>PLAN-G</span>
+    </h1>
+  </header>
+
+  <!-- ================= 01 NOW ================= -->
+  <section class="now" id="now" aria-labelledby="now-t">
+    <div class="now__body">
+      <div>
+        <p class="now__kicker micro"><span class="now__pulse" aria-hidden="true"></span> Now — 지금 가장 중요한 한 가지</p>
+        <h2 class="display display--ko now__title" id="now-t">현재 소식 헤드라인</h2>
+        <p class="micro micro--plain" style="max-width:52ch">[ 요약 1~2문장. 신보 발매 / 화보 공개 / 공연 확정 중 가장 최신 항목이 이 자리로 자동 승격된다. ]</p>
+      </div>
+      <div class="now__meta">
+        <span class="micro">[ 유형 ]</span>
+        <span class="micro">[ 날짜 ]</span>
+        <span class="micro">[ 아티스트 ]</span>
+        <a class="micro" href="#" style="margin-left:auto">자세히 ↗</a>
+      </div>
+    </div>
+    <div class="now__frame">
+      <div class="ph" data-label="현재 소식 대표 이미지 · 4:5 또는 1:1"></div>
+    </div>
+  </section>
+
+  <!-- ================= 02 ROSTER ================= -->
+  <section class="block block--bone" id="roster">
+    <div class="block__inner">
+      <div class="block__head">
+        <h2 class="display" data-reveal>Roster</h2>
+        <p class="micro"><span class="block__num">02</span> — 아티스트 N팀</p>
+      </div>
+
+      <!-- 아티스트 1 -->
+      <article class="artist" data-reveal>
+        <div class="artist__row">
+          <div>
+            <h3 class="display artist__name"><span class="ko">아티스트명(한글)</span>NAME</h3>
+            <p class="artist__role micro">[ 역할 · Singer-Songwriter / Band ]</p>
+            <p class="artist__rel micro">[ 관계 표기 · 예: ↳ 다른 팀 멤버 ]</p>
+            <ul class="artist__members">
+              <li>멤버1</li><li>멤버2</li><li>멤버3</li><li>멤버4</li><li>멤버5</li>
+            </ul>
+            <div class="artist__links">
+              <a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Spotify</a><a href="#">Apple</a>
+            </div>
+          </div>
+          <div class="artist__gallery">
+            <div class="ph" data-label="프로필 3:4" style="--ar:3/4"></div>
+            <div class="ph" data-label="프로필 3:4" style="--ar:3/4"></div>
+            <div class="ph" data-label="프로필 3:4" style="--ar:3/4"></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 아티스트 2 -->
+      <article class="artist" data-reveal>
+        <div class="artist__row">
+          <div>
+            <h3 class="display artist__name"><span class="ko">아티스트명(한글)</span>NAME</h3>
+            <p class="artist__role micro">[ 역할 ]</p>
+            <ul class="artist__members">
+              <li>멤버1</li><li>멤버2</li><li>멤버3</li><li>멤버4</li><li>멤버5</li>
+            </ul>
+            <div class="artist__links">
+              <a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Spotify</a>
+            </div>
+          </div>
+          <div class="artist__gallery">
+            <div class="ph" data-label="프로필 3:4" style="--ar:3/4"></div>
+            <div class="ph" data-label="프로필 3:4" style="--ar:3/4"></div>
+            <div class="ph" data-label="프로필 3:4" style="--ar:3/4"></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= 03 CATALOG ================= -->
+  <section class="block block--accent3" id="catalog">
+    <div class="block__inner">
+      <div class="block__head">
+        <h2 class="display" data-reveal>Catalog</h2>
+        <p class="micro"><span class="block__num">03</span> — 총 N타이틀</p>
+      </div>
+
+      <div class="filters" data-reveal>
+        <button type="button" aria-pressed="true">All</button>
+        <button type="button" aria-pressed="false">Album</button>
+        <button type="button" aria-pressed="false">Single</button>
+        <button type="button" aria-pressed="false">OST</button>
+        <button type="button" aria-pressed="false">[ 아티스트별 ]</button>
+      </div>
+
+      <!-- 정적 마크업 유지: 카탈로그는 검색 유입의 핵심 자산이다 -->
+      <div class="discs" data-reveal>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+        <article class="disc"><div class="disc__art"><div class="ph" data-label="앨범아트 1:1"></div></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 · 형태 ]</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 04 STAGE ================= -->
+  <section class="block block--black" id="stage">
+    <div class="block__inner">
+      <div class="block__head">
+        <h2 class="display" data-reveal>Stage</h2>
+        <p class="micro"><span class="block__num">04</span> — 공연 · 출연</p>
+      </div>
+
+      <!-- 위치 권한은 이 버튼을 누를 때만 요청한다. 진입 즉시 팝업 금지. -->
+      <div class="geo" data-reveal>
+        <span class="micro">[ 위치기반 · 선택 기능 ]</span>
+        <p class="micro micro--plain" style="margin:0;flex:1;min-width:200px">내 주변 공연을 가까운 순으로 정렬합니다. 위치 정보는 브라우저를 벗어나지 않습니다.</p>
+        <button type="button">내 주변 공연 보기</button>
+      </div>
+
+      <ul class="stage" data-reveal>
+        <li>
+          <span class="stage__date micro">YYYY.MM.DD</span>
+          <h3>공연 · 행사명</h3>
+          <p class="stage__place micro micro--plain">[ 도시 · 장소 ]</p>
+          <span class="arrow-btn" aria-hidden="true">↗</span>
+        </li>
+        <li>
+          <span class="stage__date micro">YYYY.MM.DD</span>
+          <h3>공연 · 행사명</h3>
+          <p class="stage__place micro micro--plain">[ 도시 · 장소 ]</p>
+          <span class="arrow-btn" aria-hidden="true">↗</span>
+        </li>
+        <li>
+          <span class="stage__date micro">YYYY.MM.DD</span>
+          <h3>공연 · 행사명</h3>
+          <p class="stage__place micro micro--plain">[ 도시 · 장소 ]</p>
+          <span class="arrow-btn" aria-hidden="true">↗</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= 05 PRESS ================= -->
+  <section class="block block--accent2" id="press">
+    <div class="block__inner">
+      <div class="block__head">
+        <h2 class="display" data-reveal>Press</h2>
+        <p class="micro"><span class="block__num">05</span> — 화보 · 매거진 · 미디어</p>
+      </div>
+
+      <div class="press" data-reveal>
+        <div class="press__item press__item--tall">
+          <div class="ph" data-label="화보 세로 3:4"></div>
+          <p class="press__cap micro">[ 매체 · 호수 · 날짜 ]</p>
+        </div>
+        <div class="press__item press__item--wide">
+          <div class="ph" data-label="화보 가로 2:1"></div>
+          <p class="press__cap micro">[ 매체 · 호수 · 날짜 ]</p>
+        </div>
+        <div class="press__item">
+          <div class="ph" data-label="화보 1:1"></div>
+        </div>
+        <div class="press__item">
+          <div class="ph" data-label="화보 1:1"></div>
+        </div>
+        <div class="press__item press__item--tall">
+          <div class="ph" data-label="화보 세로 3:4"></div>
+          <p class="press__cap micro">[ 매체 · 호수 · 날짜 ]</p>
+        </div>
+        <div class="press__item press__item--wide">
+          <div class="ph" data-label="화보 가로 2:1"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 06 STUDIO ================= -->
+  <section class="block block--bone" id="studio">
+    <div class="block__inner">
+      <div class="block__head">
+        <h2 class="display" data-reveal>Studio</h2>
+        <p class="micro"><span class="block__num">06</span> — 우리가 하는 일</p>
+      </div>
+
+      <div class="studio" data-reveal>
+        <div class="studio__cell">
+          <span class="studio__no">01</span>
+          <h3>[ 서비스명 1 ]</h3>
+          <p class="micro micro--plain">[ 설명 1~2문장 ]</p>
+        </div>
+        <div class="studio__cell">
+          <span class="studio__no">02</span>
+          <h3>[ 서비스명 2 ]</h3>
+          <p class="micro micro--plain">[ 설명 1~2문장 ]</p>
+        </div>
+        <div class="studio__cell">
+          <span class="studio__no">03</span>
+          <h3>[ 서비스명 3 ]</h3>
+          <p class="micro micro--plain">[ 설명 1~2문장 ]</p>
+        </div>
+        <div class="studio__cell">
+          <span class="studio__no">04</span>
+          <h3>[ 서비스명 4 ]</h3>
+          <p class="micro micro--plain">[ 설명 1~2문장 ]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 07 INQUIRY / FOOTER ================= -->
+  <footer class="foot" id="inquiry">
+    <div class="foot__inner">
+      <div class="foot__top">
+        <p class="foot__mark">PLAN-G</p>
+        <div class="foot__cols">
+          <div><p class="micro" style="margin:0 0 6px">[ 문의 유형 1 ]</p><a class="micro micro--plain" href="#">[ 연락처 ]</a></div>
+          <div><p class="micro" style="margin:0 0 6px">[ 문의 유형 2 ]</p><a class="micro micro--plain" href="#">[ 연락처 ]</a></div>
+          <div><p class="micro" style="margin:0 0 6px">[ 문의 유형 3 ]</p><a class="micro micro--plain" href="#">[ 연락처 ]</a></div>
+        </div>
+      </div>
+      <div class="foot__bottom">
+        <p class="micro" style="margin:0">© 2026 PLAN-G Entertainment</p>
+        <p class="micro" style="margin:0">Layout Type 1 — bbj-h</p>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+/* 점진적 향상만. 이 스크립트가 죽어도 페이지는 온전하다. */
+document.documentElement.classList.add('js');
+
+(function reveal() {
+  const items = document.querySelectorAll('[data-reveal]');
+  if (!items.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    items.forEach((el) => (el.dataset.shown = 'true'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.dataset.shown = 'true';
+        io.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+
+  items.forEach((el) => io.observe(el));
+
+  // 장식용 애니메이션이 콘텐츠를 가리는 원인이 되어선 안 된다.
+  setTimeout(() => {
+    items.forEach((el) => { if (el.dataset.shown !== 'true') el.dataset.shown = 'true'; });
+  }, 3000);
+})();
+
+/* 카탈로그 필터 — 골격 단계에서는 상태 토글만 */
+document.querySelectorAll('.filters button').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filters button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    btn.setAttribute('aria-pressed', 'true');
+  });
+});
+</script>
+</body>
+</html>
