@@ -1037,8 +1037,24 @@ addEventListener('resize', () => {
   window.__fitT = setTimeout(fitWaveLines, 150);
 });
 
+/* 스테이트먼트 밴드는 '한 번만'이 아니라 화면에 들어올 때마다 다시 열린다.
+   완전히 벗어났을 때만 접어 두어(재생 준비) 경계에서 깜빡이지 않게 한다. */
+(function statementReplay() {
+  const sb = document.querySelector('.sb');
+  if (!sb) return;
+  if (!('IntersectionObserver' in window)) { sb.dataset.shown = 'true'; return; }
+
+  new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.intersectionRatio >= 0.25) sb.dataset.shown = 'true';
+      else if (e.intersectionRatio === 0) sb.dataset.shown = 'false';
+    });
+  }, { threshold: [0, 0.25] }).observe(sb);
+})();
+
 (function reveal() {
-  const items = document.querySelectorAll('[data-reveal], .lines, .sb');
+  // .sb 는 위에서 따로 다룬다 — 여기 넣으면 unobserve 되어 한 번만 실행된다
+  const items = document.querySelectorAll('[data-reveal], .lines');
   if (!items.length) return;
 
   if (!('IntersectionObserver' in window)) {
