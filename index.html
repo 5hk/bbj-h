@@ -1391,13 +1391,18 @@ a { color: inherit; text-decoration: none; }
              width="1100" height="1649" loading="lazy">
       </figure>
 
-      <!-- 아래 두 칸은 사진 확정 후 프레임만 <img> 로 교체한다. 주변 배치는 손대지 않는다 -->
+      <!-- 이 칸은 사진 확정 후 프레임만 <img> 로 교체한다. 주변 배치는 손대지 않는다 -->
       <figure class="press__f" data-reveal>
         <div class="ph" data-label="화보 가로 3:2" style="--ar:3/2"></div>
       </figure>
 
+      <!-- 마지막 한 장. 가운데에 크게 놓여 섹션이 얼굴로 끝난다 -->
       <figure class="press__g" data-reveal>
-        <div class="ph" data-label="화보 4:5" style="--ar:4/5"></div>
+        <img src="images/press/gaho-mic.jpg"
+             srcset="images/press/gaho-mic-700.jpg 700w, images/press/gaho-mic.jpg 1100w"
+             sizes="(max-width: 860px) 84vw, 40vw"
+             alt="가호 (Gaho) 무대"
+             width="1100" height="1464" loading="lazy">
       </figure>
 
       <p class="press__label vert micro" aria-hidden="true">PLAN-G.IO</p>
