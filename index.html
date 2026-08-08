@@ -323,7 +323,8 @@ a { color: inherit; text-decoration: none; }
 .released__body { display: block; }
 .released__title { display: block; font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.15rem, 2.3vw, 2rem); line-height: 1; margin-bottom: 6px; }
 .released__by { display: block; color: var(--grey); margin-bottom: 8px; }
-.released__desc { display: block; max-width: 52ch; }
+/* 본문 칸 폭을 그대로 쓴다 — 따로 좁히면 위의 제목·아티스트 줄과 오른쪽 끝이 어긋난다 */
+.released__desc { display: block; }
 .released__go { justify-self: end; white-space: nowrap; padding-top: 4px; }
 .released__link:hover .released__go { text-decoration: underline; text-underline-offset: 4px; }
 
