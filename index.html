@@ -604,7 +604,8 @@ a { color: inherit; text-decoration: none; }
 .press__d { grid-column: 7 / span 3; margin-top: clamp(20px, 3.5vw, 64px); }
 .press__e { grid-column: 10 / span 3; margin-top: clamp(72px, 13vw, 250px); }
 
-/* 세로 레이블 — 사진 사이 빈 칸에 세워 여백을 의도로 바꾼다 */
+/* 세로 레이블 — 사진 사이 빈 칸에 세워 여백을 의도로 바꾼다.
+   캡션에 이미 있는 정보를 되풀이하지 않는다. 레퍼런스의 PETERLINDBERGH.BE 자리. */
 .press__label {
   grid-column: 11 / span 1; grid-row: 1;
   justify-self: center; align-self: start;
@@ -1339,7 +1340,7 @@ a { color: inherit; text-decoration: none; }
         <figcaption class="micro">TMRW Magazine · 2026</figcaption>
       </figure>
 
-      <p class="press__label vert micro" aria-hidden="true">TMRW MAGAZINE — GAHO &amp; KAVE / 2026</p>
+      <p class="press__label vert micro" aria-hidden="true">PLAN-G.IO</p>
 
       <figure class="press__c" data-reveal>
         <div class="ph" data-label="화보 3:4"></div>
