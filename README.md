@@ -28,8 +28,31 @@
 --straddle: 50%;    /* 워드마크가 영상 쪽으로 걸치는 비율. 50% = 영상/지면 반반 */
 ```
 
-영상이 준비되면 `<video>` 의 `src` 를 채우고 `hidden` 을 지운 뒤, 옆의 `.ph` 플레이스홀더를 삭제한다.
-`muted` `loop` `playsinline` 은 모바일 자동재생에 필수라 지우면 안 된다.
+### type2 히어로 영상 준비
+
+영상은 **git에 넣지 않는다** (`media/` 는 .gitignore 대상). 각자 로컬에 아래 두 파일을 만들어 둔다.
+
+```
+media/hero.mp4          # 루프 영상
+media/hero-poster.jpg   # 첫 프레임 (로드 전 검은 화면 방지)
+```
+
+원본에서 만드는 절차 (ffmpeg 필요 — `brew install ffmpeg`):
+
+```bash
+ffmpeg -ss 8 -t 12 -i 원본.MP4 -an -c:v libx264 -crf 25 -preset slow -pix_fmt yuv420p -movflags +faststart media/hero.mp4
+```
+
+```bash
+ffmpeg -ss 1 -i media/hero.mp4 -frames:v 1 -q:v 3 media/hero-poster.jpg
+```
+
+- `-ss 8 -t 12` — 8초 지점부터 12초. 가장 좋은 구간으로 바꿔서 쓴다
+- `-an` — **오디오 제거.** 히어로는 항상 muted라 소리는 절대 안 들리는데 용량만 차지한다
+- `-movflags +faststart` — 메타데이터를 앞으로 보내 다운로드 도중 재생 시작
+- `muted` `loop` `playsinline` 속성은 모바일 자동재생 조건이라 지우면 안 된다
+
+**목표치**: 8~15초 · 2~4MB. 히어로 영상이 무거우면 첫인상이 검은 화면이 된다.
 
 ## 로컬 미리보기
 

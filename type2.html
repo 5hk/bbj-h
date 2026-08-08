@@ -127,10 +127,13 @@ a { color: inherit; text-decoration: none; }
 .hero { position: relative; padding-bottom: clamp(60px, 9vw, 150px); }
 
 .hero__stage { position: relative; height: var(--stage-h); min-height: 420px; background: var(--stage); overflow: hidden; }
-.hero__stage video { width: 100%; height: 100%; object-fit: cover; }
+/* 영상은 플레이스홀더 위에 겹쳐 둔다 — 파일이 없으면 아래 .ph가 그대로 보인다 */
+.hero__stage video { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; }
 
-/* 영상이 없을 때 자리를 지키는 모션 플레이스홀더 */
-.hero__stage .ph { height: 100%; aspect-ratio: auto; }
+/* 영상이 없을 때 자리를 지키는 모션 플레이스홀더.
+   position+z-index로 스태킹 컨텍스트를 만들어야 내부 라벨(::after, z-index 2)이
+   영상(z-index 1) 위로 뚫고 나오지 않는다. */
+.hero__stage .ph { position: relative; z-index: 0; height: 100%; aspect-ratio: auto; }
 .hero__stage .ph::before {
   content: ''; position: absolute; inset: -20%;
   background: radial-gradient(ellipse at 30% 40%, rgba(255,255,255,.16), transparent 55%),
@@ -361,12 +364,16 @@ a { color: inherit; text-decoration: none; }
   <!-- ================= 00 HERO ================= -->
   <header class="hero" id="top">
     <div class="hero__stage">
-      <!-- 실제 영상이 준비되면 아래 video의 src만 채우고 .ph를 지운다.
-           muted/playsinline/loop 는 모바일 자동재생에 필수. -->
-      <video autoplay muted loop playsinline poster="" hidden>
-        <source src="" type="video/mp4">
+      <!-- media/ 는 .gitignore 대상이다 (영상은 git에 넣지 않는다).
+           README의 준비 절차대로 media/hero.mp4 를 만들어 두면 재생된다.
+           muted/loop/playsinline 은 모바일 자동재생 조건이라 지우면 안 된다.
+           poster 는 첫 프레임 이미지 — 영상 로드 전 검은 화면을 막아준다. -->
+      <video autoplay muted loop playsinline preload="metadata"
+             poster="media/hero-poster.jpg">
+        <source src="media/hero.mp4" type="video/mp4">
       </video>
-      <div class="ph ph--dark" data-label="히어로 영상 · 16:9 (무음 루프 · 8~15초 · 2~4MB 목표)"></div>
+      <!-- 영상이 없을 때만 보이는 자리 표시 (영상이 로드되면 그 위를 덮는다) -->
+      <div class="ph ph--dark" data-label="히어로 영상 · media/hero.mp4"></div>
 
       <div class="hero__meta micro">
         <p style="margin:0">[ 기간 / 연도 ]<br>[ 보조 정보 ]</p>
