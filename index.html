@@ -274,6 +274,17 @@ a { color: inherit; text-decoration: none; }
 .teaser__frame { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--stage); }
 .teaser__video { width: 100%; height: 100%; object-fit: cover; }
 .teaser__poster { width: 100%; height: 100%; object-fit: cover; }
+/* 앨범 커버형 — 1:1 커버를 16:9 프레임 가운데 두고, 같은 이미지를 흐리게 깔아 배경을 채운다 */
+.teaser--cover .teaser__frame { display: block; }
+.teaser__blur { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(30px) brightness(.5) saturate(1.1); transform: scale(1.2); }
+.teaser__art {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  height: 84%; width: auto; aspect-ratio: 1; object-fit: cover;
+  box-shadow: 0 20px 54px rgba(0,0,0,.55);
+  transition: transform .6s var(--ease);
+}
+.teaser--cover .teaser__frame:hover .teaser__art { transform: translate(-50%, -50%) scale(1.035); }
+.teaser--cover .teaser__toggle { pointer-events: none; }
 .teaser__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .teaser__toggle, .teaser__mute {
   position: absolute; bottom: 14px;
@@ -362,11 +373,54 @@ a { color: inherit; text-decoration: none; }
 /* 멤버 줄은 아티스트 블록 전체 폭을 쓴다 — 오른쪽 컬럼 안에 가두면
    좌측 하단에 목적 없는 빈 공간이 남는다.
    auto-fill 이라 인원수가 2명이든 5명이든 칸 크기가 같게 유지된다. */
+/* 단체컷 — 이름 옆에 작게. 주인공은 아래 멤버 스트립이다 */
+.artist__groupshot { margin: 0; justify-self: start; max-width: 300px; }
+.artist__groupshot img { width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; filter: grayscale(1) contrast(1.04); }
+.artist__groupshot figcaption { margin-top: 8px; color: var(--grey); }
+
 /* 멤버 구획 — 헤어라인 헤더로 명단임을 알린다 */
 .members { margin-top: clamp(26px, 4vw, 52px); }
-.members__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); margin-bottom: clamp(12px, 1.6vw, 20px); }
+.members__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); margin-bottom: clamp(18px, 2.6vw, 34px); }
 .members__count { color: var(--grey); }
-.members__no { display: inline-block; min-width: 1.9em; color: var(--grey); }
+
+/* ---- 멤버 스트립 ----
+   레퍼런스의 사진 배열처럼 세로 위치를 어긋나게 두고 살짝 겹친다.
+   격자에 반듯이 놓는 것보다 편집물처럼 흐르고, 5장이 하나의 덩어리로 읽힌다. */
+.strip {
+  list-style: none; margin: 0; padding: 0 0 clamp(30px, 5vw, 70px);
+  display: flex; align-items: flex-start;
+}
+.strip__item {
+  position: relative;
+  flex: 1 1 0; min-width: 0;
+  transition: transform .5s var(--ease), z-index 0s;
+}
+.strip__item img {
+  width: 100%; height: auto; aspect-ratio: 3/4; object-fit: cover;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter .5s var(--ease), box-shadow .5s var(--ease);
+}
+/* 어긋난 세로 위치 — 규칙적이지 않아야 편집물처럼 보인다 */
+.strip__item:nth-child(1) { margin-top: clamp(20px, 3.4vw, 54px); }
+.strip__item:nth-child(2) { margin-top: 0; }
+.strip__item:nth-child(3) { margin-top: clamp(34px, 5.6vw, 88px); }
+.strip__item:nth-child(4) { margin-top: clamp(10px, 1.8vw, 28px); }
+.strip__item:nth-child(5) { margin-top: clamp(44px, 7vw, 112px); }
+/* 살짝 겹치기 */
+.strip__item + .strip__item { margin-left: clamp(-16px, -1.1vw, -4px); }
+
+.strip__item:hover { transform: translateY(-10px); z-index: 3; }
+.strip__item:hover img { filter: grayscale(0); box-shadow: 0 22px 46px rgba(0,0,0,.28); }
+
+.strip__name { position: relative; z-index: 2; margin: 10px 0 0; display: flex; gap: 8px; }
+.strip__no { color: var(--grey); }
+
+@media (max-width: 760px) {
+  /* 좁은 화면에서 5장을 겹쳐 놓으면 아무것도 안 보인다 — 격자로 되돌린다 */
+  .strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1.6vw, 14px); }
+  .strip__item { margin: 0 !important; }
+  .strip__item + .strip__item { margin-left: 0 !important; }
+}
 .artist__people {
   list-style: none; margin: 0; padding: 0;
   display: grid;
@@ -733,16 +787,18 @@ a { color: inherit; text-decoration: none; }
     </div>
 
     <!-- ── 두 번째: 이미 발매된 곡 ──
-         YouTube 영상은 내려받아 재생할 수 없다(이용약관). 대신 '파사드' 방식으로
-         썸네일 + 재생 버튼만 먼저 보여주고, 누를 때만 임베드를 끼운다.
-         덕분에 겉모습은 위 티저와 같고, 클릭 전에는 YouTube 스크립트가 로드되지 않는다. -->
+         YouTube 임베드는 광고가 붙어 흐름을 끊는다. 앨범 커버를 보여주고
+         클릭하면 YouTube로 이동시킨다. 커버는 1:1이라 16:9 프레임에 그대로
+         넣으면 레터링이 잘리므로, 같은 이미지를 흐리게 깔아 배경을 채운다. -->
     <div class="now now--flip">
-      <figure class="teaser" data-yt="62BGFV9A2Ig" data-reveal>
-        <div class="teaser__frame">
-          <img class="teaser__poster" src="https://img.youtube.com/vi/62BGFV9A2Ig/maxresdefault.jpg"
-               alt="가호 &lt;To Mars&gt; 뮤직비디오 썸네일" loading="lazy" width="1280" height="720">
-          <button class="teaser__toggle micro" type="button">▶ Play on YouTube</button>
-        </div>
+      <figure class="teaser teaser--cover" data-reveal>
+        <a class="teaser__frame" href="https://www.youtube.com/watch?v=62BGFV9A2Ig"
+           target="_blank" rel="noopener noreferrer" aria-label="가호 To Mars 뮤직비디오 보기 (YouTube)">
+          <img class="teaser__blur" src="images/releases/to-mars.jpg" alt="" aria-hidden="true" loading="lazy">
+          <img class="teaser__art" src="images/releases/to-mars.jpg"
+               alt="가호 &lt;To Mars&gt; 앨범 커버" width="900" height="900" loading="lazy">
+          <span class="teaser__toggle micro">▶ 뮤직비디오 보기</span>
+        </a>
         <figcaption class="micro">가호 — &lt;To Mars&gt; Music Video</figcaption>
       </figure>
 
@@ -817,15 +873,15 @@ a { color: inherit; text-decoration: none; }
     </article>
 
 
-    <!-- 밴드 5인조 — 단체컷 1 + 멤버 5 = 6장. 멤버마다 이름 캡션 필수. -->
+    <!-- 밴드 5인조 — 이름 아래 작은 단체컷, 그 아래 멤버 스트립 -->
     <article class="artist" data-reveal>
       <h3 class="display artist__name">KAVE</h3>
       <p class="artist__ko">케이브 · 5인조</p>
+
       <div class="artist__row">
         <dl class="artist__facts" style="margin:0">
           <dt>Role</dt><dd>Band — Rock · EDM · Alternative</dd>
           <dt>Formed</dt><dd>2024</dd>
-          <dt>Members</dt><dd>가호 · 지상 · 현 · 오너 · 준</dd>
           <dd class="artist__links micro">
             <a href="https://www.instagram.com/kave_official_" target="_blank" rel="noopener noreferrer">Instagram</a>
             <a href="https://www.youtube.com/@KAVE_Official" target="_blank" rel="noopener noreferrer">YouTube</a>
@@ -833,39 +889,44 @@ a { color: inherit; text-decoration: none; }
           </dd>
         </dl>
 
-        <div class="artist__media">
-          <figure class="artist__lead">
-            <div class="lead--portrait">
-              <div class="lead--portrait__img">
-                <img src="images/artists/kave-group.jpg"
-                     srcset="images/artists/kave-group-800.jpg 800w, images/artists/kave-group.jpg 1400w"
-                     sizes="(max-width: 640px) 92vw, 50vw"
-                     alt="KAVE 단체 사진 — 가호, 지상, 현, 오너, 준"
-                     width="1400" height="1750" loading="lazy">
-              </div>
-              <div class="lead--portrait__side">
-                <span class="lead--portrait__rule" aria-hidden="true"></span>
-                <p class="vert micro" style="margin:0">KAVE — 케이브 / 가호 · 지상 · 현 · 오너 · 준</p>
-                <span class="lead--portrait__rule" aria-hidden="true"></span>
-              </div>
-            </div>
-            <figcaption class="micro">Photography Hongje An · TMRW Magazine</figcaption>
-          </figure>
-        </div>
+        <!-- 단체컷은 이름 옆에 작게 — 주인공은 아래 멤버 스트립이다 -->
+        <figure class="artist__groupshot">
+          <img src="images/artists/kave-group-800.jpg"
+               alt="KAVE 단체 사진 — 가호, 지상, 현, 오너, 준"
+               width="800" height="1000" loading="lazy">
+          <figcaption class="micro">Photography Hongje An · TMRW Magazine</figcaption>
+        </figure>
       </div>
 
-      <!-- 멤버 구획 — 헤더와 번호를 붙여 '쏟아진 사진'이 아니라 명단으로 읽히게 한다 -->
+      <!-- 멤버 스트립 — 사진마다 세로 위치를 어긋나게 겹쳐 편집물처럼 흐르게 한다.
+           올려놓으면 그 한 장만 앞으로 나오며 색이 돌아온다. -->
       <div class="members">
         <div class="members__head">
           <p class="micro" style="margin:0">Members</p>
           <span class="members__count micro">(05)</span>
         </div>
-        <ul class="artist__people">
-          <li><figure style="margin:0"><img src="images/artists/kave-gaho.jpg" alt="KAVE 가호" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">01</span>가호</figcaption></figure></li>
-          <li><figure style="margin:0"><img src="images/artists/kave-jisang.jpg" alt="KAVE 지상" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">02</span>지상</figcaption></figure></li>
-          <li><figure style="margin:0"><img src="images/artists/kave-hyun.jpg" alt="KAVE 현" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">03</span>현</figcaption></figure></li>
-          <li><figure style="margin:0"><img src="images/artists/kave-owner.jpg" alt="KAVE 오너" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">04</span>오너</figcaption></figure></li>
-          <li><figure style="margin:0"><img src="images/artists/kave-jun.jpg" alt="KAVE 준" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">05</span>준</figcaption></figure></li>
+
+        <ul class="strip">
+          <li class="strip__item">
+            <img src="images/artists/kave-gaho.jpg" alt="KAVE 가호" width="600" height="800" loading="lazy">
+            <p class="strip__name micro"><span class="strip__no">01</span>가호</p>
+          </li>
+          <li class="strip__item">
+            <img src="images/artists/kave-jisang.jpg" alt="KAVE 지상" width="600" height="800" loading="lazy">
+            <p class="strip__name micro"><span class="strip__no">02</span>지상</p>
+          </li>
+          <li class="strip__item">
+            <img src="images/artists/kave-hyun.jpg" alt="KAVE 현" width="600" height="800" loading="lazy">
+            <p class="strip__name micro"><span class="strip__no">03</span>현</p>
+          </li>
+          <li class="strip__item">
+            <img src="images/artists/kave-owner.jpg" alt="KAVE 오너" width="600" height="800" loading="lazy">
+            <p class="strip__name micro"><span class="strip__no">04</span>오너</p>
+          </li>
+          <li class="strip__item">
+            <img src="images/artists/kave-jun.jpg" alt="KAVE 준" width="600" height="800" loading="lazy">
+            <p class="strip__name micro"><span class="strip__no">05</span>준</p>
+          </li>
         </ul>
       </div>
     </article>
