@@ -520,11 +520,42 @@ a { color: inherit; text-decoration: none; }
 /* ==========================================================================
    03 CATALOG
    ========================================================================== */
-.discs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: clamp(10px, 1.6vw, 24px); }
-.disc__title { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(.9rem, 1.3vw, 1.2rem); line-height: 1; margin: 10px 0 3px; }
-.disc__meta { margin: 0; color: var(--grey); }
+/* 커버가 주인공. 제목은 평소엔 숨고 올려놓았을 때만 아래에서 덮어 올라온다. */
+.discs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(130px, 13vw, 200px), 1fr)); gap: clamp(8px, 1.2vw, 18px); }
+.disc { position: relative; overflow: hidden; background: #ececec; }
+.disc__art { display: block; }
+.disc__art img {
+  width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; display: block;
+  filter: grayscale(1) contrast(1.03);
+  transform: scale(1.001);
+  transition: filter .6s var(--ease), transform .9s var(--ease);
+}
+.disc:hover .disc__art img { filter: grayscale(0); transform: scale(1.06); }
+
+.disc__info {
+  position: absolute; inset: auto 0 0 0;
+  display: block; padding: 12px 12px 11px;
+  background: linear-gradient(to top, rgba(0,0,0,.86), rgba(0,0,0,.5) 60%, transparent);
+  color: var(--paper);
+  transform: translateY(101%);
+  transition: transform .5s var(--ease);
+}
+.disc:hover .disc__info, .disc:focus-within .disc__info { transform: translateY(0); }
+.disc__title { display: block; font-family: var(--font-display); text-transform: uppercase; font-size: clamp(.85rem, 1.1vw, 1.05rem); line-height: 1.05; }
+.disc__meta { display: block; margin-top: 3px; color: rgba(255,255,255,.62); }
+
+/* 필터로 걸러진 항목 */
+.disc[hidden] { display: none; }
+
+/* 터치 기기에는 호버가 없다 — 제목을 항상 보여준다 */
+@media (hover: none) {
+  .disc__info { position: static; transform: none; background: none; color: var(--ink); padding: 9px 0 0; }
+  .disc__meta { color: var(--grey); }
+  .disc { background: none; overflow: visible; }
+}
+
 .filters { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: clamp(20px, 3vw, 38px); }
-.filters button { font: inherit; font-size: .6875rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; background: none; border: 0; padding: 0 0 3px; color: var(--grey); border-bottom: 1px solid transparent; cursor: pointer; }
+.filters button { font: inherit; font-size: .6875rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; background: none; border: 0; padding: 0 0 3px; color: var(--grey); border-bottom: 1px solid transparent; cursor: pointer; transition: color .25s var(--ease), border-color .25s var(--ease); }
 .filters button[aria-pressed="true"], .filters button:hover { color: inherit; border-color: currentColor; }
 
 /* ==========================================================================
@@ -543,49 +574,56 @@ a { color: inherit; text-decoration: none; }
 .stage h4 { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.05rem, 2.2vw, 1.9rem); line-height: 1; margin: 0; }
 .stage p { margin: 0; }
 @media (max-width: 760px) { .stage li { grid-template-columns: 1fr auto; } .stage__date, .stage__place { grid-column: 1 / -1; } }
-
 /* ==========================================================================
-   05 PRESS — 스캐터 그리드. 여백이 주인공.
+   05 PRESS — 사진만. 여백이 주인공.
+
+   12열 위에 5장을 어긋나게 얹는다. 규칙적으로 놓으면 격자가 되고,
+   불규칙해야 손으로 배치한 편집물처럼 읽힌다.
    ========================================================================== */
-/* ---- 대표 화보 ----
-   한 장을 크게 두고 옆을 비운다. 채우지 않은 자리가 이 섹션의 언어다. */
-.press-lead { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 90px); align-items: center; }
-.press-lead__media { margin: 0; }
-.press-lead__media .ph { --ar: 4/5; }
-.press-lead__side { padding-block: clamp(0px, 2vw, 40px); }
-.press-lead__meta { color: var(--grey); margin: 0 0 14px; }
-.press-lead__title { font-size: clamp(1.8rem, 4.6vw, 3.6rem); margin: 0 0 20px; }
-.press-lead__rule { height: 1px; background: var(--hair); margin: clamp(22px, 3.4vw, 44px) 0; }
-
-@media (max-width: 860px) { .press-lead { grid-template-columns: 1fr; } }
-
-/* ---- 나머지 컷 ----
-   3장만 두고 세로 위치를 어긋내 격자를 흐트러뜨린다. 사이는 넉넉히 비운다. */
-.press-grid {
-  display: grid; grid-template-columns: repeat(12, 1fr);
-  gap: clamp(12px, 2vw, 30px);
+.press {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(12px, 1.8vw, 28px);
   align-items: start;
-  margin-top: clamp(60px, 10vw, 160px);
 }
-.press-grid__item { margin: 0; }
-.press-grid__item figcaption { margin-top: 9px; color: var(--grey); }
-.press-grid__item--a { grid-column: 1 / span 3; }
-.press-grid__item--b { grid-column: 6 / span 5; margin-top: clamp(40px, 7vw, 120px); }
-.press-grid__item--c { grid-column: 9 / span 3; margin-top: clamp(70px, 12vw, 210px); }
-.press-grid__label { grid-column: 5 / span 1; justify-self: center; align-self: start; margin: clamp(20px, 4vw, 60px) 0 0; color: var(--grey); }
+.press figure { margin: 0; }
+.press figcaption { margin-top: 9px; color: var(--grey); }
+
+/* 사진은 흑백에서 시작해 화면에 들어오면 아주 천천히 색이 돈다 */
+.press .ph { transition: filter 1.2s var(--ease); }
+
+/* 배치 — 왼쪽 위에서 오른쪽 아래로 시선이 흐르되, 높이를 매번 어긋낸다 */
+.press__a { grid-column: 1 / span 3; }
+.press__b { grid-column: 5 / span 6; margin-top: clamp(48px, 9vw, 170px); }
+.press__c { grid-column: 2 / span 3; margin-top: clamp(56px, 10vw, 190px); }
+.press__d { grid-column: 7 / span 3; margin-top: clamp(20px, 3.5vw, 64px); }
+.press__e { grid-column: 10 / span 3; margin-top: clamp(72px, 13vw, 250px); }
+
+/* 세로 레이블 — 사진 사이 빈 칸에 세워 여백을 의도로 바꾼다 */
+.press__label {
+  grid-column: 11 / span 1; grid-row: 1;
+  justify-self: center; align-self: start;
+  margin: clamp(10px, 2vw, 30px) 0 0;
+  color: var(--grey);
+}
+
+/* 올려놓으면 그 한 장만 색이 돌아오며 아주 살짝 떠오른다 */
+.press figure { transition: transform .7s var(--ease); }
+.press figure:hover { transform: translateY(-8px); }
 
 @media (max-width: 860px) {
-  .press-grid { grid-template-columns: repeat(6, 1fr); }
-  .press-grid__item--a { grid-column: 1 / span 4; }
-  .press-grid__item--b { grid-column: 2 / span 5; }
-  .press-grid__item--c { grid-column: 1 / span 4; }
-  .press-grid__label { display: none; }
+  .press { grid-template-columns: repeat(6, 1fr); gap: clamp(10px, 2.4vw, 20px); }
+  .press__a { grid-column: 1 / span 4; }
+  .press__b { grid-column: 2 / span 5; margin-top: clamp(30px, 7vw, 70px); }
+  .press__c { grid-column: 1 / span 3; margin-top: clamp(30px, 7vw, 70px); }
+  .press__d { grid-column: 4 / span 3; margin-top: clamp(14px, 4vw, 40px); }
+  .press__e { grid-column: 2 / span 4; margin-top: clamp(30px, 7vw, 70px); }
+  .press__label { display: none; }
 }
 
 /* ---- 절제된 텍스트 모션 ----
-   한 번, 짧게, 아래에서 밀려 올라온다. 화면에 들어올 때만. */
-/* 부모의 data-shown 이 신호다. 부모가 없으면 영영 안 보이므로
-   reveal 안전장치(3초 후 강제 노출)가 이 요소들도 함께 살린다. */
+   한 번, 짧게, 아래에서 밀려 올라온다. 화면에 들어올 때만.
+   부모의 data-shown 이 신호이므로, reveal 안전장치(3초)가 이 요소도 함께 살린다. */
 .js .rise { opacity: 0; transform: translateY(14px); }
 .js [data-shown="true"] .rise,
 .js .rise[data-shown="true"] {
@@ -594,6 +632,7 @@ a { color: inherit; text-decoration: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .js .rise { opacity: 1 !important; transform: none !important; }
+  .press figure:hover { transform: none; }
 }
 
 /* ==========================================================================
@@ -733,7 +772,7 @@ a { color: inherit; text-decoration: none; }
     <li><a href="#press">Press</a></li>
     <li><a href="#studio">Studio</a></li>
   </ul>
-  <p class="micro nav__lang" style="margin:0">KO / EN / ES</p>
+  <p class="micro nav__lang" style="margin:0">KO / EN / JA / ES</p>
 
   <button class="nav__burger" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="menu">
     <span></span><span></span><span></span>
@@ -752,7 +791,7 @@ a { color: inherit; text-decoration: none; }
     <li><a href="#inquiry"><span class="idx">07</span>Inquiry</a></li>
   </ul>
   <div class="menu__foot micro">
-    <p style="margin:0">KO / EN / ES</p>
+    <p style="margin:0">KO / EN / JA / ES</p>
     <p style="margin:0">PLAN-G.IO</p>
   </div>
 </div>
@@ -882,6 +921,7 @@ a { color: inherit; text-decoration: none; }
 
         <div class="now__meta micro">
           <span>KAVE</span><span>Single</span><span>2026.08.12</span>
+          <a href="https://www.youtube.com/watch?v=QfJMns4R5-s" target="_blank" rel="noopener noreferrer" style="margin-left:auto">티저 영상 ↗</a>
         </div>
       </div>
     </div>
@@ -1030,29 +1070,88 @@ a { color: inherit; text-decoration: none; }
   <section class="sec" id="catalog">
     <div class="sec__head">
       <h2 class="display sec__title" data-reveal>Catalog</h2>
-      <p class="sec__no">03</p>
+      <p class="sec__no">03 — <span id="catCount">18</span> releases</p>
     </div>
 
-    <div class="filters" data-reveal>
-      <button type="button" aria-pressed="true">All</button>
-      <button type="button" aria-pressed="false">Album</button>
-      <button type="button" aria-pressed="false">Single</button>
-      <button type="button" aria-pressed="false">OST</button>
+    <!-- 필터는 실제로 동작한다. 눌러도 아무 일 없는 버튼은 두지 않는다. -->
+    <div class="filters" data-reveal role="group" aria-label="발매작 필터">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="single" aria-pressed="false">Single</button>
+      <button type="button" data-filter="album" aria-pressed="false">Album</button>
+      <button type="button" data-filter="ost" aria-pressed="false">OST</button>
     </div>
 
-    <!-- 정적 마크업 유지: 카탈로그는 검색 유입의 핵심 자산 -->
-    <div class="discs" data-reveal>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-      <article class="disc"><div class="ph" data-label="앨범아트"></div><h3 class="disc__title">타이틀</h3><p class="disc__meta micro">[ 아티스트 · 연도 ]</p></article>
-    </div>
+    <!-- 커버가 주인공. 제목은 올려놓았을 때만 덮어 올라온다. -->
+    <ul class="discs" data-reveal>
+      <li class="disc" data-type="single" data-year="2026">
+        <span class="disc__art"><img src="images/releases/to-mars.jpg" alt="To Mars" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">To Mars</span><span class="disc__meta micro">2026 · Single</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2025">
+        <span class="disc__art"><img src="images/releases/go-on.jpg" alt="Go On" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Go On</span><span class="disc__meta micro">2025 · Single</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2023">
+        <span class="disc__art"><img src="images/releases/yellow-light.jpg" alt="Yellow Light" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Yellow Light</span><span class="disc__meta micro">2023 · OST</span></span>
+      </li>
+      <li class="disc" data-type="album" data-year="2023">
+        <span class="disc__art"><img src="images/releases/diamond.jpg" alt="Only You" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Only You</span><span class="disc__meta micro">2023 · Album</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2022">
+        <span class="disc__art"><img src="images/releases/where-to-in-the-fog.jpg" alt="안개 속 어디로" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">안개 속 어디로</span><span class="disc__meta micro">2022 · Single</span></span>
+      </li>
+      <li class="disc" data-type="album" data-year="2021">
+        <span class="disc__art"><img src="images/releases/fireworks.jpg" alt="Right Now" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Right Now</span><span class="disc__meta micro">2021 · Album</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2021">
+        <span class="disc__art"><img src="images/releases/cyworld-bgm-2021.jpg" alt="Officially Missing You" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Officially Missing You</span><span class="disc__meta micro">2021 · Single</span></span>
+      </li>
+      <li class="disc" data-type="ost" data-year="2021">
+        <span class="disc__art"><img src="images/releases/time-ost.jpg" alt="시간" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">시간</span><span class="disc__meta micro">2021 · OST</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2021">
+        <span class="disc__art"><img src="images/releases/rush-hour.jpg" alt="Rush Hour" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Rush Hour</span><span class="disc__meta micro">2021 · Single</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2021">
+        <span class="disc__art"><img src="images/releases/not-the-end.jpg" alt="끝이 아니길" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">끝이 아니길</span><span class="disc__meta micro">2021 · Single</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2020">
+        <span class="disc__art"><img src="images/releases/running.jpg" alt="Running" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Running</span><span class="disc__meta micro">2020 · OST</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2020">
+        <span class="disc__art"><img src="images/releases/dont-know-you.jpg" alt="남자를 몰라" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">남자를 몰라</span><span class="disc__meta micro">2020 · Single</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2020">
+        <span class="disc__art"><img src="images/releases/stranger-2.jpg" alt="바람" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">바람</span><span class="disc__meta micro">2020 · Single</span></span>
+      </li>
+      <li class="disc" data-type="ost" data-year="2020">
+        <span class="disc__art"><img src="images/releases/start.jpg" alt="시작" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">시작</span><span class="disc__meta micro">2020 · OST</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2020">
+        <span class="disc__art"><img src="images/releases/my-heart-is-beating.jpg" alt="그렇게 가슴은 뛴다" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">그렇게 가슴은 뛴다</span><span class="disc__meta micro">2020 · Single</span></span>
+      </li>
+      <li class="disc" data-type="album" data-year="2018">
+        <span class="disc__art"><img src="images/releases/preparation-for-a-journey.jpg" alt="떠날 준비" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">떠날 준비</span><span class="disc__meta micro">2018 · Album</span></span>
+      </li>
+      <li class="disc" data-type="single" data-year="2018">
+        <span class="disc__art"><img src="images/releases/stay-here.jpg" alt="있어줘" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">있어줘</span><span class="disc__meta micro">2018 · Single</span></span>
+      </li>
+    </ul>
   </section>
 
   <!-- ================= 04 STAGE ================= -->
@@ -1218,41 +1317,31 @@ a { color: inherit; text-decoration: none; }
       <p class="sec__no">05</p>
     </div>
 
-    <!-- ── 대표 화보 ──
-         한 장을 크게 두고 옆을 비운다. 여백이 곧 편집이다.
-         텍스트는 스크롤 진입 시 아래에서 밀려 올라온다(절제된 모션). -->
-    <article class="press-lead">
-      <figure class="press-lead__media" data-reveal>
-        <div class="ph" data-label="대표 화보 · 4:5"></div>
+    <!-- 사진만으로 간다. 텍스트 패널을 붙이면 편집물이 아니라 소개 블록이 된다.
+         캡션은 작게, 세로 레이블 하나로 맥락만 준다. -->
+    <div class="press">
+      <figure class="press__a" data-reveal>
+        <div class="ph" data-label="화보 세로 3:4"></div>
+        <figcaption class="micro">[ 매체 · 호수 ]</figcaption>
       </figure>
 
-      <div class="press-lead__side" data-reveal>
-        <p class="micro press-lead__meta rise">TMRW Magazine · 2026</p>
-        <h3 class="display press-lead__title rise" style="--d:.06s">Gaho &amp; KAVE</h3>
-        <p class="body-lg rise" style="--d:.12s">[ 화보 소개 2~3문장. 촬영 콘셉트와 맥락. ]</p>
-        <p class="press-lead__rule" aria-hidden="true"></p>
-        <p class="micro rise" style="--d:.18s">[ 기사 링크 ]</p>
-      </div>
-    </article>
+      <figure class="press__b" data-reveal>
+        <div class="ph" data-label="대표 화보 3:2" style="--ar:3/2"></div>
+      </figure>
 
-    <!-- ── 나머지 컷 ──
-         3장만. 세로 위치를 어긋내 격자를 흐트러뜨리고, 사이를 넉넉히 비운다. -->
-    <div class="press-grid">
-      <figure class="press-grid__item press-grid__item--a" data-reveal>
+      <p class="press__label vert micro" aria-hidden="true">TMRW MAGAZINE — GAHO &amp; KAVE / 2026</p>
+
+      <figure class="press__c" data-reveal>
         <div class="ph" data-label="화보 3:4"></div>
-        <figcaption class="micro">[ 캡션 ]</figcaption>
       </figure>
 
-      <p class="press-grid__label vert micro" aria-hidden="true">TMRW × GAHO / KAVE — SEOUL 2026</p>
-
-      <figure class="press-grid__item press-grid__item--b" data-reveal>
-        <div class="ph" data-label="화보 3:2" style="--ar:3/2"></div>
-        <figcaption class="micro">[ 캡션 ]</figcaption>
+      <figure class="press__d" data-reveal>
+        <div class="ph" data-label="화보 1:1" style="--ar:1"></div>
+        <figcaption class="micro">[ 매체 · 호수 ]</figcaption>
       </figure>
 
-      <figure class="press-grid__item press-grid__item--c" data-reveal>
-        <div class="ph" data-label="화보 3:4"></div>
-        <figcaption class="micro">[ 캡션 ]</figcaption>
+      <figure class="press__e" data-reveal>
+        <div class="ph" data-label="화보 세로 3:4"></div>
       </figure>
     </div>
   </section>
@@ -1563,13 +1652,33 @@ document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
   }
 })();
 
-/* 카탈로그 필터 — 골격 단계에서는 상태 토글만 */
-document.querySelectorAll('.filters button').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filters button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
-    btn.setAttribute('aria-pressed', 'true');
+/* 카탈로그 필터 — 실제로 걸러낸다. 개수 표시도 함께 갱신한다.
+   눌러도 아무 일 없는 버튼은 두지 않는다. */
+(function catalogFilter() {
+  const buttons = [...document.querySelectorAll('.filters button')];
+  const discs = [...document.querySelectorAll('.disc')];
+  const count = document.getElementById('catCount');
+  if (!buttons.length || !discs.length) return;
+
+  const apply = (kind) => {
+    let shown = 0;
+    discs.forEach((d) => {
+      const match = kind === 'all' || d.dataset.type === kind;
+      d.hidden = !match;
+      if (match) shown++;
+    });
+    if (count) count.textContent = shown;
+  };
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      apply(btn.dataset.filter || 'all');
+    });
   });
-});
+
+  apply('all');   // 최초 개수 반영
+})();
 </script>
 </body>
 </html>
