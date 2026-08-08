@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PLAN-G Entertainment — Gaho &amp; KAVE Europe Tour 2026</title>
+<title>PLAN-G Entertainment — KAVE &lt;FLOWER BURN&gt; 2026.08.13</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -212,14 +212,22 @@ a { color: inherit; text-decoration: none; }
 .mark__line:nth-child(2) > span { margin-left: clamp(10px, 5vw, 90px); animation-delay: .12s; }
 @keyframes riseIn { to { transform: translateY(0); } }
 
-.hero__url { position: absolute; right: var(--gut); top: var(--stage-h); transform: translateY(18px); z-index: 5; }
+/* 레퍼런스의 PETERLINDBERGH.BE 와 같은 자리·톤:
+   워드마크 '중간'이 아니라 '아랫줄 베이스라인'에 맞춰 우측 끝에 붙는다. */
+.hero__url {
+  position: absolute; right: var(--gut); bottom: clamp(10px, 1.4vw, 24px);
+  z-index: 5;
+  color: var(--grey);
+  letter-spacing: .14em;
+}
 
 @media (max-width: 820px) {
   :root { --stage-h: 58vh; --straddle: 50%; }
   /* 좁은 화면에서는 워드마크가 폭을 다 써서 옆에 둘 자리가 없다.
      워드마크 아랫부분이 들어앉을 여백을 넉넉히 주고, URL은 그 아래 바닥에 붙인다. */
   .hero { padding-bottom: clamp(100px, 17vw, 160px); }
-  .hero__url { right: auto; left: var(--gut); top: auto; bottom: 10px; transform: none; }
+  /* 좁은 화면에선 워드마크가 폭을 다 써서 우측에 자리가 없다 — 좌측 하단으로 */
+  .hero__url { right: auto; left: var(--gut); bottom: 10px; }
 }
 @supports (height: 100dvh) {
   @media (max-width: 820px) { :root { --stage-h: 58dvh; } }
@@ -255,6 +263,22 @@ a { color: inherit; text-decoration: none; }
 /* ==========================================================================
    01 NOW — 큰 좌측 프레임 + 우측 텍스트
    ========================================================================== */
+/* ---- 티저 영상 ----
+   히어로와 달리 자동재생하지 않는다. 한 페이지에서 영상 두 개가 동시에 도는 것도,
+   음악 티저를 소리 없이 흘려보내는 것도 좋지 않다. 사용자가 눌러서 재생한다. */
+.teaser { margin: 0; }
+.teaser__frame { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--stage); }
+.teaser__video { width: 100%; height: 100%; object-fit: cover; }
+.teaser__toggle {
+  position: absolute; left: 14px; bottom: 14px;
+  background: rgba(0,0,0,.55); color: var(--paper);
+  border: 1px solid rgba(255,255,255,.5); padding: 9px 18px;
+  cursor: pointer; backdrop-filter: blur(6px);
+  transition: background .25s var(--ease), color .25s var(--ease);
+}
+.teaser__toggle:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.teaser figcaption { margin-top: 8px; color: var(--grey); }
+
 /* 본문이 길어졌으므로 상단 정렬 — 가운데 정렬이면 이미지와 텍스트가 어긋나 보인다 */
 .now { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(20px, 4vw, 64px); align-items: start; }
 .now__title { font-size: clamp(1.8rem, 4.6vw, 3.75rem); margin: 0 0 16px; }
@@ -463,42 +487,22 @@ a { color: inherit; text-decoration: none; }
 
 .sb__line span {
   display: inline-block;
-  font-variation-settings: 'wdth' 62.5, 'wght' 600;
-  will-change: font-variation-settings;
+  font-variation-settings: 'wdth' 100, 'wght' 800;
+  /* 글자 폭이 흔들려도 줄이 출렁이지 않게 각 칸의 최소 폭을 확보한다 */
+  min-width: .52em;
+  text-align: center;
 }
-/* 화면에 들어왔을 때만 돈다 — 안 보이는 곳에서 계속 도는 애니메이션은 낭비다 */
-.sb[data-shown="true"] .sb__line span {
-  animation: sbWave 3.4s cubic-bezier(.45,0,.2,1) infinite;
-  animation-delay: calc(var(--i) * .055s);
+/* 아직 확정되지 않은 글자 — 흐릿하고 얇게 */
+.sb__line span[data-pending] {
+  font-variation-settings: 'wdth' 62.5, 'wght' 400;
+  opacity: .38;
 }
-@keyframes sbWave {
-  0%, 100% { font-variation-settings: 'wdth' 62.5, 'wght' 500; }
-  45%      { font-variation-settings: 'wdth' 125,  'wght' 900; }
-}
-/* 공백은 접히지 않게 폭을 고정 */
-.sb__line span[data-space] { width: .28em; }
+.sb__line span[data-space] { min-width: .3em; }
 
-/* 측정용 — 모든 글자를 최대 너비로 세워 놓고 줄 길이를 잰다 */
+/* 측정용 — 확정 상태 기준으로 줄 길이를 잰다 */
 .sb__line.is-measuring span {
-  font-variation-settings: 'wdth' 125, 'wght' 900 !important;
-  animation: none !important;
-}
-
-/* 폰트 스펙 표기 — 레퍼런스의 그 디테일 */
-.sb__spec {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, auto));
-  gap: 6px clamp(20px, 4vw, 60px);
-  margin: clamp(26px, 4vw, 52px) 0 0;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255,255,255,.25);
-  color: var(--grey);
-}
-.sb__spec dt { display: inline; }
-.sb__spec dd { display: inline; margin: 0 0 0 8px; color: var(--paper); }
-
-/* 모션 축소 설정에서는 중간 너비로 고정 — 읽히기만 하면 된다 */
-@media (prefers-reduced-motion: reduce) {
-  .sb__line span { font-variation-settings: 'wdth' 100, 'wght' 700 !important; }
+  font-variation-settings: 'wdth' 100, 'wght' 800 !important;
+  opacity: 1 !important;
 }
 
 /* ==========================================================================
@@ -570,6 +574,7 @@ a { color: inherit; text-decoration: none; }
       <!-- 영상이 없을 때만 보이는 자리 표시 (영상이 로드되면 그 위를 덮는다) -->
       <div class="ph ph--dark" data-label="히어로 영상 · media/hero.mp4"></div>
 
+      <!-- 좌측은 기간, 우측은 범위와 투어명 -->
       <div class="hero__meta micro">
         <p style="margin:0">05 APR 26<br>18 APR 26</p>
         <p class="right" style="margin:0">EUROPE / 7 CITIES<br>CITYSCAPES — NEW HORIZONS</p>
@@ -599,30 +604,24 @@ a { color: inherit; text-decoration: none; }
   <!-- ================= INTRO ================= -->
   <section class="intro">
     <div>
-      <p class="micro" style="margin:0">(About)</p>
     </div>
     <div class="intro__body">
+      <!-- 레퍼런스처럼: 짧은 선언 한 줄 → 사실이 촘촘한 본문 한 문단 → 크레딧.
+           문단을 여러 개로 쪼개면 힘이 흩어진다. -->
       <p class="intro__lead lines" data-reveal>
         <span><i>사람과 음악이 만나는 곳.</i></span>
       </p>
       <p class="body-lg" data-reveal>
-        PLAN-G Entertainment는 음악과 진정성 있는 아티스트를 발굴하고
-        그들의 잠재력을 극대화하는 뮤직 레이블입니다.
-      </p>
-      <p class="body-lg" data-reveal>
-        우리는 독창적인 예술성과 혁신적인 사운드가 가진 힘을 믿습니다.
-        아티스트와 팬 사이의 깊이 있는 유대감을 형성하고,
-        음악 본연의 진정성을 지키며 새로운 가능성을 열어갑니다.
-      </p>
-      <p class="body-lg" data-reveal>
-        음악 제작부터 글로벌 유통에 이르기까지, PLAN-G는 아티스트의 창작 여정 전반을 함께하며
-        그들의 목소리가 전 세계로 뻗어나갈 수 있도록 든든한 파트너가 되겠습니다.
+        PLAN-G Entertainment는 진정성 있는 아티스트를 발굴하고 그 잠재력을 끝까지 밀어붙이는
+        뮤직 레이블입니다. 가호와 밴드 KAVE가 함께하고 있으며, 2026년 4월에는 로잔에서 런던까지
+        유럽 7개 도시를 도는 첫 투어를 마쳤습니다. 음악 제작부터 글로벌 유통까지 아티스트의
+        창작 여정 전반을 함께하며, 그들의 목소리가 더 멀리 닿도록 만듭니다.
       </p>
 
       <div class="credits" data-reveal style="margin-top:34px">
-        <p style="margin:0">Artist Management _ Gaho, KAVE</p>
+        <p style="margin:0">Artists _ Gaho, KAVE</p>
         <p style="margin:0">Business _ contact@plan-g.io</p>
-        <p style="margin:0">Video _ [ ] — Berlin, Columbia Theater, Europe Tour 2026</p>
+        <p style="margin:0">Video _ [ ] — Berlin, Columbia Theater</p>
       </div>
     </div>
   </section>
@@ -636,10 +635,10 @@ a { color: inherit; text-decoration: none; }
   <!-- ================= TICKER ================= -->
   <div class="ticker" aria-hidden="true">
     <div class="ticker__track micro">
-      <span>CITYSCAPES — NEW HORIZONS</span><span>✳</span><span>EUROPE TOUR 2026</span><span>✳</span>
-      <span>TICKETS ON SALE</span><span>✳</span><span>7 CITIES</span><span>✳</span>
-      <span>CITYSCAPES — NEW HORIZONS</span><span>✳</span><span>EUROPE TOUR 2026</span><span>✳</span>
-      <span>TICKETS ON SALE</span><span>✳</span><span>7 CITIES</span><span>✳</span>
+      <span>KAVE — FLOWER BURN</span><span>✳</span><span>NEW SINGLE</span><span>✳</span>
+      <span>OUT 13 AUG 2026</span><span>✳</span><span>PLAN-G ENTERTAINMENT</span><span>✳</span>
+      <span>KAVE — FLOWER BURN</span><span>✳</span><span>NEW SINGLE</span><span>✳</span>
+      <span>OUT 13 AUG 2026</span><span>✳</span><span>PLAN-G ENTERTAINMENT</span><span>✳</span>
     </div>
   </div>
 
@@ -651,38 +650,39 @@ a { color: inherit; text-decoration: none; }
     </div>
 
     <div class="now">
-      <div class="ph" data-label="투어 키비주얼 / 포스터 · 4:3" style="--ar:4/3" data-reveal></div>
-      <div data-reveal>
-        <p class="now__kicker micro"><span class="now__pulse" aria-hidden="true"></span> 진행 중 — 유럽 투어</p>
+      <figure class="teaser" data-reveal>
+        <div class="teaser__frame">
+          <video class="teaser__video" muted loop playsinline preload="none"
+                 poster="media/flowerburn-poster.jpg">
+            <source src="media/flowerburn.mp4" type="video/mp4">
+          </video>
+          <button class="teaser__toggle micro" type="button" aria-pressed="false">Play</button>
+        </div>
+        <figcaption class="micro">KAVE — &lt;FLOWER BURN&gt; Teaser</figcaption>
+      </figure>
 
-        <p class="micro" style="color:var(--grey);margin:0 0 8px">Gaho &amp; KAVE — Europe Tour 2026</p>
-        <h3 class="display now__title">Cityscapes<br>— New Horizons</h3>
+      <div data-reveal>
+        <p class="now__kicker micro"><span class="now__pulse" aria-hidden="true"></span> 신곡 발매 — 2026.08.13</p>
+
+        <p class="micro" style="color:var(--grey);margin:0 0 8px">KAVE — New Single</p>
+        <h3 class="display now__title">Flower Burn</h3>
 
         <p class="intro__lead lines" style="margin:0 0 18px">
-          <span><i>For the first time in Europe.</i></span>
+          <span><i>Out 13 August 2026.</i></span>
         </p>
 
         <p class="body-lg" style="margin:0 0 16px">
-          가호와 KAVE가 2026년 4월, 7개 도시를 도는 첫 유럽 투어에 나섭니다.
-          로잔에서 시작해 바르샤바 · 베를린 · 쾰른 · 파리 · 암스테르담을 거쳐 런던에서 막을 내립니다.
-        </p>
-        <p class="body-lg" style="margin:0 0 16px">
-          &lt;이태원 클라쓰&gt; OST로 이름을 알린 가호는 2024년 밴드 KAVE를 결성해
-          록과 EDM, 얼터너티브를 오가는 새로운 방향을 탐색해 왔습니다.
-          이번 투어의 이름 &lt;Cityscapes — New Horizons&gt;는 그 여정을 도시의 풍경에 겹쳐 놓은 것입니다.
+          KAVE의 신곡 &lt;FLOWER BURN&gt;이 2026년 8월 13일 발매됩니다.
+          지금 티저 영상을 먼저 만나보세요.
         </p>
         <p class="body-lg" style="margin:0">
-          티켓은 2026년 3월 12일부터 판매 중입니다.
+          2024년 결성 이후 록과 EDM, 얼터너티브를 오가며 자신들의 소리를 넓혀 온 KAVE가
+          내놓는 새로운 한 곡입니다.
         </p>
 
-        <div class="credits" style="margin-top:24px">
-          <p style="margin:0">Promoter _ Envol Productions</p>
-          <p style="margin:0">Label _ PLAN-G Entertainment</p>
-        </div>
-
         <div class="now__meta micro">
-          <span>7 Cities</span><span>05—18 APR 2026</span>
-          <a href="#stage" style="margin-left:auto">전체 일정 ↗</a>
+          <span>KAVE</span><span>Single</span><span>2026.08.13</span>
+          <a href="#" style="margin-left:auto">사전 저장 ↗</a>
         </div>
       </div>
     </div>
@@ -778,13 +778,6 @@ a { color: inherit; text-decoration: none; }
     <div class="sb__inner">
       <p class="sb__line" data-wave>GAHO &amp; KAVE</p>
       <p class="sb__line" data-wave>UNTOLD STORIES</p>
-
-      <dl class="sb__spec micro">
-        <div><dt>Font</dt><dd>Archivo Variable</dd></div>
-        <div><dt>Width</dt><dd>62.5 → 125</dd></div>
-        <div><dt>Weight</dt><dd>500 → 900</dd></div>
-        <div><dt>Tracking</dt><dd>−0.02em</dd></div>
-      </dl>
     </div>
   </section>
 
@@ -966,17 +959,52 @@ document.querySelectorAll('.lines > span').forEach((s) => {
 
 /* 스테이트먼트 밴드 — 글자를 span으로 쪼개 인덱스를 심는다.
    마크업은 통문장으로 두고 JS가 나누므로, JS가 죽어도 문장은 그대로 읽힌다. */
+const SCRAMBLE_POOL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-_';
+
 document.querySelectorAll('[data-wave]').forEach((el) => {
   const text = el.textContent;
+  el.dataset.final = text;
   el.textContent = '';
-  [...text].forEach((ch, i) => {
+  [...text].forEach((ch) => {
     const s = document.createElement('span');
-    s.style.setProperty('--i', i);
-    if (ch === ' ') { s.dataset.space = ''; s.textContent = ' '; }
+    if (ch.trim() === '') { s.dataset.space = ''; s.innerHTML = '&nbsp;'; }
     else s.textContent = ch;
     el.appendChild(s);
   });
 });
+
+/* 각 칸이 무작위 문자를 굴리다가 왼쪽부터 순서대로 제 글자로 확정된다 */
+function scrambleIn(el) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const final = [...(el.dataset.final || '')];
+  const spans = [...el.children];
+  const settleEvery = 3;
+  let step = 0;
+
+  spans.forEach((s, i) => { if (final[i] && final[i].trim() !== '') s.dataset.pending = ''; });
+
+  clearInterval(el.__timer);
+  el.__timer = setInterval(() => {
+    const settled = Math.floor(step / settleEvery);
+    spans.forEach((s, i) => {
+      if (!final[i] || final[i].trim() === '') return;
+      if (i < settled) {
+        s.textContent = final[i];
+        delete s.dataset.pending;
+      } else {
+        s.textContent = SCRAMBLE_POOL[Math.floor(Math.random() * SCRAMBLE_POOL.length)];
+      }
+    });
+    step++;
+    if (settled > spans.length) {
+      clearInterval(el.__timer);
+      spans.forEach((s, i) => {
+        if (final[i] && final[i].trim() !== '') s.textContent = final[i];
+        delete s.dataset.pending;
+      });
+    }
+  }, 55);
+}
 
 /* 글자가 최대 너비로 부풀면 줄이 길어져 화면 밖으로 넘친다.
    가장 넓은 상태를 기준으로 폰트 크기를 맞춰 어떤 폭에서도 잘리지 않게 한다. */
@@ -1012,7 +1040,13 @@ addEventListener('resize', () => {
 
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
-      if (e.isIntersecting) { e.target.dataset.shown = 'true'; io.unobserve(e.target); }
+      if (!e.isIntersecting) return;
+      e.target.dataset.shown = 'true';
+      // 스테이트먼트 밴드가 화면에 들어오면 그때 스크램블을 돌린다
+      if (e.target.classList.contains('sb')) {
+        e.target.querySelectorAll('[data-wave]').forEach((l, n) => setTimeout(() => scrambleIn(l), n * 260));
+      }
+      io.unobserve(e.target);
     });
   }, { rootMargin: '0px 0px -6% 0px', threshold: 0.04 });
 
@@ -1058,6 +1092,33 @@ addEventListener('resize', () => {
     v.preload = 'none';
     v.querySelectorAll('source').forEach((s) => s.remove());
     v.load();                       // poster만 남긴다
+  }
+})();
+
+/* 티저 재생 토글 — 화면 밖으로 나가면 자동으로 멈춘다 */
+(function teaser() {
+  const wrap = document.querySelector('.teaser');
+  if (!wrap) return;
+  const v = wrap.querySelector('video');
+  const btn = wrap.querySelector('.teaser__toggle');
+
+  const setLabel = () => {
+    const playing = !v.paused;
+    btn.textContent = playing ? 'Pause' : 'Play';
+    btn.setAttribute('aria-pressed', String(playing));
+  };
+
+  btn.addEventListener('click', () => {
+    if (v.paused) v.play().catch(() => {});
+    else v.pause();
+  });
+  v.addEventListener('play', setLabel);
+  v.addEventListener('pause', setLabel);
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((es) => {
+      es.forEach((e) => { if (!e.isIntersecting && !v.paused) v.pause(); });
+    }, { threshold: 0.25 }).observe(wrap);
   }
 })();
 

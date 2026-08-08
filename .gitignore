@@ -7,3 +7,5 @@ node_modules/
 media/*
 !media/hero.mp4
 !media/hero-poster.jpg
+!media/flowerburn.mp4
+!media/flowerburn-poster.jpg
