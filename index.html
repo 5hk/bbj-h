@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PLAN-G — Layout Type 2</title>
+<title>PLAN-G Entertainment — Gaho &amp; KAVE Europe Tour 2026</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -215,8 +215,10 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 820px) {
   :root { --stage-h: 58vh; --straddle: 50%; }
-  /* 좁은 화면에서는 워드마크가 폭을 다 쓴다 → URL을 옆에 두면 겹친다. 아래로 내린다. */
-  .hero__url { right: auto; left: var(--gut); transform: translateY(calc(50% + 20px)); }
+  /* 좁은 화면에서는 워드마크가 폭을 다 써서 옆에 둘 자리가 없다.
+     워드마크 아랫부분이 들어앉을 여백을 넉넉히 주고, URL은 그 아래 바닥에 붙인다. */
+  .hero { padding-bottom: clamp(100px, 17vw, 160px); }
+  .hero__url { right: auto; left: var(--gut); top: auto; bottom: 10px; transform: none; }
 }
 @supports (height: 100dvh) {
   @media (max-width: 820px) { :root { --stage-h: 58dvh; } }
@@ -371,6 +373,39 @@ a { color: inherit; text-decoration: none; }
 .foot__bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: clamp(30px, 5vw, 60px); color: var(--grey); }
 
 /* ==========================================================================
+   전면 이미지 밴드 (레퍼런스의 풀블리드 컷)
+   ========================================================================== */
+.bleed { padding: 0 var(--gut); }
+.bleed .ph { --ar: 21/9; }
+.bleed figcaption { max-width: var(--maxw); margin: 10px auto 0; color: var(--grey); }
+
+/* ==========================================================================
+   투어 일정 표 — 레퍼런스의 헤어라인 목록 톤
+   ========================================================================== */
+.dates { list-style: none; margin: 0; padding: 0; }
+.dates li {
+  display: grid;
+  grid-template-columns: minmax(76px, 110px) minmax(0, 1fr) minmax(0, 1.1fr) minmax(64px, auto);
+  gap: clamp(10px, 2vw, 36px);
+  align-items: baseline;
+  padding: clamp(14px, 2vw, 24px) 0;
+  border-top: 1px solid var(--hair);
+}
+.dates li:last-child { border-bottom: 1px solid var(--hair); }
+.dates .d-city { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.1rem, 2.4vw, 2.1rem); line-height: 1; }
+.dates .d-venue, .dates .d-day { color: var(--grey); }
+.dates .d-ticket { justify-self: end; border-bottom: 1px solid currentColor; }
+/* 히어로 영상이 촬영된 공연 */
+.dates li[data-featured] { background: rgba(0,0,0,.04); }
+.dates li[data-featured] .d-venue { color: var(--ink); }
+.dates .d-tag { display: inline-block; margin-left: 8px; font-size: .625rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; border: 1px solid currentColor; padding: 2px 6px; vertical-align: middle; }
+@media (max-width: 760px) {
+  .dates li { grid-template-columns: 1fr auto; row-gap: 4px; }
+  .dates .d-day { grid-column: 1 / -1; order: -1; }
+  .dates .d-venue { grid-column: 1 / -1; }
+}
+
+/* ==========================================================================
    Scroll reveal — 기본 노출, JS가 애니메이션을 덧입힌다
    ========================================================================== */
 [data-reveal] { opacity: 1; transform: none; }
@@ -440,8 +475,8 @@ a { color: inherit; text-decoration: none; }
       <div class="ph ph--dark" data-label="히어로 영상 · media/hero.mp4"></div>
 
       <div class="hero__meta micro">
-        <p style="margin:0">[ 기간 / 연도 ]<br>[ 보조 정보 ]</p>
-        <p class="right" style="margin:0">[ 도시 / 장소 ]<br>[ 보조 정보 ]</p>
+        <p style="margin:0">05 APR 26<br>18 APR 26</p>
+        <p class="right" style="margin:0">EUROPE / 7 CITIES<br>CITYSCAPES — NEW HORIZONS</p>
       </div>
     </div>
 
@@ -468,32 +503,44 @@ a { color: inherit; text-decoration: none; }
   <!-- ================= INTRO ================= -->
   <section class="intro">
     <div>
-      <p class="micro" style="margin:0">[ 섹션 라벨 ]</p>
+      <p class="micro" style="margin:0">(Europe Tour 2026)</p>
     </div>
     <div class="intro__body">
       <p class="intro__lead lines" data-reveal>
-        <span><i>브랜드 선언 첫 문장.</i></span>
-        <span><i>짧고 단정하게 한 줄 더.</i></span>
+        <span><i>For the first time in Europe.</i></span>
       </p>
-      <p class="body-lg" data-reveal>[ 본문 1문단. 회사가 무엇을 하는 곳인지, 왜 존재하는지. 3~5문장. ]</p>
-      <p class="body-lg" data-reveal>[ 본문 2문단. 아티스트와의 관계, 지향점. 3~5문장. ]</p>
+      <p class="body-lg" data-reveal>
+        가호와 KAVE가 2026년 4월, 7개 도시를 도는 첫 유럽 투어에 나섭니다.
+        로잔에서 시작해 바르샤바 · 베를린 · 쾰른 · 파리 · 암스테르담을 거쳐 런던에서 막을 내립니다.
+      </p>
+      <p class="body-lg" data-reveal>
+        &lt;이태원 클라쓰&gt; OST로 이름을 알린 가호는 2024년 밴드 KAVE를 결성해
+        록과 EDM, 얼터너티브를 오가는 새로운 방향을 탐색해 왔습니다.
+        이번 투어의 이름 &lt;Cityscapes — New Horizons&gt;는 그 여정을 도시의 풍경에 겹쳐 놓은 것입니다.
+      </p>
 
       <div class="credits" data-reveal style="margin-top:34px">
-        <p style="margin:0">Management _ [ ]</p>
-        <p style="margin:0">Production _ [ ]</p>
-        <p style="margin:0">Design _ [ ]</p>
+        <p style="margin:0">Label _ PLAN-G Entertainment</p>
+        <p style="margin:0">Promoter _ Envol Productions</p>
         <p style="margin:0">Photography _ [ ]</p>
+        <p style="margin:0">Video _ [ ] — Berlin, Columbia Theater</p>
       </div>
     </div>
   </section>
 
+  <!-- ================= 전면 컷 ================= -->
+  <figure class="bleed" style="margin:0" data-reveal>
+    <div class="ph" data-label="공연 전경 / 도시 컷 · 21:9 (레퍼런스의 풀블리드 자리)"></div>
+    <figcaption class="micro">Berlin · Columbia Theater · 09 APR 2026</figcaption>
+  </figure>
+
   <!-- ================= TICKER ================= -->
   <div class="ticker" aria-hidden="true">
     <div class="ticker__track micro">
-      <span>PLAN-G ENTERTAINMENT</span><span>✳</span><span>[ 현재 소식 한 줄 ]</span><span>✳</span>
-      <span>ARTIST MANAGEMENT</span><span>✳</span><span>IP STUDIO</span><span>✳</span>
-      <span>PLAN-G ENTERTAINMENT</span><span>✳</span><span>[ 현재 소식 한 줄 ]</span><span>✳</span>
-      <span>ARTIST MANAGEMENT</span><span>✳</span><span>IP STUDIO</span><span>✳</span>
+      <span>CITYSCAPES — NEW HORIZONS</span><span>✳</span><span>EUROPE TOUR 2026</span><span>✳</span>
+      <span>TICKETS ON SALE</span><span>✳</span><span>7 CITIES</span><span>✳</span>
+      <span>CITYSCAPES — NEW HORIZONS</span><span>✳</span><span>EUROPE TOUR 2026</span><span>✳</span>
+      <span>TICKETS ON SALE</span><span>✳</span><span>7 CITIES</span><span>✳</span>
     </div>
   </div>
 
@@ -505,14 +552,17 @@ a { color: inherit; text-decoration: none; }
     </div>
 
     <div class="now">
-      <div class="ph" data-label="현재 소식 대표 이미지 · 4:3" style="--ar:4/3" data-reveal></div>
+      <div class="ph" data-label="투어 키비주얼 / 포스터 · 4:3" style="--ar:4/3" data-reveal></div>
       <div data-reveal>
-        <p class="now__kicker micro"><span class="now__pulse" aria-hidden="true"></span> 지금 가장 중요한 한 가지</p>
-        <h3 class="display display--ko now__title">현재 소식 헤드라인</h3>
-        <p class="body-lg micro--plain" style="margin:0">[ 요약 2~3문장. 신보 발매 / 화보 공개 / 공연 확정 중 가장 최신 항목이 이 자리로 자동 승격된다. ]</p>
+        <p class="now__kicker micro"><span class="now__pulse" aria-hidden="true"></span> 진행 중 — 유럽 투어</p>
+        <h3 class="display now__title">Cityscapes<br>— New Horizons</h3>
+        <p class="body-lg micro--plain" style="margin:0">
+          가호와 KAVE의 첫 유럽 투어. 2026년 4월 5일 로잔에서 시작해 4월 18일 런던에서 마무리됩니다.
+          티켓은 2026년 3월 12일부터 판매 중입니다.
+        </p>
         <div class="now__meta micro">
-          <span>[ 유형 ]</span><span>[ 날짜 ]</span><span>[ 아티스트 ]</span>
-          <a href="#" style="margin-left:auto">자세히 ↗</a>
+          <span>Europe Tour</span><span>05—18 APR 2026</span><span>Gaho &amp; KAVE</span>
+          <a href="#stage" style="margin-left:auto">일정 보기 ↗</a>
         </div>
       </div>
     </div>
@@ -527,14 +577,17 @@ a { color: inherit; text-decoration: none; }
 
     <!-- 솔로 아티스트 — 대표컷 1 + 본인 2 = 3장 -->
     <article class="artist" data-reveal>
-      <h3 class="display artist__name">NAME</h3>
-      <p class="artist__ko">아티스트명 (한글) · 솔로</p>
+      <h3 class="display artist__name">GAHO</h3>
+      <p class="artist__ko">가호 · 솔로</p>
       <div class="artist__row">
         <dl class="artist__facts" style="margin:0">
-          <dt>Role</dt><dd>[ 역할 ]</dd>
-          <dt>Debut</dt><dd>[ 데뷔 ]</dd>
+          <dt>Role</dt><dd>Singer-Songwriter</dd>
+          <dt>Known for</dt><dd>&lt;시작&gt; — 이태원 클라쓰 OST Part 2</dd>
+          <dt>Also</dt><dd>KAVE 멤버 (2024~)</dd>
           <dd class="artist__links micro">
-            <a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Spotify</a><a href="#">Apple</a>
+            <a href="https://www.instagram.com/ad_gaho" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.youtube.com/gaho_official" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a href="https://open.spotify.com/artist/3ybZTNrlK0QhL4rBxfLHOc" target="_blank" rel="noopener noreferrer">Spotify</a>
           </dd>
         </dl>
 
@@ -553,13 +606,13 @@ a { color: inherit; text-decoration: none; }
 
     <!-- 밴드 5인조 — 단체컷 1 + 멤버 5 = 6장. 멤버마다 이름 캡션 필수. -->
     <article class="artist" data-reveal>
-      <h3 class="display artist__name">NAME</h3>
-      <p class="artist__ko">아티스트명 (한글) · 5인조</p>
+      <h3 class="display artist__name">KAVE</h3>
+      <p class="artist__ko">케이브 · 5인조</p>
       <div class="artist__row">
         <dl class="artist__facts" style="margin:0">
-          <dt>Role</dt><dd>[ 역할 ]</dd>
-          <dt>Debut</dt><dd>[ 데뷔 ]</dd>
-          <dt>Members</dt><dd>[ 멤버1 · 멤버2 · 멤버3 · 멤버4 · 멤버5 ]</dd>
+          <dt>Role</dt><dd>Band — Rock · EDM · Alternative</dd>
+          <dt>Formed</dt><dd>2024</dd>
+          <dt>Members</dt><dd>가호 · 지상 · 현 · 오너 · 준</dd>
           <dd class="artist__links micro">
             <a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Spotify</a>
           </dd>
@@ -571,11 +624,11 @@ a { color: inherit; text-decoration: none; }
             <figcaption class="micro">[ 촬영 · 크레딧 ]</figcaption>
           </figure>
           <ul class="artist__people">
-            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">[ 멤버1 ]</figcaption></figure></li>
-            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">[ 멤버2 ]</figcaption></figure></li>
-            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">[ 멤버3 ]</figcaption></figure></li>
-            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">[ 멤버4 ]</figcaption></figure></li>
-            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">[ 멤버5 ]</figcaption></figure></li>
+            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">가호</figcaption></figure></li>
+            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">지상</figcaption></figure></li>
+            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">현</figcaption></figure></li>
+            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">오너</figcaption></figure></li>
+            <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">준</figcaption></figure></li>
           </ul>
         </div>
       </div>
@@ -616,20 +669,59 @@ a { color: inherit; text-decoration: none; }
     <div class="sec__inner">
       <div class="sec__head">
         <h2 class="display sec__title" data-reveal>Stage</h2>
-        <p class="sec__no">04</p>
+        <p class="sec__no">04 — Europe Tour 2026</p>
       </div>
 
       <!-- 위치 권한은 이 버튼을 눌렀을 때만 요청한다. 진입 즉시 팝업 금지. -->
       <div class="geo" data-reveal>
         <span class="micro">위치기반 · 선택</span>
-        <p class="micro--plain" style="margin:0;flex:1;min-width:200px">내 주변 공연을 가까운 순으로 정렬합니다. 위치 정보는 브라우저를 벗어나지 않습니다.</p>
-        <button type="button">내 주변 공연 보기</button>
+        <p class="micro--plain" style="margin:0;flex:1;min-width:200px">내 위치에서 가까운 공연부터 정렬합니다. 위치 정보는 브라우저를 벗어나지 않습니다.</p>
+        <button type="button">가까운 공연부터 보기</button>
       </div>
 
       <ul class="stage" data-reveal>
-        <li><span class="stage__date micro">YYYY.MM.DD</span><h3>공연 · 행사명</h3><p class="stage__place micro">[ 도시 · 장소 ]</p><span class="micro">↗</span></li>
-        <li><span class="stage__date micro">YYYY.MM.DD</span><h3>공연 · 행사명</h3><p class="stage__place micro">[ 도시 · 장소 ]</p><span class="micro">↗</span></li>
-        <li><span class="stage__date micro">YYYY.MM.DD</span><h3>공연 · 행사명</h3><p class="stage__place micro">[ 도시 · 장소 ]</p><span class="micro">↗</span></li>
+        <li>
+          <span class="stage__date micro">05—06 APR</span>
+          <h3>Lausanne</h3>
+          <p class="stage__place micro">Polymanga · Switzerland</p>
+          <span class="micro">↗</span>
+        </li>
+        <li>
+          <span class="stage__date micro">08 APR</span>
+          <h3>Warsaw</h3>
+          <p class="stage__place micro">Hybrydy · Poland</p>
+          <span class="micro">↗</span>
+        </li>
+        <li>
+          <span class="stage__date micro">09 APR</span>
+          <h3>Berlin</h3>
+          <p class="stage__place micro">Columbia Theater · Germany</p>
+          <span class="micro">↗</span>
+        </li>
+        <li>
+          <span class="stage__date micro">11 APR</span>
+          <h3>Cologne</h3>
+          <p class="stage__place micro">CBE · Germany</p>
+          <span class="micro">↗</span>
+        </li>
+        <li>
+          <span class="stage__date micro">15 APR</span>
+          <h3>Paris</h3>
+          <p class="stage__place micro">Café de la Danse · France</p>
+          <span class="micro">↗</span>
+        </li>
+        <li>
+          <span class="stage__date micro">16 APR</span>
+          <h3>Amsterdam</h3>
+          <p class="stage__place micro">P60 · Netherlands</p>
+          <span class="micro">↗</span>
+        </li>
+        <li>
+          <span class="stage__date micro">18 APR</span>
+          <h3>London</h3>
+          <p class="stage__place micro">The Underworld · United Kingdom</p>
+          <span class="micro">↗</span>
+        </li>
       </ul>
     </div>
   </section>
@@ -647,7 +739,7 @@ a { color: inherit; text-decoration: none; }
         <figcaption class="micro">[ 매체 · 호수 · 날짜 ]</figcaption>
       </figure>
 
-      <p class="s-label vert micro" style="margin:0">[ 캠페인명 / 촬영지 ]</p>
+      <p class="s-label vert micro" style="margin:0">CITYSCAPES — NEW HORIZONS / EUROPE 2026</p>
 
       <figure class="s-b" style="margin:0">
         <div class="ph" data-label="화보 가로 4:3" style="--ar:4/3"></div>
