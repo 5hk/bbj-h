@@ -1,3 +1,9 @@
 .DS_Store
 node_modules/
-media/
+
+# 영상 원본은 git에 넣지 않는다.
+# 단, 배포에 필요한 웹 최적화본(hero.mp4 / hero-poster.jpg)은 예외로 커밋한다.
+# ⚠️ hero.mp4 는 반드시 4MB 이하로 압축한 뒤 커밋할 것 (README의 ffmpeg 절차 참고)
+media/*
+!media/hero.mp4
+!media/hero-poster.jpg
