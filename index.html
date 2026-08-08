@@ -505,6 +505,16 @@ a { color: inherit; text-decoration: none; }
 .disc:hover .disc__info, .disc:focus-within .disc__info { transform: translateY(0); }
 .disc__title { display: block; font-family: var(--font-display); text-transform: uppercase; font-size: clamp(.85rem, 1.1vw, 1.05rem); line-height: 1.05; }
 .disc__meta { display: block; margin-top: 3px; color: rgba(255,255,255,.62); }
+/* 수록처 — 싱글이면 실린 OST·앨범명, 앨범이면 수록곡 목록.
+   이 줄이 없으면 '2020 · Single' 만 남아 카탈로그가 비어 보인다.
+   두 줄에서 자른다 — 커버 위 오버레이라 높이가 자라면 그림을 덮는다. */
+.disc__from {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin-top: 4px;
+  color: rgba(255,255,255,.48);
+  text-transform: none; letter-spacing: .02em; line-height: 1.35;
+}
 
 /* 필터로 걸러진 항목 */
 .disc[hidden] { display: none; }
@@ -513,6 +523,7 @@ a { color: inherit; text-decoration: none; }
 @media (hover: none) {
   .disc__info { position: static; transform: none; background: none; color: var(--ink); padding: 9px 0 0; }
   .disc__meta { color: var(--grey); }
+  .disc__from { color: var(--grey); opacity: .8; }
   .disc { background: none; overflow: visible; }
 }
 
@@ -1037,71 +1048,71 @@ a { color: inherit; text-decoration: none; }
     <ul class="discs" data-reveal>
       <li class="disc" data-type="single" data-year="2026">
         <span class="disc__art"><img src="images/releases/to-mars.jpg" alt="To Mars" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">To Mars</span><span class="disc__meta micro">2026 · Single</span></span>
+        <span class="disc__info"><span class="disc__title">To Mars</span><span class="disc__meta micro">2026.04.08 · Single</span></span>
       </li>
-      <li class="disc" data-type="single" data-year="2025">
+      <li class="disc" data-type="ost" data-year="2025">
         <span class="disc__art"><img src="images/releases/go-on.jpg" alt="Go On" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Go On</span><span class="disc__meta micro">2025 · Single</span></span>
+        <span class="disc__info"><span class="disc__title">Go On</span><span class="disc__meta micro">2025.05.25 · OST</span><span class="disc__from micro">불꽃야구 OST Part.2</span></span>
       </li>
       <li class="disc" data-type="single" data-year="2023">
         <span class="disc__art"><img src="images/releases/yellow-light.jpg" alt="Yellow Light" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Yellow Light</span><span class="disc__meta micro">2023 · OST</span></span>
+        <span class="disc__info"><span class="disc__title">Yellow Light</span><span class="disc__meta micro">2023.06.18 · Single</span></span>
       </li>
       <li class="disc" data-type="album" data-year="2023">
-        <span class="disc__art"><img src="images/releases/diamond.jpg" alt="Only You" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Only You</span><span class="disc__meta micro">2023 · Album</span></span>
+        <span class="disc__art"><img src="images/releases/diamond.jpg" alt="Diamond" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Diamond</span><span class="disc__meta micro">2023.03.20 · Album · 3곡</span><span class="disc__from micro">Only You · Beautiful Night · Lonely</span></span>
       </li>
-      <li class="disc" data-type="single" data-year="2022">
+      <li class="disc" data-type="ost" data-year="2022">
         <span class="disc__art"><img src="images/releases/where-to-in-the-fog.jpg" alt="안개 속 어디로" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">안개 속 어디로</span><span class="disc__meta micro">2022 · Single</span></span>
+        <span class="disc__info"><span class="disc__title">안개 속 어디로</span><span class="disc__meta micro">2022.07.23 · OST</span><span class="disc__from micro">왜 오수재인가 OST</span></span>
       </li>
       <li class="disc" data-type="album" data-year="2021">
-        <span class="disc__art"><img src="images/releases/fireworks.jpg" alt="Right Now" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Right Now</span><span class="disc__meta micro">2021 · Album</span></span>
+        <span class="disc__art"><img src="images/releases/fireworks.jpg" alt="Fireworks" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Fireworks</span><span class="disc__meta micro">2021.11.23 · Album · 4곡</span><span class="disc__from micro">Right Now · RIDE · Lost my way · 마음대로</span></span>
       </li>
       <li class="disc" data-type="single" data-year="2021">
         <span class="disc__art"><img src="images/releases/cyworld-bgm-2021.jpg" alt="Officially Missing You" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Officially Missing You</span><span class="disc__meta micro">2021 · Single</span></span>
+        <span class="disc__info"><span class="disc__title">Officially Missing You</span><span class="disc__meta micro">2021.07.15 · Single</span><span class="disc__from micro">싸이월드 BGM 2021</span></span>
       </li>
       <li class="disc" data-type="ost" data-year="2021">
         <span class="disc__art"><img src="images/releases/time-ost.jpg" alt="시간" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">시간</span><span class="disc__meta micro">2021 · OST</span></span>
+        <span class="disc__info"><span class="disc__title">시간</span><span class="disc__meta micro">2021.06.23 · OST</span><span class="disc__from micro">시간 OST</span></span>
       </li>
       <li class="disc" data-type="single" data-year="2021">
         <span class="disc__art"><img src="images/releases/rush-hour.jpg" alt="Rush Hour" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Rush Hour</span><span class="disc__meta micro">2021 · Single</span></span>
+        <span class="disc__info"><span class="disc__title">Rush Hour</span><span class="disc__meta micro">2021.05.24 · Single</span></span>
       </li>
-      <li class="disc" data-type="single" data-year="2021">
+      <li class="disc" data-type="ost" data-year="2021">
         <span class="disc__art"><img src="images/releases/not-the-end.jpg" alt="끝이 아니길" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">끝이 아니길</span><span class="disc__meta micro">2021 · Single</span></span>
+        <span class="disc__info"><span class="disc__title">끝이 아니길</span><span class="disc__meta micro">2021.02.09 · OST</span><span class="disc__from micro">황후의 품격 OST</span></span>
       </li>
-      <li class="disc" data-type="single" data-year="2020">
+      <li class="disc" data-type="ost" data-year="2020">
         <span class="disc__art"><img src="images/releases/running.jpg" alt="Running" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Running</span><span class="disc__meta micro">2020 · OST</span></span>
+        <span class="disc__info"><span class="disc__title">Running</span><span class="disc__meta micro">2020.10.30 · OST</span><span class="disc__from micro">스타트업 OST Part 5</span></span>
       </li>
       <li class="disc" data-type="single" data-year="2020">
         <span class="disc__art"><img src="images/releases/dont-know-you.jpg" alt="남자를 몰라" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">남자를 몰라</span><span class="disc__meta micro">2020 · Single</span></span>
+        <span class="disc__info"><span class="disc__title">남자를 몰라</span><span class="disc__meta micro">2020.10.27 · Single</span><span class="disc__from micro">남자를 몰라 (삼성전자 뉴레트로 시리즈)</span></span>
       </li>
-      <li class="disc" data-type="single" data-year="2020">
+      <li class="disc" data-type="ost" data-year="2020">
         <span class="disc__art"><img src="images/releases/stranger-2.jpg" alt="바람" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">바람</span><span class="disc__meta micro">2020 · Single</span></span>
+        <span class="disc__info"><span class="disc__title">바람</span><span class="disc__meta micro">2020.10.03 · OST</span><span class="disc__from micro">비밀의 숲 2 OST</span></span>
       </li>
       <li class="disc" data-type="ost" data-year="2020">
         <span class="disc__art"><img src="images/releases/start.jpg" alt="시작" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">시작</span><span class="disc__meta micro">2020 · OST</span></span>
+        <span class="disc__info"><span class="disc__title">시작</span><span class="disc__meta micro">2020.02.01 · OST</span><span class="disc__from micro">이태원 클라쓰 OST Part 2</span></span>
       </li>
-      <li class="disc" data-type="single" data-year="2020">
+      <li class="disc" data-type="ost" data-year="2020">
         <span class="disc__art"><img src="images/releases/my-heart-is-beating.jpg" alt="그렇게 가슴은 뛴다" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">그렇게 가슴은 뛴다</span><span class="disc__meta micro">2020 · Single</span></span>
+        <span class="disc__info"><span class="disc__title">그렇게 가슴은 뛴다</span><span class="disc__meta micro">2020.01.22 · OST</span><span class="disc__from micro">내 뒤에 테리우스 OST</span></span>
       </li>
       <li class="disc" data-type="album" data-year="2018">
-        <span class="disc__art"><img src="images/releases/preparation-for-a-journey.jpg" alt="떠날 준비" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">떠날 준비</span><span class="disc__meta micro">2018 · Album</span></span>
+        <span class="disc__art"><img src="images/releases/preparation-for-a-journey.jpg" alt="Preparation For a Journey" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">Preparation For a Journey</span><span class="disc__meta micro">2018.12.11 · Album · 3곡</span><span class="disc__from micro">떠날 준비 · Going on · Heaven</span></span>
       </li>
       <li class="disc" data-type="single" data-year="2018">
-        <span class="disc__art"><img src="images/releases/stay-here.jpg" alt="있어줘" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">있어줘</span><span class="disc__meta micro">2018 · Single</span></span>
+        <span class="disc__art"><img src="images/releases/stay-here.jpg" alt="있어줘 Stay Here" width="600" height="600" loading="lazy"></span>
+        <span class="disc__info"><span class="disc__title">있어줘 Stay Here</span><span class="disc__meta micro">2018.05.03 · Single</span></span>
       </li>
     </ul>
   </section>
