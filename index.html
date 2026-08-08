@@ -325,14 +325,23 @@ a { color: inherit; text-decoration: none; }
 .released__by { display: block; color: var(--grey); margin-bottom: 8px; }
 /* 본문 칸 폭을 그대로 쓴다 — 따로 좁히면 위의 제목·아티스트 줄과 오른쪽 끝이 어긋난다 */
 .released__desc { display: block; }
-.released__go { justify-self: end; white-space: nowrap; padding-top: 4px; }
-.released__link:hover .released__go { text-decoration: underline; text-underline-offset: 4px; }
+/* 원형 화살표 버튼 — 레퍼런스의 그 마크. 행 전체가 링크라 화살표는 장식이다. */
+.arrow-btn {
+  display: grid; place-items: center;
+  width: clamp(38px, 3.4vw, 54px); aspect-ratio: 1;
+  border: 1px solid currentColor; border-radius: 50%;
+  font-size: clamp(.9rem, 1.4vw, 1.1rem); line-height: 1;
+  transition: transform .45s var(--ease), background .3s var(--ease), color .3s var(--ease);
+}
+.released__go { justify-self: end; align-self: center; }
+.released__link:hover .arrow-btn { transform: rotate(45deg); background: var(--ink); color: var(--paper); }
+
 
 @media (max-width: 760px) {
   .released__link { grid-template-columns: clamp(64px, 18vw, 92px) minmax(0, 1fr); row-gap: 10px; }
   .released__date { grid-column: 2; grid-row: 1; padding-top: 0; }
   .released__body { grid-column: 2; grid-row: 2; }
-  .released__go { grid-column: 2; grid-row: 3; justify-self: start; padding-top: 0; }
+  .released__go { grid-column: 2; grid-row: 3; justify-self: start; }
 }
 
 .now__title { font-size: clamp(1.8rem, 4.6vw, 3.75rem); margin: 0 0 16px; }
@@ -858,7 +867,8 @@ a { color: inherit; text-decoration: none; }
       <ul class="released__list">
         <li class="released__item">
           <a class="released__link" href="https://www.youtube.com/watch?v=62BGFV9A2Ig"
-             target="_blank" rel="noopener noreferrer">
+             target="_blank" rel="noopener noreferrer"
+             aria-label="가호 To Mars 뮤직비디오 보기 (YouTube)">
             <span class="released__art">
               <img src="images/releases/to-mars.jpg" alt="가호 &lt;To Mars&gt; 앨범 커버"
                    width="900" height="900" loading="lazy">
@@ -869,7 +879,7 @@ a { color: inherit; text-decoration: none; }
               <span class="released__by micro">가호 (Gaho) · Single</span>
               <span class="released__desc">사랑의 크기를 우주의 거리로 넓힌 팝 트랙. PLAN-G와 함께한 첫 발매작입니다.</span>
             </span>
-            <span class="released__go micro">뮤직비디오 ↗</span>
+            <span class="released__go arrow-btn" aria-hidden="true">↗</span>
           </a>
         </li>
       </ul>
