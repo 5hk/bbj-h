@@ -163,7 +163,7 @@ a { color: inherit; text-decoration: none; }
    00 HERO — full-bleed video + wordmark straddling its lower edge
    ========================================================================== */
 /* padding-bottom 은 워드마크 아랫부분이 들어앉을 공간이다. 줄이면 글자가 잘린다. */
-.hero { position: relative; padding-bottom: clamp(60px, 9vw, 150px); }
+.hero { position: relative; padding-bottom: clamp(120px, 15vw, 250px); }
 
 .hero__stage { position: relative; height: var(--stage-h); min-height: 420px; background: var(--stage); overflow: hidden; }
 /* 영상은 플레이스홀더 위에 겹쳐 둔다 — 파일이 없으면 아래 .ph가 그대로 보인다 */
@@ -225,7 +225,7 @@ a { color: inherit; text-decoration: none; }
   :root { --stage-h: 58vh; --straddle: 50%; }
   /* 좁은 화면에서는 워드마크가 폭을 다 써서 옆에 둘 자리가 없다.
      워드마크 아랫부분이 들어앉을 여백을 넉넉히 주고, URL은 그 아래 바닥에 붙인다. */
-  .hero { padding-bottom: clamp(100px, 17vw, 160px); }
+  .hero { padding-bottom: clamp(140px, 24vw, 240px); }
   /* 좁은 화면에선 워드마크가 폭을 다 써서 우측에 자리가 없다 — 좌측 하단으로 */
   .hero__url { right: auto; left: var(--gut); bottom: 10px; }
 }
@@ -236,7 +236,7 @@ a { color: inherit; text-decoration: none; }
 /* ==========================================================================
    Intro copy — 우측 정렬 좁은 단, 그 아래 크레딧
    ========================================================================== */
-.intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(20px, 4vw, 70px); padding: clamp(50px, 8vw, 130px) var(--gut) clamp(30px, 5vw, 70px); max-width: var(--maxw); margin-inline: auto; }
+.intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(20px, 4vw, 70px); padding: clamp(80px, 11vw, 170px) var(--gut) clamp(30px, 5vw, 70px); max-width: var(--maxw); margin-inline: auto; }
 .intro__lead { margin: 0 0 22px; font-size: clamp(1.05rem, 1.5vw, 1.3rem); }
 .intro__body p { margin: 0 0 18px; }
 @media (max-width: 760px) { .intro { grid-template-columns: 1fr; } }
@@ -511,24 +511,24 @@ a { color: inherit; text-decoration: none; }
 }
 .sb__line + .sb__line { margin-top: clamp(2px, .6vw, 10px); }
 
+/* 글자는 가운데를 축으로 납작하게 눌린 '가로 선' 상태에서 시작해
+   위아래로 열리며 제 모양이 된다. 레퍼런스의 그 얇은 획이 이 상태다. */
 .sb__line span {
   display: inline-block;
   font-variation-settings: 'wdth' 100, 'wght' 800;
-  /* 글자 폭이 흔들려도 줄이 출렁이지 않게 각 칸의 최소 폭을 확보한다 */
-  min-width: .52em;
-  text-align: center;
+  transform: scaleY(.04);
+  transform-origin: center;
+  transition: transform .85s cubic-bezier(.16, 1, .3, 1);
+  transition-delay: calc(var(--i) * .045s);
 }
-/* 아직 확정되지 않은 글자 — 흐릿하고 얇게 */
-.sb__line span[data-pending] {
-  font-variation-settings: 'wdth' 62.5, 'wght' 400;
-  opacity: .38;
-}
-.sb__line span[data-space] { min-width: .3em; }
+.sb[data-shown="true"] .sb__line span { transform: scaleY(1); }
+.sb__line span[data-space] { transform: none !important; }
 
-/* 측정용 — 확정 상태 기준으로 줄 길이를 잰다 */
-.sb__line.is-measuring span {
-  font-variation-settings: 'wdth' 100, 'wght' 800 !important;
-  opacity: 1 !important;
+/* 측정용 — 다 열린 상태 기준으로 줄 길이를 잰다 */
+.sb__line.is-measuring span { transform: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sb__line span { transform: none !important; }
 }
 
 /* ==========================================================================
@@ -554,7 +554,7 @@ a { color: inherit; text-decoration: none; }
   <a class="micro" href="#top">PLAN-G</a>
   <ul class="nav__links micro">
     <li><a href="#now">Now</a></li>
-    <li><a href="#roster">Roster</a></li>
+    <li><a href="#roster">Artists</a></li>
     <li><a href="#catalog">Catalog</a></li>
     <li><a href="#stage">Stage</a></li>
     <li><a href="#press">Press</a></li>
@@ -571,7 +571,7 @@ a { color: inherit; text-decoration: none; }
 <div class="menu" id="menu" data-open="false">
   <ul>
     <li><a href="#now"><span class="idx">01</span>Now</a></li>
-    <li><a href="#roster"><span class="idx">02</span>Roster</a></li>
+    <li><a href="#roster"><span class="idx">02</span>Artists</a></li>
     <li><a href="#catalog"><span class="idx">03</span>Catalog</a></li>
     <li><a href="#stage"><span class="idx">04</span>Stage</a></li>
     <li><a href="#press"><span class="idx">05</span>Press</a></li>
@@ -700,7 +700,7 @@ a { color: inherit; text-decoration: none; }
 
         <div class="now__meta micro">
           <span>KAVE</span><span>Single</span><span>2026.08.12</span>
-          <a href="#" style="margin-left:auto">사전 저장 ↗</a>
+          <a href="https://www.youtube.com/@KAVE_Official" target="_blank" rel="noopener noreferrer" style="margin-left:auto">사전 저장 ↗</a>
         </div>
       </div>
     </div>
@@ -731,7 +731,7 @@ a { color: inherit; text-decoration: none; }
   <!-- ================= 02 ROSTER ================= -->
   <section class="sec" id="roster">
     <div class="sec__head">
-      <h2 class="display sec__title" data-reveal>Roster</h2>
+      <h2 class="display sec__title" data-reveal>Artists</h2>
       <p class="sec__no">02</p>
     </div>
 
@@ -816,7 +816,8 @@ a { color: inherit; text-decoration: none; }
        레퍼런스가 큰 워드마크를 쓰던 자리와 같은 역할이다. -->
   <section class="sb" id="statement" aria-label="Gaho &amp; KAVE — Untold Stories">
     <div class="sb__inner">
-      <p class="sb__line" data-wave>GAHO &amp; KAVE</p>
+      <p class="sb__line" data-wave>GAHO</p>
+      <p class="sb__line" data-wave>&amp; KAVE</p>
       <p class="sb__line" data-wave>UNTOLD STORIES</p>
     </div>
   </section>
@@ -997,57 +998,24 @@ document.querySelectorAll('.lines > span').forEach((s) => {
   if (!s.querySelector('i')) s.innerHTML = '<i>' + s.innerHTML + '</i>';
 });
 
-/* 스테이트먼트 밴드 — 글자를 span으로 쪼개 인덱스를 심는다.
-   마크업은 통문장으로 두고 JS가 나누므로, JS가 죽어도 문장은 그대로 읽힌다. */
-const SCRAMBLE_POOL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-_';
-
-document.querySelectorAll('[data-wave]').forEach((el) => {
+/* 스테이트먼트 밴드 — 글자를 span으로 쪼개고 순번(--i)을 심는다.
+   CSS가 그 순번만큼 지연시켜 가로 선에서 위아래로 열어준다.
+   마크업은 통문장이라 JS가 죽어도 문장은 그대로 읽힌다. */
+document.querySelectorAll('[data-wave]').forEach((el, lineIdx) => {
   const text = el.textContent;
-  el.dataset.final = text;
   el.textContent = '';
-  [...text].forEach((ch) => {
+  [...text].forEach((ch, i) => {
     const s = document.createElement('span');
+    // 줄마다 조금씩 늦게 시작해 위에서 아래로 열리는 흐름을 만든다
+    s.style.setProperty('--i', i + lineIdx * 5);
     if (ch.trim() === '') { s.dataset.space = ''; s.innerHTML = '&nbsp;'; }
     else s.textContent = ch;
     el.appendChild(s);
   });
 });
 
-/* 각 칸이 무작위 문자를 굴리다가 왼쪽부터 순서대로 제 글자로 확정된다 */
-function scrambleIn(el) {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const final = [...(el.dataset.final || '')];
-  const spans = [...el.children];
-  const settleEvery = 3;
-  let step = 0;
-
-  spans.forEach((s, i) => { if (final[i] && final[i].trim() !== '') s.dataset.pending = ''; });
-
-  clearInterval(el.__timer);
-  el.__timer = setInterval(() => {
-    const settled = Math.floor(step / settleEvery);
-    spans.forEach((s, i) => {
-      if (!final[i] || final[i].trim() === '') return;
-      if (i < settled) {
-        s.textContent = final[i];
-        delete s.dataset.pending;
-      } else {
-        s.textContent = SCRAMBLE_POOL[Math.floor(Math.random() * SCRAMBLE_POOL.length)];
-      }
-    });
-    step++;
-    if (settled > spans.length) {
-      clearInterval(el.__timer);
-      spans.forEach((s, i) => {
-        if (final[i] && final[i].trim() !== '') s.textContent = final[i];
-        delete s.dataset.pending;
-      });
-    }
-  }, 55);
-}
-
-/* 글자가 최대 너비로 부풀면 줄이 길어져 화면 밖으로 넘친다.
-   가장 넓은 상태를 기준으로 폰트 크기를 맞춰 어떤 폭에서도 잘리지 않게 한다. */
+/* 글자가 다 열리면 줄이 가장 길어진다.
+   그 상태를 기준으로 폰트 크기를 맞춰 어떤 화면 폭에서도 잘리지 않게 한다. */
 function fitWaveLines() {
   document.querySelectorAll('[data-wave]').forEach((el) => {
     el.style.fontSize = '';
@@ -1082,10 +1050,6 @@ addEventListener('resize', () => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
       e.target.dataset.shown = 'true';
-      // 스테이트먼트 밴드가 화면에 들어오면 그때 스크램블을 돌린다
-      if (e.target.classList.contains('sb')) {
-        e.target.querySelectorAll('[data-wave]').forEach((l, n) => setTimeout(() => scrambleIn(l), n * 260));
-      }
       io.unobserve(e.target);
     });
   }, { rootMargin: '0px 0px -6% 0px', threshold: 0.04 });
