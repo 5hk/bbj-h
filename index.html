@@ -185,7 +185,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* 모서리 메타 — 좌상단 기간, 우상단 장소 */
-.hero__meta { position: absolute; top: clamp(54px, 8vh, 92px); left: var(--gut); right: var(--gut); display: flex; justify-content: space-between; gap: 20px; color: #fff; z-index: 3; pointer-events: none; }
+.hero__meta { position: absolute; top: clamp(54px, 8vh, 92px); left: var(--gut); right: var(--gut); display: flex; justify-content: flex-end; gap: 20px; color: #fff; z-index: 3; pointer-events: none; }
 .hero__meta .right { text-align: right; }
 
 /* 워드마크 — 같은 글자를 두 벌 겹쳐 두고, '영상 영역'과 '지면 영역'을
@@ -269,14 +269,16 @@ a { color: inherit; text-decoration: none; }
 .teaser { margin: 0; }
 .teaser__frame { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--stage); }
 .teaser__video { width: 100%; height: 100%; object-fit: cover; }
-.teaser__toggle {
-  position: absolute; left: 14px; bottom: 14px;
+.teaser__toggle, .teaser__mute {
+  position: absolute; bottom: 14px;
   background: rgba(0,0,0,.55); color: var(--paper);
   border: 1px solid rgba(255,255,255,.5); padding: 9px 18px;
   cursor: pointer; backdrop-filter: blur(6px);
   transition: background .25s var(--ease), color .25s var(--ease);
 }
-.teaser__toggle:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.teaser__toggle { left: 14px; }
+.teaser__mute { right: 14px; }
+.teaser__toggle:hover, .teaser__mute:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
 .teaser figcaption { margin-top: 8px; color: var(--grey); }
 
 /* 본문이 길어졌으므로 상단 정렬 — 가운데 정렬이면 이미지와 텍스트가 어긋나 보인다 */
@@ -605,10 +607,9 @@ a { color: inherit; text-decoration: none; }
       <!-- 영상이 없을 때만 보이는 자리 표시 (영상이 로드되면 그 위를 덮는다) -->
       <div class="ph ph--dark" data-label="히어로 영상 · media/hero.mp4"></div>
 
-      <!-- 좌측은 기간, 우측은 범위와 투어명 -->
+      <!-- 우측 한 곳에만: 시기 · 범위 · 투어명 -->
       <div class="hero__meta micro">
-        <p style="margin:0">05 APR 26<br>18 APR 26</p>
-        <p class="right" style="margin:0">EUROPE / 7 CITIES<br>CITYSCAPES — NEW HORIZONS</p>
+        <p class="right" style="margin:0">2026 APR / EUROPE / 7 CITIES<br>CITYSCAPES — NEW HORIZONS</p>
       </div>
     </div>
 
@@ -683,13 +684,16 @@ a { color: inherit; text-decoration: none; }
     <div class="now">
       <figure class="teaser" data-reveal>
         <div class="teaser__frame">
-          <video class="teaser__video" muted loop playsinline preload="none"
+          <!-- 음악 티저이므로 muted 를 걸지 않는다. 사용자가 눌러서 재생하는 방식이라
+               브라우저 자동재생 정책에 걸리지 않고 소리가 그대로 난다. -->
+          <video class="teaser__video" loop playsinline preload="none"
                  poster="media/flowerburn-poster.jpg">
             <source src="media/flowerburn.mp4" type="video/mp4">
           </video>
-          <button class="teaser__toggle micro" type="button" aria-pressed="false">Play</button>
+          <button class="teaser__toggle micro" type="button" aria-pressed="false">▶ Play with sound</button>
+          <button class="teaser__mute micro" type="button" aria-pressed="false" hidden>Mute</button>
         </div>
-        <figcaption class="micro">KAVE — &lt;FLOWER BURN&gt; Teaser</figcaption>
+        <figcaption class="micro">KAVE — &lt;FLOWER BURN&gt; Teaser · 소리 포함</figcaption>
       </figure>
 
       <div data-reveal>
@@ -1148,25 +1152,36 @@ addEventListener('resize', () => {
   }
 })();
 
-/* 티저 재생 토글 — 화면 밖으로 나가면 자동으로 멈춘다 */
+/* 티저 재생 — 소리 포함. 화면 밖으로 나가면 자동으로 멈춘다. */
 (function teaser() {
   const wrap = document.querySelector('.teaser');
   if (!wrap) return;
   const v = wrap.querySelector('video');
-  const btn = wrap.querySelector('.teaser__toggle');
+  const play = wrap.querySelector('.teaser__toggle');
+  const mute = wrap.querySelector('.teaser__mute');
 
-  const setLabel = () => {
+  const sync = () => {
     const playing = !v.paused;
-    btn.textContent = playing ? 'Pause' : 'Play';
-    btn.setAttribute('aria-pressed', String(playing));
+    play.textContent = playing ? '❚❚ Pause' : '▶ Play with sound';
+    play.setAttribute('aria-pressed', String(playing));
+    mute.hidden = !playing;
+    mute.textContent = v.muted ? 'Unmute' : 'Mute';
+    mute.setAttribute('aria-pressed', String(v.muted));
   };
 
-  btn.addEventListener('click', () => {
-    if (v.paused) v.play().catch(() => {});
-    else v.pause();
+  play.addEventListener('click', () => {
+    if (v.paused) {
+      v.muted = false;
+      // 소리 포함 재생이 막히면(정책·기기 설정) 무음으로라도 재생한다
+      v.play().catch(() => { v.muted = true; v.play().catch(() => {}); sync(); });
+    } else v.pause();
   });
-  v.addEventListener('play', setLabel);
-  v.addEventListener('pause', setLabel);
+
+  mute.addEventListener('click', () => { v.muted = !v.muted; sync(); });
+
+  v.addEventListener('play', sync);
+  v.addEventListener('pause', sync);
+  v.addEventListener('volumechange', sync);
 
   if ('IntersectionObserver' in window) {
     new IntersectionObserver((es) => {
