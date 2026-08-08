@@ -54,6 +54,33 @@ ffmpeg -ss 1 -i media/hero.mp4 -frames:v 1 -q:v 3 media/hero-poster.jpg
 
 **목표치**: 8~15초 · 2~4MB. 히어로 영상이 무거우면 첫인상이 검은 화면이 된다.
 
+## 배포 (GitHub Pages)
+
+**https://5hk.github.io/bbj-h/**
+
+`main` 에 push하면 GitHub Actions(`.github/workflows/pages.yml`)가 저장소를 그대로 Pages에 올린다.
+빌드 과정은 없다. 배포 상태는 저장소의 **Actions** 탭에서 확인한다.
+
+```bash
+git push        # 이게 곧 배포
+```
+
+- 저장소 **Settings → Pages → Source** 는 `GitHub Actions` 로 설정돼 있어야 한다
+- ⛔ **`CNAME` 파일을 만들지 않는다.** 만들면 plan-g.io 를 이 프로토타입이 가로채 운영 사이트가 죽는다
+- 모든 안(案)에 `noindex` 가 걸려 있어 검색에는 잡히지 않는다
+
+### 히어로 영상이 배포본에서 안 보인다면
+
+`media/` 는 기본적으로 gitignore 대상이라, **영상이 저장소에 없으면 배포된 페이지에는 플레이스홀더만 보인다.**
+아래 두 파일만 예외로 커밋하도록 설정돼 있으니, **압축한 뒤** 커밋한다.
+
+```bash
+git add -f media/hero.mp4 media/hero-poster.jpg
+```
+
+⚠️ 압축 전 원본(수 MB~수십 MB)을 그대로 커밋하지 않는다. git 저장소는 한 번 커밋한 큰 파일을
+되돌리기 어렵다. 4MB 이하로 줄인 뒤 올린다.
+
 ## 로컬 미리보기
 
 ```bash
