@@ -391,14 +391,16 @@ a { color: inherit; text-decoration: none; }
 .split__side .artist__name { margin-bottom: 4px; }
 .split__side .artist__ko { margin-bottom: clamp(18px, 3vw, 40px); }
 
-/* 좌우 반전 — 이름이 왼쪽, 사진이 오른쪽. 두 아티스트 블록이 번갈아 리듬을 만든다 */
-.artist--flip .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr); }
+/* 좌우 반전 — 이름이 왼쪽, 사진이 오른쪽. 두 아티스트 블록이 번갈아 리듬을 만든다.
+   열 정의는 기본 .split 과 같으므로 다시 쓰지 않는다 —
+   `.artist--flip .split` 로 한 번 더 쓰면 (0,2,0) 이 되어 아래 미디어쿼리의
+   1단 전환(0,1,0)을 이겨버린다. 실제로 GAHO 블록만 모바일에서 2단으로 남았었다. */
 .artist--flip .split__media { order: 2; }
 
 @media (max-width: 860px) {
   .split { grid-template-columns: 1fr; }
   .split__side { padding-top: 0; }
-  /* 좁은 화면에선 이름이 먼저 오는 게 자연스럽다 */
+  /* 좁은 화면에선 이름과 설명이 먼저, 사진은 그 아래. 두 아티스트 모두 동일하다 */
   .split__media { order: 2; }
 }
 
@@ -480,10 +482,20 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ==========================================================================
-   03 CATALOG
+   03 RELEASES
    ========================================================================== */
 /* 커버가 주인공. 제목은 평소엔 숨고 올려놓았을 때만 아래에서 덮어 올라온다. */
-.discs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(130px, 13vw, 200px), 1fr)); gap: clamp(8px, 1.2vw, 18px); }
+/* 지금은 두 장뿐이다. auto-fill 로 두면 작은 커버 두 개가 왼쪽에 몰리고
+   오른쪽 다섯 칸이 텅 비어 깨진 것처럼 보인다. auto-fit + max-width 로
+   두 장이 제 몫의 폭을 갖게 한다.
+   ⚠ 목록을 다시 늘리면 max-width 를 지우고 auto-fill 로 되돌린다. */
+.discs {
+  list-style: none; margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 17vw, 250px), 1fr));
+  gap: clamp(8px, 1.2vw, 18px);
+  max-width: 660px;
+}
 .disc { position: relative; overflow: hidden; background: #ececec; }
 .disc__art { display: block; }
 .disc__art img {
@@ -527,9 +539,6 @@ a { color: inherit; text-decoration: none; }
   .disc { background: none; overflow: visible; }
 }
 
-.filters { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: clamp(20px, 3vw, 38px); }
-.filters button { font: inherit; font-size: .6875rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; background: none; border: 0; padding: 0 0 3px; color: var(--grey); border-bottom: 1px solid transparent; cursor: pointer; transition: color .25s var(--ease), border-color .25s var(--ease); }
-.filters button[aria-pressed="true"], .filters button:hover { color: inherit; border-color: currentColor; }
 
 /* ==========================================================================
    04 STAGE
@@ -765,7 +774,7 @@ a { color: inherit; text-decoration: none; }
   <ul class="nav__links micro">
     <li><a href="#now">Now</a></li>
     <li><a href="#artists">Artists</a></li>
-    <li><a href="#catalog">Catalog</a></li>
+    <li><a href="#releases">Releases</a></li>
     <li><a href="#stage">Stage</a></li>
     <li><a href="#press">Press</a></li>
   </ul>
@@ -781,7 +790,7 @@ a { color: inherit; text-decoration: none; }
   <ul>
     <li><a href="#now"><span class="idx">01</span>Now</a></li>
     <li><a href="#artists"><span class="idx">02</span>Artists</a></li>
-    <li><a href="#catalog"><span class="idx">03</span>Catalog</a></li>
+    <li><a href="#releases"><span class="idx">03</span>Releases</a></li>
     <li><a href="#stage"><span class="idx">04</span>Stage</a></li>
     <li><a href="#press"><span class="idx">05</span>Press</a></li>
     <li><a href="#inquiry"><span class="idx">06</span>Inquiry</a></li>
@@ -1029,90 +1038,23 @@ a { color: inherit; text-decoration: none; }
     </div>
   </section>
 
-  <!-- ================= 03 CATALOG ================= -->
-  <section class="sec" id="catalog">
+  <!-- ================= 03 RELEASES ================= -->
+  <section class="sec" id="releases">
     <div class="sec__head">
-      <h2 class="display sec__title" data-reveal>Catalog</h2>
-      <p class="sec__no">03 — <span id="catCount">17</span> releases</p>
+      <h2 class="display sec__title" data-reveal>Releases</h2>
+      <p class="sec__no">03 — 2 releases</p>
     </div>
 
-    <!-- 필터는 실제로 동작한다. 눌러도 아무 일 없는 버튼은 두지 않는다. -->
-    <div class="filters" data-reveal role="group" aria-label="발매작 필터">
-      <button type="button" data-filter="all" aria-pressed="true">All</button>
-      <button type="button" data-filter="single" aria-pressed="false">Single</button>
-      <button type="button" data-filter="album" aria-pressed="false">Album</button>
-      <button type="button" data-filter="ost" aria-pressed="false">OST</button>
-    </div>
-
-    <!-- 커버가 주인공. 제목은 올려놓았을 때만 덮어 올라온다. -->
+    <!-- 커버가 주인공. 제목은 올려놓았을 때만 덮어 올라온다.
+         두 장뿐이라 필터는 두지 않는다 — Album 을 누르면 결과가 0이다. -->
     <ul class="discs" data-reveal>
       <li class="disc" data-type="single" data-year="2026">
         <span class="disc__art"><img src="images/releases/to-mars.jpg" alt="To Mars" width="600" height="600" loading="lazy"></span>
         <span class="disc__info"><span class="disc__title">To Mars</span><span class="disc__meta micro">2026.04.08 · Single</span></span>
       </li>
-      <li class="disc" data-type="ost" data-year="2025">
-        <span class="disc__art"><img src="images/releases/go-on.jpg" alt="Go On" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Go On</span><span class="disc__meta micro">2025.05.25 · OST</span><span class="disc__from micro">불꽃야구 OST Part.2</span></span>
-      </li>
-      <li class="disc" data-type="single" data-year="2023">
-        <span class="disc__art"><img src="images/releases/yellow-light.jpg" alt="Yellow Light" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Yellow Light</span><span class="disc__meta micro">2023.06.18 · Single</span></span>
-      </li>
-      <li class="disc" data-type="album" data-year="2023">
-        <span class="disc__art"><img src="images/releases/diamond.jpg" alt="Diamond" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Diamond</span><span class="disc__meta micro">2023.03.20 · Album · 3곡</span><span class="disc__from micro">Only You · Beautiful Night · Lonely</span></span>
-      </li>
-      <li class="disc" data-type="ost" data-year="2022">
-        <span class="disc__art"><img src="images/releases/where-to-in-the-fog.jpg" alt="안개 속 어디로" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">안개 속 어디로</span><span class="disc__meta micro">2022.07.23 · OST</span><span class="disc__from micro">왜 오수재인가 OST</span></span>
-      </li>
-      <li class="disc" data-type="album" data-year="2021">
-        <span class="disc__art"><img src="images/releases/fireworks.jpg" alt="Fireworks" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Fireworks</span><span class="disc__meta micro">2021.11.23 · Album · 4곡</span><span class="disc__from micro">Right Now · RIDE · Lost my way · 마음대로</span></span>
-      </li>
-      <li class="disc" data-type="single" data-year="2021">
-        <span class="disc__art"><img src="images/releases/cyworld-bgm-2021.jpg" alt="Officially Missing You" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Officially Missing You</span><span class="disc__meta micro">2021.07.15 · Single</span><span class="disc__from micro">싸이월드 BGM 2021</span></span>
-      </li>
-      <li class="disc" data-type="ost" data-year="2021">
-        <span class="disc__art"><img src="images/releases/time-ost.jpg" alt="시간" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">시간</span><span class="disc__meta micro">2021.06.23 · OST</span><span class="disc__from micro">시간 OST</span></span>
-      </li>
-      <li class="disc" data-type="single" data-year="2021">
-        <span class="disc__art"><img src="images/releases/rush-hour.jpg" alt="Rush Hour" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Rush Hour</span><span class="disc__meta micro">2021.05.24 · Single</span></span>
-      </li>
-      <li class="disc" data-type="ost" data-year="2021">
-        <span class="disc__art"><img src="images/releases/not-the-end.jpg" alt="끝이 아니길" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">끝이 아니길</span><span class="disc__meta micro">2021.02.09 · OST</span><span class="disc__from micro">황후의 품격 OST</span></span>
-      </li>
-      <li class="disc" data-type="ost" data-year="2020">
-        <span class="disc__art"><img src="images/releases/running.jpg" alt="Running" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Running</span><span class="disc__meta micro">2020.10.30 · OST</span><span class="disc__from micro">스타트업 OST Part 5</span></span>
-      </li>
-      <li class="disc" data-type="single" data-year="2020">
-        <span class="disc__art"><img src="images/releases/dont-know-you.jpg" alt="남자를 몰라" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">남자를 몰라</span><span class="disc__meta micro">2020.10.27 · Single</span><span class="disc__from micro">남자를 몰라 (삼성전자 뉴레트로 시리즈)</span></span>
-      </li>
-      <li class="disc" data-type="ost" data-year="2020">
-        <span class="disc__art"><img src="images/releases/stranger-2.jpg" alt="바람" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">바람</span><span class="disc__meta micro">2020.10.03 · OST</span><span class="disc__from micro">비밀의 숲 2 OST</span></span>
-      </li>
       <li class="disc" data-type="ost" data-year="2020">
         <span class="disc__art"><img src="images/releases/start.jpg" alt="시작" width="600" height="600" loading="lazy"></span>
         <span class="disc__info"><span class="disc__title">시작</span><span class="disc__meta micro">2020.02.01 · OST</span><span class="disc__from micro">이태원 클라쓰 OST Part 2</span></span>
-      </li>
-      <li class="disc" data-type="ost" data-year="2020">
-        <span class="disc__art"><img src="images/releases/my-heart-is-beating.jpg" alt="그렇게 가슴은 뛴다" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">그렇게 가슴은 뛴다</span><span class="disc__meta micro">2020.01.22 · OST</span><span class="disc__from micro">내 뒤에 테리우스 OST</span></span>
-      </li>
-      <li class="disc" data-type="album" data-year="2018">
-        <span class="disc__art"><img src="images/releases/preparation-for-a-journey.jpg" alt="Preparation For a Journey" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">Preparation For a Journey</span><span class="disc__meta micro">2018.12.11 · Album · 3곡</span><span class="disc__from micro">떠날 준비 · Going on · Heaven</span></span>
-      </li>
-      <li class="disc" data-type="single" data-year="2018">
-        <span class="disc__art"><img src="images/releases/stay-here.jpg" alt="있어줘 Stay Here" width="600" height="600" loading="lazy"></span>
-        <span class="disc__info"><span class="disc__title">있어줘 Stay Here</span><span class="disc__meta micro">2018.05.03 · Single</span></span>
       </li>
     </ul>
   </section>
@@ -1637,33 +1579,6 @@ document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
   }
 })();
 
-/* 카탈로그 필터 — 실제로 걸러낸다. 개수 표시도 함께 갱신한다.
-   눌러도 아무 일 없는 버튼은 두지 않는다. */
-(function catalogFilter() {
-  const buttons = [...document.querySelectorAll('.filters button')];
-  const discs = [...document.querySelectorAll('.disc')];
-  const count = document.getElementById('catCount');
-  if (!buttons.length || !discs.length) return;
-
-  const apply = (kind) => {
-    let shown = 0;
-    discs.forEach((d) => {
-      const match = kind === 'all' || d.dataset.type === kind;
-      d.hidden = !match;
-      if (match) shown++;
-    });
-    if (count) count.textContent = shown;
-  };
-
-  buttons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-      apply(btn.dataset.filter || 'all');
-    });
-  });
-
-  apply('all');   // 최초 개수 반영
-})();
 </script>
 </body>
 </html>
