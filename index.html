@@ -304,57 +304,6 @@ a { color: inherit; text-decoration: none; }
 
 /* 본문이 길어졌으므로 상단 정렬 — 가운데 정렬이면 이미지와 텍스트가 어긋나 보인다 */
 .now { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(20px, 4vw, 64px); align-items: start; }
-/* ---- 발매된 곡 ----
-   진행 중인 소식(위)과 같은 크기로 두면 'Now'의 뜻이 흐려진다.
-   자켓 + 한 줄로 줄여 '지난 항목'임을 크기로 알린다. 추가는 <li> 하나 복사. */
-.released { margin-top: clamp(44px, 6.5vw, 96px); }
-.released__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); }
-.released__list { list-style: none; margin: 0; padding: 0; }
-.released__item { border-bottom: 1px solid var(--hair); }
-/* 텍스트는 .released__body 하나로 묶는다 — 낱개로 두면 좁은 화면에서
-   그리드 칸에 제멋대로 흩어진다. */
-.released__link {
-  display: grid;
-  grid-template-columns: clamp(72px, 8vw, 108px) minmax(88px, 118px) minmax(0, 1fr) auto;
-  gap: clamp(14px, 2.4vw, 36px);
-  align-items: start;
-  padding: clamp(14px, 2vw, 24px) 0;
-}
-.released__art { display: block; overflow: hidden; }
-.released__art img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; filter: grayscale(1); transition: filter .5s var(--ease), transform .6s var(--ease); }
-.released__link:hover .released__art img { filter: grayscale(0); transform: scale(1.04); }
-.released__date { color: var(--grey); padding-top: 4px; }
-.released__body { display: block; }
-.released__title { display: block; font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.15rem, 2.3vw, 2rem); line-height: 1; margin-bottom: 6px; }
-.released__by { display: block; color: var(--grey); margin-bottom: 8px; }
-/* 본문 칸 폭을 그대로 쓴다 — 따로 좁히면 위의 제목·아티스트 줄과 오른쪽 끝이 어긋난다 */
-.released__desc { display: block; }
-/* 화살표는 버튼이 아니라 활자로 쓴다.
-   이 페이지는 전부 직각·헤어라인·컨덴스드 대문자인데 원은 여기 하나뿐이라
-   범용 UI 위젯처럼 떠 보였다. 게다가 행 전체가 이미 링크라 테두리는 거짓 정보다.
-   테두리를 걷고 크기를 키워 표식이 아니라 글자로 읽히게 한다. */
-/* 디스플레이 서체(Anton)에는 ↗ 글리프가 없다 — 지정해도 어차피 본문 서체로 떨어지므로
-   font-family 는 아예 쓰지 않는다 */
-.released__go {
-  justify-self: end; align-self: center;
-  font-size: clamp(1.5rem, 3vw, 2.6rem); line-height: 1;
-  color: var(--grey);
-  padding-left: clamp(8px, 1.6vw, 22px);
-  transition: transform .5s var(--ease), color .35s var(--ease);
-}
-/* 올려놓으면 화살표가 가리키는 방향으로 실제로 움직인다 — 회전보다 뜻이 분명하다 */
-.released__link:hover .released__go { color: inherit; transform: translate(5px, -5px); }
-/* 터치 기기엔 hover가 없다. 흐린 채로 끝나지 않게 처음부터 본색으로 */
-@media (hover: none) { .released__go { color: inherit; } }
-
-
-@media (max-width: 760px) {
-  .released__link { grid-template-columns: clamp(64px, 18vw, 92px) minmax(0, 1fr); row-gap: 10px; }
-  .released__date { grid-column: 2; grid-row: 1; padding-top: 0; }
-  .released__body { grid-column: 2; grid-row: 2; }
-  .released__go { grid-column: 2; grid-row: 3; justify-self: start; }
-}
-
 .now__title { font-size: clamp(1.8rem, 4.6vw, 3.75rem); margin: 0 0 16px; }
 .now__kicker { display: flex; align-items: center; gap: 9px; margin: 0 0 16px; }
 .now__pulse { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: pulse 2.4s var(--ease) infinite; }
@@ -956,36 +905,6 @@ a { color: inherit; text-decoration: none; }
           <a href="https://www.youtube.com/watch?v=QfJMns4R5-s" target="_blank" rel="noopener noreferrer" style="margin-left:auto">티저 영상 ↗</a>
         </div>
       </div>
-    </div>
-
-    <!-- ── 이미 발매된 곡 ──
-         진행 중인 소식과 같은 크기로 두면 'Now'가 무엇을 가리키는지 흐려진다.
-         자켓과 한 줄 정보만 남겨 지난 항목임을 크기로 알린다. -->
-    <div class="released">
-      <div class="released__head">
-        <p class="micro" style="margin:0">Released</p>
-        <span class="micro" style="color:var(--grey)">2026</span>
-      </div>
-
-      <ul class="released__list">
-        <li class="released__item">
-          <a class="released__link" href="https://www.youtube.com/watch?v=62BGFV9A2Ig"
-             target="_blank" rel="noopener noreferrer"
-             aria-label="가호 To Mars 뮤직비디오 보기 (YouTube)">
-            <span class="released__art">
-              <img src="images/releases/to-mars.jpg" alt="가호 &lt;To Mars&gt; 앨범 커버"
-                   width="900" height="900" loading="lazy">
-            </span>
-            <span class="released__date micro">2026.04.08</span>
-            <span class="released__body">
-              <span class="released__title">To Mars</span>
-              <span class="released__by micro">가호 (Gaho) · Single</span>
-              <span class="released__desc">사랑의 크기를 우주의 거리로 넓힌 팝 트랙. PLAN-G와 함께한 첫 발매작입니다.</span>
-            </span>
-            <span class="released__go" aria-hidden="true">↗</span>
-          </a>
-        </li>
-      </ul>
     </div>
 
   </section>
