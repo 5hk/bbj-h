@@ -15,7 +15,21 @@
 
 | 파일 | 내용 |
 |---|---|
-| `type1.html` | 안 1 — 브루탈리스트 편집형. 정보구조를 새로 설계 (Now/Roster/Catalog/Stage/Press/Studio/Inquiry) |
+| `type1.html` | 안 1 — **브루탈리스트 컬러**. 채도 높은 컬러 블록, 초대형 컨덴스드 대문자 (참조: OFEN) |
+| `type2.html` | 안 2 — **흑백 편집형 + 영상 히어로**. 워드마크가 영상 경계를 가로지름, 텍스트 애니메이션 (참조: Peter Lindbergh) |
+
+두 안 모두 정보구조는 동일하다 (00 Opening · 01 Now · 02 Roster · 03 Catalog · 04 Stage · 05 Press · 06 Studio · 07 Inquiry).
+시각 방향만 다르므로 나란히 비교할 수 있다.
+
+### type2 조절 포인트
+
+```css
+--stage-h:  74vh;   /* 히어로 영상 높이 */
+--straddle: 50%;    /* 워드마크가 영상 쪽으로 걸치는 비율. 50% = 영상/지면 반반 */
+```
+
+영상이 준비되면 `<video>` 의 `src` 를 채우고 `hidden` 을 지운 뒤, 옆의 `.ph` 플레이스홀더를 삭제한다.
+`muted` `loop` `playsinline` 은 모바일 자동재생에 필수라 지우면 안 된다.
 
 ## 로컬 미리보기
 
