@@ -300,9 +300,35 @@ a { color: inherit; text-decoration: none; }
 
 /* 본문이 길어졌으므로 상단 정렬 — 가운데 정렬이면 이미지와 텍스트가 어긋나 보인다 */
 .now { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(20px, 4vw, 64px); align-items: start; }
-/* 두 번째 이후 항목은 좌우를 뒤집어 리듬을 만든다 */
-.now--flip { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); margin-top: clamp(40px, 6vw, 90px); padding-top: clamp(36px, 5vw, 70px); border-top: 1px solid var(--hair); }
-.now--flip .teaser { order: 2; }
+/* ---- 발매된 곡 ----
+   진행 중인 소식(위)과 같은 크기로 두면 'Now'의 뜻이 흐려진다.
+   자켓 + 한 줄로 줄여 '지난 항목'임을 크기로 알린다. 추가는 <li> 하나 복사. */
+.released { margin-top: clamp(44px, 6.5vw, 96px); }
+.released__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); }
+.released__list { list-style: none; margin: 0; padding: 0; }
+.released__item { border-bottom: 1px solid var(--hair); }
+.released__link {
+  display: grid;
+  grid-template-columns: clamp(64px, 7vw, 96px) minmax(88px, 118px) minmax(0, 1fr) auto;
+  gap: clamp(14px, 2.4vw, 36px);
+  align-items: center;
+  padding: clamp(12px, 1.8vw, 20px) 0;
+  transition: opacity .3s var(--ease);
+}
+.released__art { display: block; overflow: hidden; }
+.released__art img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; filter: grayscale(1); transition: filter .5s var(--ease), transform .6s var(--ease); }
+.released__link:hover .released__art img { filter: grayscale(0); transform: scale(1.04); }
+.released__date { color: var(--grey); }
+.released__title { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.1rem, 2.2vw, 1.9rem); line-height: 1; }
+.released__by { color: var(--grey); }
+.released__go { justify-self: end; white-space: nowrap; }
+
+@media (max-width: 760px) {
+  .released__link { grid-template-columns: clamp(58px, 16vw, 84px) minmax(0, 1fr) auto; row-gap: 4px; }
+  .released__date { grid-column: 2 / -1; }
+  .released__by { grid-column: 2 / -1; }
+  .released__go { grid-column: 2 / -1; justify-self: start; }
+}
 
 .now__title { font-size: clamp(1.8rem, 4.6vw, 3.75rem); margin: 0 0 16px; }
 .now__kicker { display: flex; align-items: center; gap: 9px; margin: 0 0 16px; }
@@ -310,9 +336,9 @@ a { color: inherit; text-decoration: none; }
 @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .3; transform: scale(.7); } }
 .now__meta { display: flex; gap: clamp(12px, 2.4vw, 34px); flex-wrap: wrap; border-top: 1px solid var(--hair); padding-top: 14px; margin-top: 22px; }
 @media (max-width: 820px) {
-  .now, .now--flip { grid-template-columns: 1fr; }
-  /* 한 줄로 접히면 영상이 먼저 와야 한다 */
-  .now--flip .teaser { order: 0; }
+  .now { grid-template-columns: 1fr; }
+
+
 }
 
 /* ==========================================================================
@@ -408,18 +434,30 @@ a { color: inherit; text-decoration: none; }
 .strip__item:nth-child(5) { margin-top: clamp(44px, 7vw, 112px); }
 /* 살짝 겹치기 */
 .strip__item + .strip__item { margin-left: clamp(-16px, -1.1vw, -4px); }
-
 .strip__item:hover { transform: translateY(-10px); z-index: 3; }
 .strip__item:hover img { filter: grayscale(0); box-shadow: 0 22px 46px rgba(0,0,0,.28); }
 
-.strip__name { position: relative; z-index: 2; margin: 10px 0 0; display: flex; gap: 8px; }
-.strip__no { color: var(--grey); }
+/* 이름표는 사진 '안'에 얹는다 — 사진 밖에 두면 옆 사진에 가려 읽히지 않는다.
+   자기 사진 위에 놓이므로 어떤 겹침에서도 항상 보인다. */
+.strip__name {
+  position: absolute; left: 10px; bottom: 10px; z-index: 2;
+  margin: 0;
+  display: inline-flex; align-items: baseline; gap: 7px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, .62);
+  color: var(--paper);
+  backdrop-filter: blur(6px);
+  transition: background .4s var(--ease);
+}
+.strip__item:hover .strip__name { background: rgba(0, 0, 0, .8); }
+.strip__no { color: rgba(255, 255, 255, .55); }
 
 @media (max-width: 760px) {
   /* 좁은 화면에서 5장을 겹쳐 놓으면 아무것도 안 보인다 — 격자로 되돌린다 */
   .strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1.6vw, 14px); }
   .strip__item { margin: 0 !important; }
   .strip__item + .strip__item { margin-left: 0 !important; }
+  .strip__name { left: 7px; bottom: 7px; padding: 5px 8px; }
 }
 .artist__people {
   list-style: none; margin: 0; padding: 0;
@@ -786,52 +824,30 @@ a { color: inherit; text-decoration: none; }
       </div>
     </div>
 
-    <!-- ── 두 번째: 이미 발매된 곡 ──
-         YouTube 임베드는 광고가 붙어 흐름을 끊는다. 앨범 커버를 보여주고
-         클릭하면 YouTube로 이동시킨다. 커버는 1:1이라 16:9 프레임에 그대로
-         넣으면 레터링이 잘리므로, 같은 이미지를 흐리게 깔아 배경을 채운다. -->
-    <div class="now now--flip">
-      <figure class="teaser teaser--cover" data-reveal>
-        <a class="teaser__frame" href="https://www.youtube.com/watch?v=62BGFV9A2Ig"
-           target="_blank" rel="noopener noreferrer" aria-label="가호 To Mars 뮤직비디오 보기 (YouTube)">
-          <img class="teaser__blur" src="images/releases/to-mars.jpg" alt="" aria-hidden="true" loading="lazy">
-          <img class="teaser__art" src="images/releases/to-mars.jpg"
-               alt="가호 &lt;To Mars&gt; 앨범 커버" width="900" height="900" loading="lazy">
-          <span class="teaser__toggle micro">▶ 뮤직비디오 보기</span>
-        </a>
-        <figcaption class="micro">가호 — &lt;To Mars&gt; Music Video</figcaption>
-      </figure>
-
-      <div data-reveal>
-        <p class="now__kicker micro">발매 — 2026.04.08</p>
-
-        <p class="micro" style="color:var(--grey);margin:0 0 8px">가호 (Gaho) — Single</p>
-        <h3 class="display now__title">To Mars</h3>
-
-        <p class="intro__lead lines" style="margin:0 0 18px">
-          <span><i>Out now.</i></span>
-        </p>
-
-        <p class="body-lg" style="margin:0 0 16px">
-          가호의 디지털 싱글 &lt;To Mars&gt;가 2026년 4월 8일 발매되었습니다.
-          PLAN-G Entertainment와 함께한 첫 공식 발매작입니다.
-        </p>
-        <p class="body-lg" style="margin:0 0 16px">
-          사랑의 크기를 우주의 거리로 넓힌 팝 트랙입니다. 단 한 사람을 향한 확신,
-          화성까지라도 함께 가겠다는 마음, 더는 기다리고 싶지 않다는 솔직한 감정을
-          담았습니다. 우주라는 광활한 이미지를 빌려 오히려 가장 사적이고 내밀한
-          마음을 전합니다.
-        </p>
-        <p class="body-lg" style="margin:0">
-          발매 당일, 유럽 투어 &lt;Cityscapes — New Horizons&gt;의 바르샤바 공연에서
-          첫 무대를 선보였습니다.
-        </p>
-
-        <div class="now__meta micro">
-          <span>가호 (Gaho)</span><span>Single</span><span>2026.04.08</span>
-          <a href="https://www.youtube.com/watch?v=62BGFV9A2Ig" target="_blank" rel="noopener noreferrer" style="margin-left:auto">뮤직비디오 ↗</a>
-        </div>
+    <!-- ── 이미 발매된 곡 ──
+         진행 중인 소식과 같은 크기로 두면 'Now'가 무엇을 가리키는지 흐려진다.
+         자켓과 한 줄 정보만 남겨 지난 항목임을 크기로 알린다. -->
+    <div class="released">
+      <div class="released__head">
+        <p class="micro" style="margin:0">Released</p>
+        <span class="micro" style="color:var(--grey)">2026</span>
       </div>
+
+      <ul class="released__list">
+        <li class="released__item">
+          <a class="released__link" href="https://www.youtube.com/watch?v=62BGFV9A2Ig"
+             target="_blank" rel="noopener noreferrer">
+            <span class="released__art">
+              <img src="images/releases/to-mars.jpg" alt="가호 &lt;To Mars&gt; 앨범 커버"
+                   width="900" height="900" loading="lazy">
+            </span>
+            <span class="released__date micro">2026.04.08</span>
+            <span class="released__title">To Mars</span>
+            <span class="released__by micro">가호 (Gaho) · Single</span>
+            <span class="released__go micro">뮤직비디오 ↗</span>
+          </a>
+        </li>
+      </ul>
     </div>
 
   </section>
