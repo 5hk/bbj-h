@@ -7,7 +7,8 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Anton&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<!-- Archivo는 wdth(62.5~125) 가변 축을 지원한다 — 스테이트먼트 밴드의 글자 애니메이션에 쓴다 -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,400..900&family=Anton&family=Black+Han+Sans&display=swap" rel="stylesheet">
 <style>
 /* ==========================================================================
    PLAN-G — Layout Type 2 (skeleton)
@@ -442,6 +443,65 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ==========================================================================
+   STATEMENT BAND — 가변 폰트 width 축 웨이브
+   레퍼런스(Peter Lindbergh)의 그 애니메이션. 글자마다 wdth를 62.5→125로
+   시차를 두고 밀어 올리면 얇은 획이 파도처럼 부풀었다 접힌다.
+   ========================================================================== */
+.sb { background: var(--ink); color: var(--paper); padding: clamp(56px, 9vw, 130px) var(--gut); overflow: hidden; }
+.sb__inner { max-width: var(--maxw); margin-inline: auto; }
+
+.sb__line {
+  font-family: var(--font-body);
+  font-size: clamp(2.2rem, 11vw, 10rem);
+  line-height: 1.02;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  margin: 0;
+  white-space: nowrap;
+}
+.sb__line + .sb__line { margin-top: clamp(2px, .6vw, 10px); }
+
+.sb__line span {
+  display: inline-block;
+  font-variation-settings: 'wdth' 62.5, 'wght' 600;
+  will-change: font-variation-settings;
+}
+/* 화면에 들어왔을 때만 돈다 — 안 보이는 곳에서 계속 도는 애니메이션은 낭비다 */
+.sb[data-shown="true"] .sb__line span {
+  animation: sbWave 3.4s cubic-bezier(.45,0,.2,1) infinite;
+  animation-delay: calc(var(--i) * .055s);
+}
+@keyframes sbWave {
+  0%, 100% { font-variation-settings: 'wdth' 62.5, 'wght' 500; }
+  45%      { font-variation-settings: 'wdth' 125,  'wght' 900; }
+}
+/* 공백은 접히지 않게 폭을 고정 */
+.sb__line span[data-space] { width: .28em; }
+
+/* 측정용 — 모든 글자를 최대 너비로 세워 놓고 줄 길이를 잰다 */
+.sb__line.is-measuring span {
+  font-variation-settings: 'wdth' 125, 'wght' 900 !important;
+  animation: none !important;
+}
+
+/* 폰트 스펙 표기 — 레퍼런스의 그 디테일 */
+.sb__spec {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, auto));
+  gap: 6px clamp(20px, 4vw, 60px);
+  margin: clamp(26px, 4vw, 52px) 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.25);
+  color: var(--grey);
+}
+.sb__spec dt { display: inline; }
+.sb__spec dd { display: inline; margin: 0 0 0 8px; color: var(--paper); }
+
+/* 모션 축소 설정에서는 중간 너비로 고정 — 읽히기만 하면 된다 */
+@media (prefers-reduced-motion: reduce) {
+  .sb__line span { font-variation-settings: 'wdth' 100, 'wght' 700 !important; }
+}
+
+/* ==========================================================================
    Scroll reveal — 기본 노출, JS가 애니메이션을 덧입힌다
    ========================================================================== */
 [data-reveal] { opacity: 1; transform: none; }
@@ -711,6 +771,23 @@ a { color: inherit; text-decoration: none; }
     </article>
   </section>
 
+  <!-- ================= STATEMENT BAND =================
+       아티스트를 만난 직후, 카탈로그로 넘어가기 전의 숨 고르기.
+       레퍼런스가 큰 워드마크를 쓰던 자리와 같은 역할이다. -->
+  <section class="sb" id="statement" aria-label="Gaho &amp; KAVE — Untold Stories">
+    <div class="sb__inner">
+      <p class="sb__line" data-wave>GAHO &amp; KAVE</p>
+      <p class="sb__line" data-wave>UNTOLD STORIES</p>
+
+      <dl class="sb__spec micro">
+        <div><dt>Font</dt><dd>Archivo Variable</dd></div>
+        <div><dt>Width</dt><dd>62.5 → 125</dd></div>
+        <div><dt>Weight</dt><dd>500 → 900</dd></div>
+        <div><dt>Tracking</dt><dd>−0.02em</dd></div>
+      </dl>
+    </div>
+  </section>
+
   <!-- ================= 03 CATALOG ================= -->
   <section class="sec" id="catalog">
     <div class="sec__head">
@@ -887,8 +964,45 @@ document.querySelectorAll('.lines > span').forEach((s) => {
   if (!s.querySelector('i')) s.innerHTML = '<i>' + s.innerHTML + '</i>';
 });
 
+/* 스테이트먼트 밴드 — 글자를 span으로 쪼개 인덱스를 심는다.
+   마크업은 통문장으로 두고 JS가 나누므로, JS가 죽어도 문장은 그대로 읽힌다. */
+document.querySelectorAll('[data-wave]').forEach((el) => {
+  const text = el.textContent;
+  el.textContent = '';
+  [...text].forEach((ch, i) => {
+    const s = document.createElement('span');
+    s.style.setProperty('--i', i);
+    if (ch === ' ') { s.dataset.space = ''; s.textContent = ' '; }
+    else s.textContent = ch;
+    el.appendChild(s);
+  });
+});
+
+/* 글자가 최대 너비로 부풀면 줄이 길어져 화면 밖으로 넘친다.
+   가장 넓은 상태를 기준으로 폰트 크기를 맞춰 어떤 폭에서도 잘리지 않게 한다. */
+function fitWaveLines() {
+  document.querySelectorAll('[data-wave]').forEach((el) => {
+    el.style.fontSize = '';
+    const avail = el.parentElement.clientWidth;
+    if (!avail) return;
+    el.classList.add('is-measuring');
+    const widest = el.scrollWidth;
+    el.classList.remove('is-measuring');
+    if (widest > avail) {
+      const base = parseFloat(getComputedStyle(el).fontSize);
+      el.style.fontSize = (base * (avail / widest)) + 'px';
+    }
+  });
+}
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitWaveLines);
+else addEventListener('load', fitWaveLines);
+addEventListener('resize', () => {
+  clearTimeout(window.__fitT);
+  window.__fitT = setTimeout(fitWaveLines, 150);
+});
+
 (function reveal() {
-  const items = document.querySelectorAll('[data-reveal], .lines');
+  const items = document.querySelectorAll('[data-reveal], .lines, .sb');
   if (!items.length) return;
 
   if (!('IntersectionObserver' in window)) {
