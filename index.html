@@ -435,6 +435,10 @@ a { color: inherit; text-decoration: none; }
 .split__side .artist__name { margin-bottom: 4px; }
 .split__side .artist__ko { margin-bottom: clamp(18px, 3vw, 40px); }
 
+/* 좌우 반전 — 이름이 왼쪽, 사진이 오른쪽. 두 아티스트 블록이 번갈아 리듬을 만든다 */
+.artist--flip .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr); }
+.artist--flip .split__media { order: 2; }
+
 @media (max-width: 860px) {
   .split { grid-template-columns: 1fr; }
   .split__side { padding-top: 0; }
@@ -976,7 +980,7 @@ a { color: inherit; text-decoration: none; }
     </div>
 
     <!-- 솔로 — KAVE와 같은 2단 분할. 프레임 3개를 한 장으로 합쳤다 -->
-    <article class="artist artist--split" data-reveal>
+    <article class="artist artist--split artist--flip" data-reveal>
       <div class="split">
         <figure class="split__media split__media--natural">
           <img src="images/artists/gaho-lead.jpg"
