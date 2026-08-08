@@ -526,14 +526,17 @@ a { color: inherit; text-decoration: none; }
 /* ==========================================================================
    04 STAGE
    ========================================================================== */
-.geo { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border-block: 1px solid rgba(255,255,255,.25); padding: 14px 0; margin-bottom: clamp(20px, 3vw, 40px); }
-.geo button { font: inherit; font-size: .6875rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; background: none; color: inherit; border: 1px solid currentColor; padding: 8px 16px; cursor: pointer; transition: background .25s var(--ease), color .25s var(--ease); }
-.geo button:hover { background: var(--paper); color: var(--ink); }
 
+/* ---- 투어 단위 ----
+   개별 공연을 낱개로 늘어놓지 않고 투어로 묶는다. 다가오는 투어가 위. */
+.tour + .tour { margin-top: clamp(40px, 6vw, 88px); padding-top: clamp(30px, 4.5vw, 60px); border-top: 1px solid rgba(255,255,255,.25); }
+.tour__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: clamp(16px, 2.4vw, 30px); }
+.tour__title { font-size: clamp(1.4rem, 3.4vw, 2.8rem); }
+.tour__span { margin: 0; text-align: right; color: var(--grey); }
 .stage { list-style: none; margin: 0; padding: 0; }
-.stage li { display: grid; grid-template-columns: minmax(84px, 130px) minmax(0, 1fr) minmax(0, .8fr) auto; gap: clamp(12px, 2.4vw, 40px); align-items: baseline; padding: clamp(15px, 2.2vw, 26px) 0; border-top: 1px solid rgba(255,255,255,.22); }
+.stage li { display: grid; grid-template-columns: minmax(84px, 130px) minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(12px, 2.4vw, 40px); align-items: baseline; padding: clamp(15px, 2.2vw, 26px) 0; border-top: 1px solid rgba(255,255,255,.22); }
 .stage li:last-child { border-bottom: 1px solid rgba(255,255,255,.22); }
-.stage h3 { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.05rem, 2.2vw, 1.9rem); line-height: 1; margin: 0; }
+.stage h4 { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.05rem, 2.2vw, 1.9rem); line-height: 1; margin: 0; }
 .stage p { margin: 0; }
 @media (max-width: 760px) { .stage li { grid-template-columns: 1fr auto; } .stage__date, .stage__place { grid-column: 1 / -1; } }
 
@@ -1029,60 +1032,154 @@ a { color: inherit; text-decoration: none; }
     <div class="sec__inner">
       <div class="sec__head">
         <h2 class="display sec__title" data-reveal>Stage</h2>
-        <p class="sec__no">04 — Europe Tour 2026</p>
+        <p class="sec__no">04</p>
       </div>
 
-      <!-- 위치 권한은 이 버튼을 눌렀을 때만 요청한다. 진입 즉시 팝업 금지. -->
-      <div class="geo" data-reveal>
-        <span class="micro">위치기반 · 선택</span>
-        <p class="micro--plain" style="margin:0;flex:1;min-width:200px">내 위치에서 가까운 공연부터 정렬합니다. 위치 정보는 브라우저를 벗어나지 않습니다.</p>
-        <button type="button">가까운 공연부터 보기</button>
-      </div>
+      <!-- 다가오는 투어를 위에 둔다 -->
+      <article class="tour" data-reveal>
+        <div class="tour__head">
+          <div>
+            <p class="micro" style="color:var(--grey);margin:0 0 6px">가호 (Gaho) · Brazil Tour 2026</p>
+            <h3 class="display tour__title">To Mars Tour</h3>
+          </div>
+          <p class="micro tour__span">22 AUG—05 SEP 2026<br>브라질 · 8개 도시</p>
+        </div>
 
-      <ul class="stage" data-reveal>
-        <li>
-          <span class="stage__date micro">05—06 APR</span>
-          <h3>Lausanne</h3>
-          <p class="stage__place micro">Polymanga · Switzerland</p>
-          <span class="micro">↗</span>
-        </li>
-        <li>
-          <span class="stage__date micro">08 APR</span>
-          <h3>Warsaw</h3>
-          <p class="stage__place micro">Hybrydy · Poland</p>
-          <span class="micro">↗</span>
-        </li>
-        <li>
-          <span class="stage__date micro">09 APR</span>
-          <h3>Berlin</h3>
-          <p class="stage__place micro">Columbia Theater · Germany</p>
-          <span class="micro">↗</span>
-        </li>
-        <li>
-          <span class="stage__date micro">11 APR</span>
-          <h3>Cologne</h3>
-          <p class="stage__place micro">CBE · Germany</p>
-          <span class="micro">↗</span>
-        </li>
-        <li>
-          <span class="stage__date micro">15 APR</span>
-          <h3>Paris</h3>
-          <p class="stage__place micro">Café de la Danse · France</p>
-          <span class="micro">↗</span>
-        </li>
-        <li>
-          <span class="stage__date micro">16 APR</span>
-          <h3>Amsterdam</h3>
-          <p class="stage__place micro">P60 · Netherlands</p>
-          <span class="micro">↗</span>
-        </li>
-        <li>
-          <span class="stage__date micro">18 APR</span>
-          <h3>London</h3>
-          <p class="stage__place micro">The Underworld · United Kingdom</p>
-          <span class="micro">↗</span>
-        </li>
-      </ul>
+        <ul class="stage">
+          <li>
+            <span class="stage__date micro">22 AUG</span>
+            <h4>São Paulo</h4>
+            <p class="stage__place micro">Studio Stage · SP</p>
+          </li>
+          <li>
+            <span class="stage__date micro">23 AUG</span>
+            <h4>São Luís</h4>
+            <p class="stage__place micro">Humberto de Maracanã · MA</p>
+          </li>
+          <li>
+            <span class="stage__date micro">28 AUG</span>
+            <h4>Belém</h4>
+            <p class="stage__place micro">Teatro It Center · PA</p>
+          </li>
+          <li>
+            <span class="stage__date micro">30 AUG</span>
+            <h4>Fortaleza</h4>
+            <p class="stage__place micro">Teatro Brasil Tropical · CE</p>
+          </li>
+          <li>
+            <span class="stage__date micro">01 SEP</span>
+            <h4>Salvador</h4>
+            <p class="stage__place micro">Teatro da Cidade · BA</p>
+          </li>
+          <li>
+            <span class="stage__date micro">03 SEP</span>
+            <h4>Florianópolis</h4>
+            <p class="stage__place micro">John Bull · SC</p>
+          </li>
+          <li>
+            <span class="stage__date micro">04 SEP</span>
+            <h4>Porto Alegre</h4>
+            <p class="stage__place micro">Centro de Eventos CIEE · RS</p>
+          </li>
+          <li>
+            <span class="stage__date micro">05 SEP</span>
+            <h4>Curitiba</h4>
+            <p class="stage__place micro">Igloo Super Hall · PR</p>
+          </li>
+        </ul>
+      </article>
+      <!-- 단발 공연 — 도시가 하나뿐이라 회차를 목록으로 둔다 -->
+      <article class="tour" data-reveal>
+        <div class="tour__head">
+          <div>
+            <p class="micro" style="color:var(--grey);margin:0 0 6px">가호 (Gaho) · 1st Japan Event</p>
+            <h3 class="display tour__title">Start Over</h3>
+          </div>
+          <p class="micro tour__span">26 JUL 2026<br>일본 · 도쿄</p>
+        </div>
+
+        <ul class="stage">
+          <li>
+            <span class="stage__date micro">26 JUL</span>
+            <h4>Japan</h4>
+            <p class="stage__place micro">Tokyo · Hikousen Theater — Chapter 1. Special Fanmeeting</p>
+          </li>
+          <li>
+            <span class="stage__date micro">26 JUL</span>
+            <h4>Japan</h4>
+            <p class="stage__place micro">Tokyo · Hikousen Theater — Chapter 2. Special Live</p>
+          </li>
+        </ul>
+      </article>
+
+
+      <!-- 하나의 투어를 한 덩어리로 묶는다. 개별 공연은 그 안의 목록. -->
+      <article class="tour" data-reveal>
+        <div class="tour__head">
+          <div>
+            <p class="micro" style="color:var(--grey);margin:0 0 6px">Gaho &amp; KAVE · Europe Tour 2026</p>
+            <h3 class="display tour__title">Cityscapes — New Horizons</h3>
+          </div>
+          <p class="micro tour__span">05—18 APR 2026<br>6개국 · 7개 도시</p>
+        </div>
+
+        <ul class="stage">
+          <li>
+            <span class="stage__date micro">05—06 APR</span>
+            <h4>Switzerland</h4>
+            <p class="stage__place micro">Lausanne · Polymanga</p>
+          </li>
+          <li>
+            <span class="stage__date micro">08 APR</span>
+            <h4>Poland</h4>
+            <p class="stage__place micro">Warsaw · Hybrydy</p>
+          </li>
+          <li>
+            <span class="stage__date micro">09 APR</span>
+            <h4>Germany</h4>
+            <p class="stage__place micro">Berlin · Columbia Theater</p>
+          </li>
+          <li>
+            <span class="stage__date micro">11 APR</span>
+            <h4>Germany</h4>
+            <p class="stage__place micro">Cologne · CBE</p>
+          </li>
+          <li>
+            <span class="stage__date micro">15 APR</span>
+            <h4>France</h4>
+            <p class="stage__place micro">Paris · Café de la Danse</p>
+          </li>
+          <li>
+            <span class="stage__date micro">16 APR</span>
+            <h4>Netherlands</h4>
+            <p class="stage__place micro">Amsterdam · P60</p>
+          </li>
+          <li>
+            <span class="stage__date micro">18 APR</span>
+            <h4>United Kingdom</h4>
+            <p class="stage__place micro">London · The Underworld</p>
+          </li>
+        </ul>
+      </article>
+
+      <!-- 단독 공연 -->
+      <article class="tour" data-reveal>
+        <div class="tour__head">
+          <div>
+            <p class="micro" style="color:var(--grey);margin:0 0 6px">가호 (Gaho) · AL!VE 월간종로</p>
+            <h3 class="display tour__title">Monthly Jongno</h3>
+          </div>
+          <p class="micro tour__span">14 FEB 2026<br>한국 · 서울</p>
+        </div>
+
+        <ul class="stage">
+          <li>
+            <span class="stage__date micro">14 FEB</span>
+            <h4>Korea</h4>
+            <p class="stage__place micro">Seoul · CGV 피카디리1958 — 18:00</p>
+          </li>
+        </ul>
+      </article>
     </div>
   </section>
 
@@ -1147,15 +1244,31 @@ a { color: inherit; text-decoration: none; }
   <footer class="foot" id="inquiry">
     <div class="foot__inner">
       <p class="foot__mark">PLAN-G</p>
+
+      <!-- 연락처는 bbj(운영 사이트) Contact 섹션 그대로 -->
       <div class="foot__cols micro">
-        <div><p style="margin:0 0 8px;color:var(--grey)">[ 문의 유형 1 ]</p><a href="#">[ 연락처 ]</a></div>
-        <div><p style="margin:0 0 8px;color:var(--grey)">[ 문의 유형 2 ]</p><a href="#">[ 연락처 ]</a></div>
-        <div><p style="margin:0 0 8px;color:var(--grey)">[ 문의 유형 3 ]</p><a href="#">[ 연락처 ]</a></div>
-        <div><p style="margin:0 0 8px;color:var(--grey)">Social</p><a href="#">[ 채널 1 ]</a><a href="#">[ 채널 2 ]</a></div>
+        <div>
+          <p style="margin:0 0 8px;color:var(--grey)">Business Inquiries</p>
+          <a href="mailto:contact@plan-g.io">contact@plan-g.io</a>
+        </div>
+        <div>
+          <p style="margin:0 0 8px;color:var(--grey)">Press &amp; Media</p>
+          <a href="mailto:contact@plan-g.io">contact@plan-g.io</a>
+        </div>
+        <div>
+          <p style="margin:0 0 8px;color:var(--grey)">Artist Management</p>
+          <a href="tel:+821064033823">010-6403-3823</a>
+        </div>
+        <div>
+          <p style="margin:0 0 8px;color:var(--grey)">Artists</p>
+          <a href="#roster">가호 (Gaho)</a>
+          <a href="#roster">KAVE</a>
+        </div>
       </div>
+
       <div class="foot__bottom micro">
-        <p style="margin:0">© 2026 PLAN-G Entertainment</p>
-        <p style="margin:0">Layout Type 2 — bbj-h</p>
+        <p style="margin:0">© 2026 PLAN-G Entertainment. All rights reserved.</p>
+        <p style="margin:0">(주)플랜지엔터테인먼트 · PLAN-G.IO</p>
       </div>
     </div>
   </footer>
