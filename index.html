@@ -362,8 +362,13 @@ a { color: inherit; text-decoration: none; }
 /* 멤버 줄은 아티스트 블록 전체 폭을 쓴다 — 오른쪽 컬럼 안에 가두면
    좌측 하단에 목적 없는 빈 공간이 남는다.
    auto-fill 이라 인원수가 2명이든 5명이든 칸 크기가 같게 유지된다. */
+/* 멤버 구획 — 헤어라인 헤더로 명단임을 알린다 */
+.members { margin-top: clamp(26px, 4vw, 52px); }
+.members__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); margin-bottom: clamp(12px, 1.6vw, 20px); }
+.members__count { color: var(--grey); }
+.members__no { display: inline-block; min-width: 1.9em; color: var(--grey); }
 .artist__people {
-  list-style: none; margin: clamp(14px, 2vw, 26px) 0 0; padding: 0;
+  list-style: none; margin: 0; padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(clamp(104px, 11vw, 170px), 1fr));
   gap: clamp(6px, .8vw, 12px);
@@ -751,8 +756,19 @@ a { color: inherit; text-decoration: none; }
           <span><i>Out now.</i></span>
         </p>
 
+        <p class="body-lg" style="margin:0 0 16px">
+          가호의 디지털 싱글 &lt;To Mars&gt;가 2026년 4월 8일 발매되었습니다.
+          PLAN-G Entertainment와 함께한 첫 공식 발매작입니다.
+        </p>
+        <p class="body-lg" style="margin:0 0 16px">
+          사랑의 크기를 우주의 거리로 넓힌 팝 트랙입니다. 단 한 사람을 향한 확신,
+          화성까지라도 함께 가겠다는 마음, 더는 기다리고 싶지 않다는 솔직한 감정을
+          담았습니다. 우주라는 광활한 이미지를 빌려 오히려 가장 사적이고 내밀한
+          마음을 전합니다.
+        </p>
         <p class="body-lg" style="margin:0">
-          가호의 &lt;To Mars&gt;가 2026년 4월 8일 발매되었습니다. 뮤직비디오로 먼저 만나보세요.
+          발매 당일, 유럽 투어 &lt;Cityscapes — New Horizons&gt;의 바르샤바 공연에서
+          첫 무대를 선보였습니다.
         </p>
 
         <div class="now__meta micro">
@@ -838,14 +854,20 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
-      <!-- 멤버 줄은 블록 전체 폭 -->
-      <ul class="artist__people">
-        <li><figure style="margin:0"><img src="images/artists/kave-gaho.jpg" alt="KAVE 가호" width="600" height="800" loading="lazy"><figcaption class="micro">가호</figcaption></figure></li>
-        <li><figure style="margin:0"><img src="images/artists/kave-jisang.jpg" alt="KAVE 지상" width="600" height="800" loading="lazy"><figcaption class="micro">지상</figcaption></figure></li>
-        <li><figure style="margin:0"><img src="images/artists/kave-hyun.jpg" alt="KAVE 현" width="600" height="800" loading="lazy"><figcaption class="micro">현</figcaption></figure></li>
-        <li><figure style="margin:0"><img src="images/artists/kave-owner.jpg" alt="KAVE 오너" width="600" height="800" loading="lazy"><figcaption class="micro">오너</figcaption></figure></li>
-        <li><figure style="margin:0"><img src="images/artists/kave-jun.jpg" alt="KAVE 준" width="600" height="800" loading="lazy"><figcaption class="micro">준</figcaption></figure></li>
-      </ul>
+      <!-- 멤버 구획 — 헤더와 번호를 붙여 '쏟아진 사진'이 아니라 명단으로 읽히게 한다 -->
+      <div class="members">
+        <div class="members__head">
+          <p class="micro" style="margin:0">Members</p>
+          <span class="members__count micro">(05)</span>
+        </div>
+        <ul class="artist__people">
+          <li><figure style="margin:0"><img src="images/artists/kave-gaho.jpg" alt="KAVE 가호" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">01</span>가호</figcaption></figure></li>
+          <li><figure style="margin:0"><img src="images/artists/kave-jisang.jpg" alt="KAVE 지상" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">02</span>지상</figcaption></figure></li>
+          <li><figure style="margin:0"><img src="images/artists/kave-hyun.jpg" alt="KAVE 현" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">03</span>현</figcaption></figure></li>
+          <li><figure style="margin:0"><img src="images/artists/kave-owner.jpg" alt="KAVE 오너" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">04</span>오너</figcaption></figure></li>
+          <li><figure style="margin:0"><img src="images/artists/kave-jun.jpg" alt="KAVE 준" width="600" height="800" loading="lazy"><figcaption class="micro"><span class="members__no">05</span>준</figcaption></figure></li>
+        </ul>
+      </div>
     </article>
   </section>
 
