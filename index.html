@@ -273,6 +273,8 @@ a { color: inherit; text-decoration: none; }
 .teaser { margin: 0; }
 .teaser__frame { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--stage); }
 .teaser__video { width: 100%; height: 100%; object-fit: cover; }
+.teaser__poster { width: 100%; height: 100%; object-fit: cover; }
+.teaser__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .teaser__toggle, .teaser__mute {
   position: absolute; bottom: 14px;
   background: rgba(0,0,0,.55); color: var(--paper);
@@ -287,6 +289,9 @@ a { color: inherit; text-decoration: none; }
 
 /* 본문이 길어졌으므로 상단 정렬 — 가운데 정렬이면 이미지와 텍스트가 어긋나 보인다 */
 .now { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(20px, 4vw, 64px); align-items: start; }
+/* 두 번째 이후 항목은 좌우를 뒤집어 리듬을 만든다 */
+.now--flip { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); margin-top: clamp(40px, 6vw, 90px); padding-top: clamp(36px, 5vw, 70px); border-top: 1px solid var(--hair); }
+.now--flip .teaser { order: 2; }
 
 /* ---- 후속 소식 ----
    Now는 '대표 1건 + 후속 목록' 구조다. 대표는 크게, 나머지는 한 줄씩.
@@ -323,7 +328,11 @@ a { color: inherit; text-decoration: none; }
 .now__pulse { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: pulse 2.4s var(--ease) infinite; }
 @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .3; transform: scale(.7); } }
 .now__meta { display: flex; gap: clamp(12px, 2.4vw, 34px); flex-wrap: wrap; border-top: 1px solid var(--hair); padding-top: 14px; margin-top: 22px; }
-@media (max-width: 820px) { .now { grid-template-columns: 1fr; } }
+@media (max-width: 820px) {
+  .now, .now--flip { grid-template-columns: 1fr; }
+  /* 한 줄로 접히면 영상이 먼저 와야 한다 */
+  .now--flip .teaser { order: 0; }
+}
 
 /* ==========================================================================
    02 ROSTER — 이름이 먼저, 사진이 따라온다
@@ -748,6 +757,41 @@ a { color: inherit; text-decoration: none; }
       </div>
     </div>
 
+    <!-- ── 두 번째: 이미 발매된 곡 ──
+         YouTube 영상은 내려받아 재생할 수 없다(이용약관). 대신 '파사드' 방식으로
+         썸네일 + 재생 버튼만 먼저 보여주고, 누를 때만 임베드를 끼운다.
+         덕분에 겉모습은 위 티저와 같고, 클릭 전에는 YouTube 스크립트가 로드되지 않는다. -->
+    <div class="now now--flip">
+      <figure class="teaser" data-yt="62BGFV9A2Ig" data-reveal>
+        <div class="teaser__frame">
+          <img class="teaser__poster" src="https://img.youtube.com/vi/62BGFV9A2Ig/maxresdefault.jpg"
+               alt="가호 &lt;To Mars&gt; 뮤직비디오 썸네일" loading="lazy" width="1280" height="720">
+          <button class="teaser__toggle micro" type="button">▶ Play on YouTube</button>
+        </div>
+        <figcaption class="micro">가호 — &lt;To Mars&gt; Music Video</figcaption>
+      </figure>
+
+      <div data-reveal>
+        <p class="now__kicker micro">발매 — 2026.04.08</p>
+
+        <p class="micro" style="color:var(--grey);margin:0 0 8px">가호 (Gaho) — Single</p>
+        <h3 class="display now__title">To Mars</h3>
+
+        <p class="intro__lead lines" style="margin:0 0 18px">
+          <span><i>Out now.</i></span>
+        </p>
+
+        <p class="body-lg" style="margin:0">
+          가호의 &lt;To Mars&gt;가 2026년 4월 8일 발매되었습니다. 뮤직비디오로 먼저 만나보세요.
+        </p>
+
+        <div class="now__meta micro">
+          <span>가호 (Gaho)</span><span>Single</span><span>2026.04.08</span>
+          <a href="https://www.youtube.com/watch?v=62BGFV9A2Ig" target="_blank" rel="noopener noreferrer" style="margin-left:auto">뮤직비디오 ↗</a>
+        </div>
+      </div>
+    </div>
+
     <!-- 후속 소식 — 항목 추가는 <li> 하나 복사 -->
     <ul class="now-more" data-reveal>
       <li>
@@ -797,7 +841,7 @@ a { color: inherit; text-decoration: none; }
         <div class="artist__media">
           <figure class="artist__lead">
             <div class="ph" data-label="대표컷 3:2"></div>
-            <figcaption class="micro">[ 촬영 · 크레딧 ]</figcaption>
+            <figcaption class="micro">Photography Hongje An · TMRW Magazine</figcaption>
           </figure>
           <ul class="artist__people">
             <li><figure style="margin:0"><div class="ph" data-label="프로필 3:4"></div></figure></li>
@@ -818,7 +862,8 @@ a { color: inherit; text-decoration: none; }
           <dt>Formed</dt><dd>2024</dd>
           <dt>Members</dt><dd>가호 · 지상 · 현 · 오너 · 준</dd>
           <dd class="artist__links micro">
-            <a href="#">Instagram</a><a href="#">YouTube</a><a href="#">Spotify</a>
+            <a href="https://www.instagram.com/kave_official_" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.youtube.com/@KAVE_Official" target="_blank" rel="noopener noreferrer">YouTube</a>
           </dd>
         </dl>
 
@@ -838,7 +883,7 @@ a { color: inherit; text-decoration: none; }
                 <span class="lead--portrait__rule" aria-hidden="true"></span>
               </div>
             </div>
-            <figcaption class="micro">[ 촬영 · 크레딧 ]</figcaption>
+            <figcaption class="micro">Photography Hongje An · TMRW Magazine</figcaption>
           </figure>
         </div>
       </div>
@@ -1232,9 +1277,27 @@ addEventListener('resize', () => {
   }
 })();
 
-/* 티저 재생 — 소리 포함. 화면 밖으로 나가면 자동으로 멈춘다. */
+/* YouTube 파사드 — 누르기 전에는 썸네일만 있고 YouTube 스크립트가 로드되지 않는다.
+   영상을 내려받아 자체 재생하는 것은 이용약관 위반이라 임베드로 처리한다. */
+document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
+  const btn = fig.querySelector('.teaser__toggle');
+  const frame = fig.querySelector('.teaser__frame');
+  if (!btn || !frame) return;
+
+  btn.addEventListener('click', () => {
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://www.youtube-nocookie.com/embed/' + fig.dataset.yt + '?autoplay=1&rel=0&playsinline=1';
+    const cap = fig.querySelector('figcaption');
+    iframe.title = cap ? cap.textContent.trim() : 'Music video';
+    iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    frame.replaceChildren(iframe);
+  });
+});
+
+/* 자체 호스팅 티저 재생 — 소리 포함. 화면 밖으로 나가면 자동으로 멈춘다. */
 (function teaser() {
-  const wrap = document.querySelector('.teaser');
+  const wrap = document.querySelector('.teaser:not([data-yt])');
   if (!wrap) return;
   const v = wrap.querySelector('video');
   const play = wrap.querySelector('.teaser__toggle');
