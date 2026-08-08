@@ -428,6 +428,8 @@ a { color: inherit; text-decoration: none; }
 }
 .split__media:hover img { filter: grayscale(0); }
 .split__media figcaption { margin-top: 9px; color: var(--grey); }
+/* 원본 비율 그대로 — 잘리지 않는다. KAVE(4:5)와 크기감은 비슷하게 유지된다. */
+.split__media--natural img { aspect-ratio: auto; object-fit: contain; }
 /* 우측 이름은 이미지 윗변에 맞춰 시작한다 */
 .split__side { padding-top: clamp(0px, 1vw, 12px); }
 .split__side .artist__name { margin-bottom: 4px; }
@@ -973,30 +975,31 @@ a { color: inherit; text-decoration: none; }
       <p class="sec__no">02</p>
     </div>
 
-    <!-- 솔로 아티스트 — 대표컷 1 + 본인 2 = 3장 -->
-    <article class="artist" data-reveal>
-      <h3 class="display artist__name">GAHO</h3>
-      <p class="artist__ko">가호</p>
-      <div class="artist__row">
-        <dl class="artist__facts" style="margin:0">
-          <dt>Role</dt><dd>Singer-Songwriter</dd>
-          <dt>Known for</dt><dd>&lt;시작&gt; — 이태원 클라쓰 OST Part 2</dd>
-          <dt>Also</dt><dd>KAVE 멤버 (2024~)</dd>
-          <dd class="artist__links micro">
-            <a href="https://www.instagram.com/ad_gaho" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="https://www.youtube.com/gaho_official" target="_blank" rel="noopener noreferrer">YouTube</a>
-            <a href="https://open.spotify.com/artist/3ybZTNrlK0QhL4rBxfLHOc" target="_blank" rel="noopener noreferrer">Spotify</a>
-          </dd>
-        </dl>
+    <!-- 솔로 — KAVE와 같은 2단 분할. 프레임 3개를 한 장으로 합쳤다 -->
+    <article class="artist artist--split" data-reveal>
+      <div class="split">
+        <figure class="split__media split__media--natural">
+          <img src="images/artists/gaho-lead.jpg"
+               srcset="images/artists/gaho-lead-700.jpg 700w, images/artists/gaho-lead.jpg 1100w"
+               sizes="(max-width: 860px) 92vw, 46vw"
+               alt="가호 (Gaho)"
+               width="1100" height="1251" loading="lazy">
+        </figure>
 
-        <div class="artist__media">
-          <figure class="artist__lead">
-            <div class="ph" data-label="대표컷 3:2"></div>
-          </figure>
-          <ul class="artist__people">
-            <li><figure style="margin:0"><div class="ph" data-label="프로필 3:4"></div></figure></li>
-            <li><figure style="margin:0"><div class="ph" data-label="프로필 3:4"></div></figure></li>
-          </ul>
+        <div class="split__side">
+          <h3 class="display artist__name">GAHO</h3>
+          <p class="artist__ko">가호</p>
+
+          <dl class="artist__facts" style="margin:0">
+            <dt>Role</dt><dd>Singer-Songwriter</dd>
+            <dt>Known for</dt><dd>&lt;시작&gt; — 이태원 클라쓰 OST Part 2</dd>
+            <dt>Also</dt><dd>KAVE 멤버 (2024~)</dd>
+            <dd class="artist__links micro">
+              <a href="https://www.instagram.com/ad_gaho" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://www.youtube.com/gaho_official" target="_blank" rel="noopener noreferrer">YouTube</a>
+              <a href="https://open.spotify.com/artist/3ybZTNrlK0QhL4rBxfLHOc" target="_blank" rel="noopener noreferrer">Spotify</a>
+            </dd>
+          </dl>
         </div>
       </div>
     </article>
@@ -1358,11 +1361,7 @@ a { color: inherit; text-decoration: none; }
       </figure>
 
       <figure class="press__e" data-reveal>
-        <img src="images/press/gaho-leather.jpg"
-             srcset="images/press/gaho-leather-700.jpg 700w, images/press/gaho-leather.jpg 1100w"
-             sizes="(max-width: 860px) 60vw, 24vw"
-             alt="가호 (Gaho) 화보"
-             width="1100" height="1251" loading="lazy">
+        <div class="ph" data-label="화보 세로 3:4"></div>
       </figure>
     </div>
   </section>
