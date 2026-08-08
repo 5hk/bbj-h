@@ -293,36 +293,6 @@ a { color: inherit; text-decoration: none; }
 .now--flip { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); margin-top: clamp(40px, 6vw, 90px); padding-top: clamp(36px, 5vw, 70px); border-top: 1px solid var(--hair); }
 .now--flip .teaser { order: 2; }
 
-/* ---- 후속 소식 ----
-   Now는 '대표 1건 + 후속 목록' 구조다. 대표는 크게, 나머지는 한 줄씩.
-   전부 같은 크기로 늘어놓으면 '지금 가장 중요한 한 가지'라는 뜻이 사라진다.
-   항목 추가는 <li> 하나 복사면 된다. */
-.now-more { list-style: none; margin: clamp(30px, 5vw, 66px) 0 0; padding: 0; }
-.now-more li {
-  display: grid;
-  grid-template-columns: minmax(72px, 104px) minmax(110px, 168px) minmax(0, 1fr) auto;
-  gap: clamp(12px, 2.2vw, 34px);
-  align-items: center;
-  padding: clamp(14px, 2vw, 22px) 0;
-  border-top: 1px solid var(--hair);
-}
-.now-more li:last-child { border-bottom: 1px solid var(--hair); }
-.now-more__date { color: var(--grey); }
-.now-more__thumb { overflow: hidden; }
-.now-more__thumb .ph { --ar: 3/2; }
-.now-more__thumb img { width: 100%; aspect-ratio: 3/2; object-fit: cover; filter: grayscale(1); transition: filter .6s var(--ease); }
-.now-more li:hover .now-more__thumb img { filter: grayscale(0); }
-.now-more h4 {
-  font-family: var(--font-display); text-transform: uppercase;
-  font-size: clamp(1rem, 1.9vw, 1.5rem); line-height: 1.05; margin: 0 0 5px;
-}
-.now-more p { margin: 0; color: var(--grey); }
-.now-more__go { justify-self: end; }
-
-@media (max-width: 760px) {
-  .now-more li { grid-template-columns: minmax(84px, 1fr) minmax(0, 2fr) auto; row-gap: 6px; }
-  .now-more__date { grid-column: 1 / -1; }
-}
 .now__title { font-size: clamp(1.8rem, 4.6vw, 3.75rem); margin: 0 0 16px; }
 .now__kicker { display: flex; align-items: center; gap: 9px; margin: 0 0 16px; }
 .now__pulse { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: pulse 2.4s var(--ease) infinite; }
@@ -792,27 +762,6 @@ a { color: inherit; text-decoration: none; }
       </div>
     </div>
 
-    <!-- 후속 소식 — 항목 추가는 <li> 하나 복사 -->
-    <ul class="now-more" data-reveal>
-      <li>
-        <span class="now-more__date micro">2026.08</span>
-        <div class="now-more__thumb"><div class="ph" data-label="화보 3:2"></div></div>
-        <div>
-          <h4>TMRW Magazine × 가호, KAVE</h4>
-          <p class="micro--plain">※ 게재 호수·공개일 확인 후 확정 문구로 교체</p>
-        </div>
-        <span class="now-more__go micro" aria-hidden="true">↗</span>
-      </li>
-      <li>
-        <span class="now-more__date micro">2026.04</span>
-        <div class="now-more__thumb"><div class="ph" data-label="공연 3:2"></div></div>
-        <div>
-          <h4>Europe Tour — Cityscapes, New Horizons</h4>
-          <p class="micro--plain">로잔에서 런던까지 7개 도시. 첫 유럽 투어를 마쳤습니다.</p>
-        </div>
-        <a class="now-more__go micro" href="#stage">일정 ↗</a>
-      </li>
-    </ul>
   </section>
 
   <!-- ================= 02 ROSTER ================= -->
@@ -864,6 +813,7 @@ a { color: inherit; text-decoration: none; }
           <dd class="artist__links micro">
             <a href="https://www.instagram.com/kave_official_" target="_blank" rel="noopener noreferrer">Instagram</a>
             <a href="https://www.youtube.com/@KAVE_Official" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a href="https://open.spotify.com/artist/2ULfZAs05dyyWxznOPua14" target="_blank" rel="noopener noreferrer">Spotify</a>
           </dd>
         </dl>
 
