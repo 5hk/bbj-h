@@ -121,7 +121,7 @@ a { color: inherit; text-decoration: none; }
 /* 로고는 흰 글자 + 투명 배경 PNG.
    nav 가 mix-blend-mode: difference 라 어두운 영상 위에선 희게, 흰 지면 위에선 검게 보인다. */
 .nav__logo { display: flex; align-items: center; }
-.nav__logo img { width: auto; height: clamp(13px, 1.5vw, 18px); display: block; }
+.nav__logo img { width: auto; height: clamp(20px, 2.4vw, 30px); display: block; }
 .nav__links { display: flex; gap: clamp(10px, 2vw, 32px); list-style: none; margin: 0; padding: 0; }
 .nav__links a { position: relative; }
 .nav__links a::after { content: ''; position: absolute; left: 0; bottom: -3px; width: 100%; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .45s var(--ease); }
@@ -391,6 +391,12 @@ a { color: inherit; text-decoration: none; }
 }
 .artist__people li { margin: 0; }
 .artist__people .ph { --ar: 3/4; }
+.artist__people img {
+  width: 100%; height: auto; aspect-ratio: 3/4; object-fit: cover;
+  filter: grayscale(1) contrast(1.04);
+  transition: filter .6s var(--ease);
+}
+.artist__people li:hover img { filter: grayscale(0); }
 .artist__people figcaption,
 .artist__people span { display: block; margin-top: 6px; }
 
@@ -530,22 +536,28 @@ a { color: inherit; text-decoration: none; }
 .sb[data-shown="true"] .sb__line[data-anim="open"] span { transform: scaleY(1); }
 .sb__line[data-anim="open"] span[data-space] { transform: none !important; }
 
-/* ② 스크램블 — 무작위 문자를 굴리다 왼쪽부터 확정된다 */
+/* ② 스크램블 — 무작위 문자를 굴리다 왼쪽부터 확정된다.
+   레퍼런스에서 UNTOLD STORIES 는 큰 워드마크 아래 붙는 '부제'다.
+   그래서 굵기를 낮추고 자간을 크게 벌리고 크기도 한 단계 내린다. */
+.sb__line[data-anim="scramble"] {
+  font-size: clamp(.85rem, 2.7vw, 2.1rem);
+  letter-spacing: .34em;
+  margin-top: clamp(18px, 3vw, 44px);
+}
 .sb__line[data-anim="scramble"] span {
-  min-width: .52em; text-align: center;
+  font-variation-settings: 'wdth' 100, 'wght' 300;
+  min-width: .62em; text-align: center;
 }
 .sb__line[data-anim="scramble"] span[data-pending] {
-  font-variation-settings: 'wdth' 62.5, 'wght' 400;
-  opacity: .38;
+  font-variation-settings: 'wdth' 75, 'wght' 200;
+  opacity: .35;
 }
-.sb__line[data-anim="scramble"] span[data-space] { min-width: .3em; }
+.sb__line[data-anim="scramble"] span[data-space] { min-width: .34em; }
 
 /* 측정용 — 최종 상태 기준으로 줄 길이를 잰다 */
-.sb__line.is-measuring span {
-  transform: none !important;
-  font-variation-settings: 'wdth' 100, 'wght' 800 !important;
-  opacity: 1 !important;
-}
+.sb__line.is-measuring span { transform: none !important; opacity: 1 !important; }
+.sb__line[data-anim="open"].is-measuring span { font-variation-settings: 'wdth' 100, 'wght' 800 !important; }
+.sb__line[data-anim="scramble"].is-measuring span { font-variation-settings: 'wdth' 100, 'wght' 300 !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .sb__line span { transform: none !important; opacity: 1 !important; }
@@ -824,11 +836,11 @@ a { color: inherit; text-decoration: none; }
 
       <!-- 멤버 줄은 블록 전체 폭 -->
       <ul class="artist__people">
-        <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">가호</figcaption></figure></li>
-        <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">지상</figcaption></figure></li>
-        <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">현</figcaption></figure></li>
-        <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">오너</figcaption></figure></li>
-        <li><figure style="margin:0"><div class="ph" data-label="멤버 3:4"></div><figcaption class="micro">준</figcaption></figure></li>
+        <li><figure style="margin:0"><img src="images/artists/kave-gaho.jpg" alt="KAVE 가호" width="600" height="800" loading="lazy"><figcaption class="micro">가호</figcaption></figure></li>
+        <li><figure style="margin:0"><img src="images/artists/kave-jisang.jpg" alt="KAVE 지상" width="600" height="800" loading="lazy"><figcaption class="micro">지상</figcaption></figure></li>
+        <li><figure style="margin:0"><img src="images/artists/kave-hyun.jpg" alt="KAVE 현" width="600" height="800" loading="lazy"><figcaption class="micro">현</figcaption></figure></li>
+        <li><figure style="margin:0"><img src="images/artists/kave-owner.jpg" alt="KAVE 오너" width="600" height="800" loading="lazy"><figcaption class="micro">오너</figcaption></figure></li>
+        <li><figure style="margin:0"><img src="images/artists/kave-jun.jpg" alt="KAVE 준" width="600" height="800" loading="lazy"><figcaption class="micro">준</figcaption></figure></li>
       </ul>
     </article>
   </section>
