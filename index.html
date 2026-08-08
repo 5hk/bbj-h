@@ -118,6 +118,10 @@ a { color: inherit; text-decoration: none; }
   color: #fff;
 }
 .nav a, .nav p { color: inherit; }
+/* 로고는 흰 글자 + 투명 배경 PNG.
+   nav 가 mix-blend-mode: difference 라 어두운 영상 위에선 희게, 흰 지면 위에선 검게 보인다. */
+.nav__logo { display: flex; align-items: center; }
+.nav__logo img { width: auto; height: clamp(13px, 1.5vw, 18px); display: block; }
 .nav__links { display: flex; gap: clamp(10px, 2vw, 32px); list-style: none; margin: 0; padding: 0; }
 .nav__links a { position: relative; }
 .nav__links a::after { content: ''; position: absolute; left: 0; bottom: -3px; width: 100%; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .45s var(--ease); }
@@ -511,24 +515,40 @@ a { color: inherit; text-decoration: none; }
 }
 .sb__line + .sb__line { margin-top: clamp(2px, .6vw, 10px); }
 
-/* 글자는 가운데를 축으로 납작하게 눌린 '가로 선' 상태에서 시작해
-   위아래로 열리며 제 모양이 된다. 레퍼런스의 그 얇은 획이 이 상태다. */
 .sb__line span {
   display: inline-block;
   font-variation-settings: 'wdth' 100, 'wght' 800;
+}
+
+/* ① 열림 — 가운데를 축으로 납작하게 눌린 '가로 선'에서 위아래로 펼쳐진다 */
+.sb__line[data-anim="open"] span {
   transform: scaleY(.04);
   transform-origin: center;
   transition: transform .85s cubic-bezier(.16, 1, .3, 1);
   transition-delay: calc(var(--i) * .045s);
 }
-.sb[data-shown="true"] .sb__line span { transform: scaleY(1); }
-.sb__line span[data-space] { transform: none !important; }
+.sb[data-shown="true"] .sb__line[data-anim="open"] span { transform: scaleY(1); }
+.sb__line[data-anim="open"] span[data-space] { transform: none !important; }
 
-/* 측정용 — 다 열린 상태 기준으로 줄 길이를 잰다 */
-.sb__line.is-measuring span { transform: none !important; }
+/* ② 스크램블 — 무작위 문자를 굴리다 왼쪽부터 확정된다 */
+.sb__line[data-anim="scramble"] span {
+  min-width: .52em; text-align: center;
+}
+.sb__line[data-anim="scramble"] span[data-pending] {
+  font-variation-settings: 'wdth' 62.5, 'wght' 400;
+  opacity: .38;
+}
+.sb__line[data-anim="scramble"] span[data-space] { min-width: .3em; }
+
+/* 측정용 — 최종 상태 기준으로 줄 길이를 잰다 */
+.sb__line.is-measuring span {
+  transform: none !important;
+  font-variation-settings: 'wdth' 100, 'wght' 800 !important;
+  opacity: 1 !important;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .sb__line span { transform: none !important; }
+  .sb__line span { transform: none !important; opacity: 1 !important; }
 }
 
 /* ==========================================================================
@@ -551,7 +571,9 @@ a { color: inherit; text-decoration: none; }
 <a href="#main" class="sr-only">본문으로 건너뛰기</a>
 
 <nav class="nav">
-  <a class="micro" href="#top">PLAN-G</a>
+  <a class="nav__logo" href="#top" aria-label="PLAN-G Entertainment">
+    <img src="images/logo-white.png" alt="PLAN-G" width="460" height="141">
+  </a>
   <ul class="nav__links micro">
     <li><a href="#now">Now</a></li>
     <li><a href="#roster">Artists</a></li>
@@ -816,9 +838,9 @@ a { color: inherit; text-decoration: none; }
        레퍼런스가 큰 워드마크를 쓰던 자리와 같은 역할이다. -->
   <section class="sb" id="statement" aria-label="Gaho &amp; KAVE — Untold Stories">
     <div class="sb__inner">
-      <p class="sb__line" data-wave>GAHO</p>
-      <p class="sb__line" data-wave>&amp; KAVE</p>
-      <p class="sb__line" data-wave>UNTOLD STORIES</p>
+      <p class="sb__line" data-wave data-anim="open">GAHO</p>
+      <p class="sb__line" data-wave data-anim="open">&amp; KAVE</p>
+      <p class="sb__line" data-wave data-anim="scramble">UNTOLD STORIES</p>
     </div>
   </section>
 
@@ -1001,18 +1023,54 @@ document.querySelectorAll('.lines > span').forEach((s) => {
 /* 스테이트먼트 밴드 — 글자를 span으로 쪼개고 순번(--i)을 심는다.
    CSS가 그 순번만큼 지연시켜 가로 선에서 위아래로 열어준다.
    마크업은 통문장이라 JS가 죽어도 문장은 그대로 읽힌다. */
+const SCRAMBLE_POOL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-_';
+
 document.querySelectorAll('[data-wave]').forEach((el, lineIdx) => {
   const text = el.textContent;
+  el.dataset.final = text;
   el.textContent = '';
   [...text].forEach((ch, i) => {
     const s = document.createElement('span');
-    // 줄마다 조금씩 늦게 시작해 위에서 아래로 열리는 흐름을 만든다
+    // 줄마다 조금씩 늦게 시작해 위에서 아래로 흐르게 한다
     s.style.setProperty('--i', i + lineIdx * 5);
     if (ch.trim() === '') { s.dataset.space = ''; s.innerHTML = '&nbsp;'; }
     else s.textContent = ch;
     el.appendChild(s);
   });
 });
+
+/* 스크램블 — 무작위 문자를 굴리다 왼쪽부터 순서대로 제 글자로 확정된다 */
+function scrambleIn(el) {
+  const final = [...(el.dataset.final || '')];
+  const spans = [...el.children];
+  clearInterval(el.__timer);
+
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    spans.forEach((s, i) => { if (final[i] && final[i].trim() !== '') s.textContent = final[i]; delete s.dataset.pending; });
+    return;
+  }
+
+  let step = 0;
+  const settleEvery = 3;
+  spans.forEach((s, i) => { if (final[i] && final[i].trim() !== '') s.dataset.pending = ''; });
+
+  el.__timer = setInterval(() => {
+    const settled = Math.floor(step / settleEvery);
+    spans.forEach((s, i) => {
+      if (!final[i] || final[i].trim() === '') return;
+      if (i < settled) { s.textContent = final[i]; delete s.dataset.pending; }
+      else s.textContent = SCRAMBLE_POOL[Math.floor(Math.random() * SCRAMBLE_POOL.length)];
+    });
+    step++;
+    if (settled > spans.length) {
+      clearInterval(el.__timer);
+      spans.forEach((s, i) => {
+        if (final[i] && final[i].trim() !== '') s.textContent = final[i];
+        delete s.dataset.pending;
+      });
+    }
+  }, 55);
+}
 
 /* 글자가 다 열리면 줄이 가장 길어진다.
    그 상태를 기준으로 폰트 크기를 맞춰 어떤 화면 폭에서도 잘리지 않게 한다. */
@@ -1044,10 +1102,19 @@ addEventListener('resize', () => {
   if (!sb) return;
   if (!('IntersectionObserver' in window)) { sb.dataset.shown = 'true'; return; }
 
+  const scrambleLines = sb.querySelectorAll('[data-anim="scramble"]');
+
   new IntersectionObserver((entries) => {
     entries.forEach((e) => {
-      if (e.intersectionRatio >= 0.25) sb.dataset.shown = 'true';
-      else if (e.intersectionRatio === 0) sb.dataset.shown = 'false';
+      if (e.intersectionRatio >= 0.25) {
+        if (sb.dataset.shown === 'true') return;      // 이미 재생 중이면 다시 걸지 않는다
+        sb.dataset.shown = 'true';
+        // 열림 애니메이션이 끝나갈 즈음 스크램블을 시작해 위→아래 흐름을 잇는다
+        scrambleLines.forEach((l) => setTimeout(() => scrambleIn(l), 520));
+      } else if (e.intersectionRatio === 0) {
+        sb.dataset.shown = 'false';
+        scrambleLines.forEach((l) => clearInterval(l.__timer));
+      }
     });
   }, { threshold: [0, 0.25] }).observe(sb);
 })();
