@@ -329,16 +329,23 @@ a { color: inherit; text-decoration: none; }
 .released__by { display: block; color: var(--grey); margin-bottom: 8px; }
 /* 본문 칸 폭을 그대로 쓴다 — 따로 좁히면 위의 제목·아티스트 줄과 오른쪽 끝이 어긋난다 */
 .released__desc { display: block; }
-/* 원형 화살표 버튼 — 레퍼런스의 그 마크. 행 전체가 링크라 화살표는 장식이다. */
-.arrow-btn {
-  display: grid; place-items: center;
-  width: clamp(38px, 3.4vw, 54px); aspect-ratio: 1;
-  border: 1px solid currentColor; border-radius: 50%;
-  font-size: clamp(.9rem, 1.4vw, 1.1rem); line-height: 1;
-  transition: transform .45s var(--ease), background .3s var(--ease), color .3s var(--ease);
+/* 화살표는 버튼이 아니라 활자로 쓴다.
+   이 페이지는 전부 직각·헤어라인·컨덴스드 대문자인데 원은 여기 하나뿐이라
+   범용 UI 위젯처럼 떠 보였다. 게다가 행 전체가 이미 링크라 테두리는 거짓 정보다.
+   테두리를 걷고 크기를 키워 표식이 아니라 글자로 읽히게 한다. */
+/* 디스플레이 서체(Anton)에는 ↗ 글리프가 없다 — 지정해도 어차피 본문 서체로 떨어지므로
+   font-family 는 아예 쓰지 않는다 */
+.released__go {
+  justify-self: end; align-self: center;
+  font-size: clamp(1.5rem, 3vw, 2.6rem); line-height: 1;
+  color: var(--grey);
+  padding-left: clamp(8px, 1.6vw, 22px);
+  transition: transform .5s var(--ease), color .35s var(--ease);
 }
-.released__go { justify-self: end; align-self: center; }
-.released__link:hover .arrow-btn { transform: rotate(45deg); background: var(--ink); color: var(--paper); }
+/* 올려놓으면 화살표가 가리키는 방향으로 실제로 움직인다 — 회전보다 뜻이 분명하다 */
+.released__link:hover .released__go { color: inherit; transform: translate(5px, -5px); }
+/* 터치 기기엔 hover가 없다. 흐린 채로 끝나지 않게 처음부터 본색으로 */
+@media (hover: none) { .released__go { color: inherit; } }
 
 
 @media (max-width: 760px) {
@@ -975,7 +982,7 @@ a { color: inherit; text-decoration: none; }
               <span class="released__by micro">가호 (Gaho) · Single</span>
               <span class="released__desc">사랑의 크기를 우주의 거리로 넓힌 팝 트랙. PLAN-G와 함께한 첫 발매작입니다.</span>
             </span>
-            <span class="released__go arrow-btn" aria-hidden="true">↗</span>
+            <span class="released__go" aria-hidden="true">↗</span>
           </a>
         </li>
       </ul>
