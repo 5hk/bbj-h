@@ -268,15 +268,6 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 760px) { .intro { grid-template-columns: 1fr; } }
 
 /* ==========================================================================
-   Marquee ticker
-   ========================================================================== */
-.ticker { background: var(--ink); color: var(--paper); padding: 12px 0; overflow: hidden; }
-.ticker__track { display: flex; width: max-content; animation: slide 26s linear infinite; }
-.ticker__track span { padding: 0 22px; white-space: nowrap; }
-@keyframes slide { to { transform: translateX(-50%); } }
-.ticker:hover .ticker__track { animation-play-state: paused; }
-
-/* ==========================================================================
    Section shell
    ========================================================================== */
 .sec { padding: clamp(56px, 9vw, 140px) var(--gut); max-width: var(--maxw); margin-inline: auto; }
@@ -903,18 +894,6 @@ a { color: inherit; text-decoration: none; }
   </section>
 
 
-  <!-- ================= TICKER ================= -->
-  <!-- 상태 티커 — 레퍼런스가 'THE EXHIBITION IS NOW OVER'를 반복하던 자리.
-       한 가지 상태를 반복해서 흘린다. data-release 기준으로 문구가 스스로 바뀐다:
-       발매 전 → OUT IN N DAYS / 당일 → OUT TODAY / 이후 → OUT NOW
-       JS가 없으면 아래 기본 문구가 그대로 남는다. -->
-  <div class="ticker" aria-hidden="true" data-release="2026-08-12" data-title="KAVE — FLOWERBURN">
-    <div class="ticker__track micro">
-      <span>KAVE — FLOWERBURN</span><span>✳</span><span>OUT 12 AUG 2026</span><span>✳</span>
-      <span>KAVE — FLOWERBURN</span><span>✳</span><span>OUT 12 AUG 2026</span><span>✳</span>
-    </div>
-  </div>
-
   <!-- ================= 01 NOW ================= -->
   <section class="sec" id="now">
     <div class="sec__head">
@@ -1526,48 +1505,6 @@ addEventListener('resize', () => {
   }
 })();
 
-/* 상태 티커 — 발매일까지 남은 날을 계산해 문구를 스스로 갱신한다.
-   손으로 고쳐야 하는 문구는 반드시 낡는다. */
-(function ticker() {
-  const el = document.querySelector('.ticker[data-release]');
-  if (!el) return;
-
-  const release = new Date(el.dataset.release + 'T00:00:00');
-  const LOCALE = { ko: 'ko-KR', en: 'en-GB', ja: 'ja-JP', es: 'es-ES' };
-
-  const render = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const days = Math.round((release - today) / 86400000);
-    const lang = document.documentElement.lang || 'ko';
-
-    // 번역이 없으면(=한국어) 마크업과 같은 원문을 쓴다
-    const status = days > 0
-      ? (window.t && window.t('ticker.days', days)) || `${days}일 남음`
-      : days === 0
-        ? (window.t && window.t('ticker.today')) || '오늘 발매'
-        : (window.t && window.t('ticker.now')) || '발매 중';
-
-    const dateLabel = release
-      .toLocaleDateString(LOCALE[lang] || 'en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-      .toUpperCase();
-
-    const parts = [el.dataset.title, status, dateLabel];
-    const track = el.querySelector('.ticker__track');
-    track.innerHTML = '';
-    // 끊김 없이 이어지려면 같은 묶음이 최소 2벌 필요하다
-    for (let rep = 0; rep < 2; rep++) {
-      parts.forEach((t) => {
-        const s = document.createElement('span'); s.textContent = t; track.appendChild(s);
-        const m = document.createElement('span'); m.textContent = '✳'; track.appendChild(m);
-      });
-    }
-  };
-
-  render();
-  document.addEventListener('langchange', render);
-})();
-
 /* YouTube 파사드 — 누르기 전에는 썸네일만 있고 YouTube 스크립트가 로드되지 않는다.
    영상을 내려받아 자체 재생하는 것은 이용약관 위반이라 임베드로 처리한다. */
 document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
@@ -1692,10 +1629,7 @@ const I18N = {
     'foot.mgmt': 'Artist Management',
     'foot.artists': 'Artists',
     'foot.rights': '© 2026 PLAN-G Entertainment. All rights reserved.',
-    'foot.company': 'PLAN-G Entertainment Co., Ltd.',
-    'ticker.days': (n) => `OUT IN ${n} DAY${n > 1 ? 'S' : ''}`,
-    'ticker.today': 'OUT TODAY',
-    'ticker.now': 'OUT NOW'
+    'foot.company': 'PLAN-G Entertainment Co., Ltd.'
   },
   ja: {
     'skip': '本文へスキップ',
@@ -1745,10 +1679,7 @@ const I18N = {
     'foot.mgmt': 'アーティストマネジメント',
     'foot.artists': 'アーティスト',
     'foot.rights': '© 2026 PLAN-G Entertainment. All rights reserved.',
-    'foot.company': '株式会社プランジエンターテインメント',
-    'ticker.days': (n) => `あと ${n} 日`,
-    'ticker.today': '本日リリース',
-    'ticker.now': 'リリース中'
+    'foot.company': '株式会社プランジエンターテインメント'
   },
   es: {
     'skip': 'Saltar al contenido',
@@ -1798,10 +1729,7 @@ const I18N = {
     'foot.mgmt': 'Management de artistas',
     'foot.artists': 'Artistas',
     'foot.rights': '© 2026 PLAN-G Entertainment. Todos los derechos reservados.',
-    'foot.company': 'PLAN-G Entertainment, S.L.',
-    'ticker.days': (n) => `SALE EN ${n} DÍA${n > 1 ? 'S' : ''}`,
-    'ticker.today': 'SALE HOY',
-    'ticker.now': 'YA DISPONIBLE'
+    'foot.company': 'PLAN-G Entertainment, S.L.'
   }
 };
 
