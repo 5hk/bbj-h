@@ -612,6 +612,14 @@ a { color: inherit; text-decoration: none; }
 }
 .notice__date { color: var(--grey); padding-top: .35em; }
 .notice__title { font-size: clamp(1.15rem, 2.4vw, 2rem); margin: 0 0 clamp(8px, 1vw, 14px); }
+/* 한글·일본어가 들어가는 제목.
+   Anton 은 라틴 전용이라 한글이 통째로 폴백되고, .display 의 행간 .82 로는
+   한글 받침이 윗줄에 닿는다. 한글 디스플레이 서체(Black Han Sans)와
+   CJK 에 맞는 행간을 따로 준다.
+   라틴만 남는 EN/ES 에서는 다른 제목과 같은 Anton 으로 되돌린다. */
+.notice__title--intl { font-family: var(--font-ko); line-height: .98; letter-spacing: -.02em; }
+html[lang="en"] .notice__title--intl,
+html[lang="es"] .notice__title--intl { font-family: var(--font-display); line-height: .82; letter-spacing: -.01em; }
 .notice__text { margin: 0; }
 .notice__meta { margin: 0; padding-top: .35em; text-align: right; color: var(--grey); }
 
@@ -1156,7 +1164,7 @@ a { color: inherit; text-decoration: none; }
         <li class="notice__item">
           <time class="notice__date micro" datetime="2026-08-22">2026.08.22</time>
           <div class="notice__body">
-            <h3 class="display notice__title">To Mars Tour</h3>
+            <h3 class="display notice__title notice__title--intl" data-i18n="notice.brazil.title">브라질 — To Mars Tour</h3>
             <p class="notice__text" data-i18n="notice.brazil.text">8월 22일부터 9월 5일까지 브라질 8개 도시. 상파울루 · 상루이스 · 벨렝 · 포르탈레자 · 사우바도르 · 플로리아노폴리스 · 포르투알레그리 · 쿠리치바에서 가호가 무대에 섭니다.</p>
           </div>
           <p class="notice__meta micro" data-i18n="notice.brazil.meta">브라질 · 8개 도시</p>
@@ -1165,7 +1173,7 @@ a { color: inherit; text-decoration: none; }
         <li class="notice__item">
           <time class="notice__date micro" datetime="2026-07-26">2026.07.26</time>
           <div class="notice__body">
-            <h3 class="display notice__title">Start Over</h3>
+            <h3 class="display notice__title notice__title--intl" data-i18n="notice.japan.title">도쿄 콘서트</h3>
             <p class="notice__text" data-i18n="notice.japan.text">7월 26일 도쿄, 두 차례의 무대. 히코센 극장에서 가호가 팬미팅과 라이브로 나눠 첫 일본 단독 행사를 열었습니다.</p>
           </div>
           <p class="notice__meta micro" data-i18n="notice.japan.meta">일본 · 도쿄</p>
@@ -1631,6 +1639,8 @@ document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
 const I18N = {
   ko: {},   // 마크업에 있는 원문이 곧 한국어다 — 중복해서 적지 않는다
   en: {
+    'notice.brazil.title': 'Brazil — To Mars Tour',
+    'notice.japan.title': 'Tokyo Concert',
     'notice.launch.text': 'PLAN-G Entertainment launches its official website. A new chapter begins where music meets vision. Discover our artists and their latest releases.',
     'notice.launch.meta': 'Official website',
     'notice.brazil.text': '22 August to 5 September, eight cities in Brazil. Gaho takes the stage in São Paulo, São Luís, Belém, Fortaleza, Salvador, Florianópolis, Porto Alegre and Curitiba.',
@@ -1680,6 +1690,8 @@ const I18N = {
     'foot.company': 'PLAN-G Entertainment Co., Ltd.'
   },
   ja: {
+    'notice.brazil.title': 'ブラジル — To Mars Tour',
+    'notice.japan.title': '東京コンサート',
     'notice.launch.text': 'PLAN-G Entertainment の公式ウェブサイトがオープンしました。新しい音楽の旅の始まり、そしてアーティストとファンをつなぐ特別な場所。ぜひご覧ください。',
     'notice.launch.meta': '公式ウェブサイト',
     'notice.brazil.text': '8月22日から9月5日まで、ブラジル8都市。サンパウロ、サンルイス、ベレン、フォルタレザ、サルバドール、フロリアノポリス、ポルトアレグレ、クリチバでガホがステージに立ちます。',
@@ -1729,6 +1741,8 @@ const I18N = {
     'foot.company': '株式会社プランジエンターテインメント'
   },
   es: {
+    'notice.brazil.title': 'Brasil — To Mars Tour',
+    'notice.japan.title': 'Concierto en Tokio',
     'notice.launch.text': 'PLAN-G Entertainment lanza su sitio web oficial. Comienza un nuevo viaje musical, un espacio especial que conecta artistas y fans. Descúbrelo ahora.',
     'notice.launch.meta': 'Sitio web oficial',
     'notice.brazil.text': 'Del 22 de agosto al 5 de septiembre, ocho ciudades de Brasil. Gaho actúa en São Paulo, São Luís, Belém, Fortaleza, Salvador, Florianópolis, Porto Alegre y Curitiba.',
