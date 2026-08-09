@@ -612,14 +612,22 @@ a { color: inherit; text-decoration: none; }
 }
 .notice__date { color: var(--grey); padding-top: .35em; }
 .notice__title { font-size: clamp(1.15rem, 2.4vw, 2rem); margin: 0 0 clamp(8px, 1vw, 14px); }
-/* 한글·일본어가 들어가는 제목.
-   Anton 은 라틴 전용이라 한글이 통째로 폴백되고, .display 의 행간 .82 로는
-   한글 받침이 윗줄에 닿는다. 한글 디스플레이 서체(Black Han Sans)와
-   CJK 에 맞는 행간을 따로 준다.
-   라틴만 남는 EN/ES 에서는 다른 제목과 같은 Anton 으로 되돌린다. */
-.notice__title--intl { font-family: var(--font-ko); line-height: .98; letter-spacing: -.02em; }
-html[lang="en"] .notice__title--intl,
-html[lang="es"] .notice__title--intl { font-family: var(--font-display); line-height: .82; letter-spacing: -.01em; }
+/* ---- 라틴 밖 글자가 들어가는 제목 ----
+   기본값은 다른 제목과 같은 Anton 이다. 실제로 CJK 가 들어가는 언어에서만 바꾼다.
+   Anton 은 라틴 전용이라 한글·일본어가 통째로 폴백되고,
+   .display 의 행간 .82 로는 한글 받침이 윗줄에 닿는다.
+
+   --ko   : 한국어에서만 한글 (예: 월간 종로 AL!VE / 그 외 언어는 Monthly Jongno)
+   --intl : 한국어와 일본어 양쪽에 CJK (예: 도쿄 콘서트 / 東京コンサート) */
+html[lang="ko"] .notice__title--ko,
+html[lang="ko"] .notice__title--intl {
+  font-family: var(--font-ko); line-height: .98; letter-spacing: -.02em;
+}
+/* 일본어 웹폰트는 싣지 않았다. Anton 에 맡기면 어떤 시스템 폰트로 떨어질지 알 수 없으니
+   본문 서체 스택(일본어 폴백이 명시돼 있다)을 굵게 써서 결과를 예측 가능하게 만든다 */
+html[lang="ja"] .notice__title--intl {
+  font-family: var(--font-body); font-weight: 800; line-height: 1.06; letter-spacing: -.01em;
+}
 .notice__text { margin: 0; }
 .notice__meta { margin: 0; padding-top: .35em; text-align: right; color: var(--grey); }
 
@@ -1191,7 +1199,7 @@ html[lang="es"] .notice__title--intl { font-family: var(--font-display); line-he
         <li class="notice__item">
           <time class="notice__date micro" datetime="2026-02-14">2026.02.14</time>
           <div class="notice__body">
-            <h3 class="display notice__title">Monthly Jongno</h3>
+            <h3 class="display notice__title notice__title--ko" data-i18n="notice.jongno.title">월간 종로 AL!VE</h3>
             <p class="notice__text" data-i18n="notice.jongno.text">2월 14일 오후 6시, 서울. CGV 피카디리1958에서 가호가 월간종로 AL!VE 무대에 섰습니다.</p>
           </div>
           <p class="notice__meta micro" data-i18n="notice.jongno.meta">한국 · 서울</p>
@@ -1639,6 +1647,7 @@ document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
 const I18N = {
   ko: {},   // 마크업에 있는 원문이 곧 한국어다 — 중복해서 적지 않는다
   en: {
+    'notice.jongno.title': 'Monthly Jongno',
     'notice.brazil.title': 'Brazil — To Mars Tour',
     'notice.japan.title': 'Tokyo Concert',
     'notice.launch.text': 'PLAN-G Entertainment launches its official website. A new chapter begins where music meets vision. Discover our artists and their latest releases.',
@@ -1690,6 +1699,7 @@ const I18N = {
     'foot.company': 'PLAN-G Entertainment Co., Ltd.'
   },
   ja: {
+    'notice.jongno.title': 'Monthly Jongno',
     'notice.brazil.title': 'ブラジル — To Mars Tour',
     'notice.japan.title': '東京コンサート',
     'notice.launch.text': 'PLAN-G Entertainment の公式ウェブサイトがオープンしました。新しい音楽の旅の始まり、そしてアーティストとファンをつなぐ特別な場所。ぜひご覧ください。',
@@ -1741,6 +1751,7 @@ const I18N = {
     'foot.company': '株式会社プランジエンターテインメント'
   },
   es: {
+    'notice.jongno.title': 'Monthly Jongno',
     'notice.brazil.title': 'Brasil — To Mars Tour',
     'notice.japan.title': 'Concierto en Tokio',
     'notice.launch.text': 'PLAN-G Entertainment lanza su sitio web oficial. Comienza un nuevo viaje musical, un espacio especial que conecta artistas y fans. Descúbrelo ahora.',
