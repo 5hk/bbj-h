@@ -526,16 +526,18 @@ a { color: inherit; text-decoration: none; }
    03 RELEASES
    ========================================================================== */
 /* 커버가 주인공. 제목은 평소엔 숨고 올려놓았을 때만 아래에서 덮어 올라온다. */
-/* 지금은 두 장뿐이다. auto-fill 로 두면 작은 커버 두 개가 왼쪽에 몰리고
-   오른쪽 다섯 칸이 텅 비어 깨진 것처럼 보인다. auto-fit + max-width 로
-   두 장이 제 몫의 폭을 갖게 한다.
-   ⚠ 목록을 다시 늘리면 max-width 를 지우고 auto-fill 로 되돌린다. */
+/* 지금은 한 장뿐이다. 폭을 풀어두면 auto-fit 이 빈 트랙을 접어 커버가 660px 까지
+   늘어난다. 늘릴 이유가 없다 — 앨범 커버 한 장은 그 크기여야 할 이유가 없고,
+   원본 상한이 544px 라 늘리면 2배 화면에서 그대로 흐려지기만 한다.
+   300px 로 두면 파일 600px 와 정확히 맞아떨어져 어느 화면에서도 또렷하다.
+   ⚠ 목록을 늘리면 max-width 를 지우고 auto-fill 로 되돌린다.
+      더 큰 커버가 필요하면 이미지부터 다시 받아야 한다 — 원본 상한이 544px 다. */
 .discs {
   list-style: none; margin: 0; padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 17vw, 250px), 1fr));
   gap: clamp(8px, 1.2vw, 18px);
-  max-width: 660px;
+  max-width: 300px;
 }
 .disc { position: relative; overflow: hidden; background: #ececec; }
 /* 커버는 흑백으로 죽이지 않는다.
@@ -1185,10 +1187,6 @@ html[lang="ja"] .notice__title--intl {
         <span class="disc__art"><img src="images/releases/to-mars.jpg" alt="To Mars" width="600" height="600" loading="lazy" decoding="async"></span>
         <span class="disc__info"><span class="disc__title">To Mars</span><span class="disc__meta micro">2026.04.08 · <span data-i18n="type.single">Single</span></span></span>
       </li>
-      <li class="disc" data-type="ost" data-year="2020">
-        <span class="disc__art"><img src="images/releases/start.jpg" alt="시작" width="600" height="600" loading="lazy" decoding="async"></span>
-        <span class="disc__info"><span class="disc__title" data-i18n="rel.start.title">시작</span><span class="disc__meta micro">2020.02.01 · <span data-i18n="type.ost">OST</span></span><span class="disc__from micro" data-i18n="rel.start.from">이태원 클라쓰 OST Part 2</span></span>
-      </li>
     </ul>
   </section>
 
@@ -1743,7 +1741,6 @@ const I18N = {
     'now.body': 'KAVE’s new single <FLOWERBURN> arrives on 12 August 2026. Watch the teaser now.',
     'now.teaserLink': 'Teaser ↗',
     'type.single': 'Single',
-    'type.ost': 'OST',
     'gaho.ko': 'Gaho',
     'gaho.full': 'Gaho',
     'gaho.role': 'Singer',
@@ -1754,8 +1751,6 @@ const I18N = {
     'fact.role': 'Role',
     'fact.members': 'Members',
     'members.head': 'Members',
-    'rel.start.title': 'Start Over',
-    'rel.start.from': 'Itaewon Class OST Part 2',
     'foot.business': 'Business Inquiries',
     'foot.press': 'Press & Media',
     'foot.artists': 'Artists',
@@ -1795,7 +1790,6 @@ const I18N = {
     'now.body': 'KAVE のニューシングル <FLOWERBURN> が2026年8月12日にリリースされます。まずはティザー映像をご覧ください。',
     'now.teaserLink': 'ティザー映像 ↗',
     'type.single': 'シングル',
-    'type.ost': 'OST',
     'gaho.ko': 'ガホ',
     'gaho.full': 'ガホ (Gaho)',
     'gaho.role': '歌手',
@@ -1806,8 +1800,6 @@ const I18N = {
     'fact.role': 'ロール',
     'fact.members': 'メンバー',
     'members.head': 'メンバー',
-    'rel.start.title': '시작 (Start Over)',
-    'rel.start.from': '梨泰院クラス OST Part 2',
     'foot.business': 'ビジネスのお問い合わせ',
     'foot.press': 'プレス・メディア',
     'foot.artists': 'アーティスト',
@@ -1847,7 +1839,6 @@ const I18N = {
     'now.body': 'El nuevo sencillo de KAVE, <FLOWERBURN>, sale el 12 de agosto de 2026. Mira ya el teaser.',
     'now.teaserLink': 'Teaser ↗',
     'type.single': 'Sencillo',
-    'type.ost': 'BSO',
     'gaho.ko': 'Gaho',
     'gaho.full': 'Gaho',
     'gaho.role': 'Cantante',
@@ -1858,8 +1849,6 @@ const I18N = {
     'fact.role': 'Rol',
     'fact.members': 'Integrantes',
     'members.head': 'Integrantes',
-    'rel.start.title': 'Start Over',
-    'rel.start.from': 'Itaewon Class BSO Parte 2',
     'foot.business': 'Consultas comerciales',
     'foot.press': 'Prensa y medios',
     'foot.artists': 'Artistas',
