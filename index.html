@@ -759,6 +759,36 @@ html[lang="ja"] .notice__title--intl {
 }
 
 /* ==========================================================================
+   터치 기기: hover 효과를 끈다
+
+   터치 브라우저는 탭을 hover 로 흉내 낸다. 그런데 손가락을 뗀다고 hover 가
+   풀리지 않아서, 한 번 누르면 다른 곳을 누를 때까지 그 상태로 굳는다.
+   Releases 커버를 누르면 확대된 채 돌아오지 않던 것이 이 현상이다.
+
+   그래서 hover 로 '변했다가 돌아와야 하는' 것들은 터치에서 아예 걸지 않는다.
+   전부 장식이라 없어도 잃는 정보가 없다 — 커버 제목처럼 실제 정보는
+   위쪽 @media (hover: none) 에서 이미 상시 노출로 바꿔 두었다.
+
+   ⚠ 이 블록은 반드시 위의 :hover 규칙들보다 뒤에 있어야 한다.
+      특이성이 같으므로 순서로 이긴다.
+   ========================================================================== */
+@media (hover: none) {
+  /* 눌렀을 때 확대된 채 굳던 것 (신고된 증상) */
+  .disc:hover .disc__art img { filter: saturate(.9) contrast(1.02); transform: scale(1.001); }
+  .disc:hover .disc__art::after { opacity: 1; }
+
+  /* 같은 방식으로 굳던 나머지 */
+  .press figure:hover { transform: none; }
+  .press figure:hover img { filter: grayscale(1) contrast(1.04); }
+  .split__media:hover img { filter: grayscale(1) contrast(1.04); }
+  .strip__item:hover { transform: none; z-index: auto; }
+  .strip__item:hover img { filter: grayscale(1) contrast(1.05); box-shadow: none; }
+  .strip__item:hover .strip__name { background: rgba(0, 0, 0, .62); }
+  .artist__links a:hover { transform: none; }
+  .nav__links a:hover::after { transform: scaleX(0); }
+}
+
+/* ==========================================================================
    07 FOOTER
    ========================================================================== */
 .foot { background: var(--ink); color: var(--paper); padding: clamp(40px, 6vw, 90px) var(--gut) clamp(24px, 3vw, 40px); }
