@@ -742,7 +742,13 @@ a { color: inherit; text-decoration: none; }
    ========================================================================== */
 .foot { background: var(--ink); color: var(--paper); padding: clamp(40px, 6vw, 90px) var(--gut) clamp(24px, 3vw, 40px); }
 .foot__inner { max-width: var(--maxw); margin-inline: auto; }
-.foot__mark { font-family: var(--font-display); font-size: clamp(3rem, 16vw, 14rem); line-height: .8; text-transform: uppercase; margin: 0 0 clamp(24px, 4vw, 56px); }
+/* 활자 대신 실제 로고를 쓴다. 히어로 워드마크와 같은 서체(Anton)로 크게 쓰면
+   페이지를 다 내려온 자리에서 시작 화면이 한 번 더 나오는 인상이 된다.
+   ⚠ 원본이 460px 짜리 비트맵이라 무한정 키울 수 없다. 지면 전폭으로 늘리면
+      2.9배(레티나 5.8배) 확대라 가장자리가 뭉갠다 — 원본 크기 근처를 지킨다.
+      SVG 원본을 확보하면 이 상한이 사라진다. */
+.foot__mark { margin: 0 0 clamp(24px, 4vw, 56px); line-height: 0; }
+.foot__mark img { display: block; width: min(420px, 62%); height: auto; }
 .foot__cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: clamp(20px, 3vw, 48px); border-top: 1px solid rgba(255,255,255,.25); padding-top: 20px; }
 .foot__cols a { display: block; }
 .foot__bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: clamp(30px, 5vw, 60px); color: var(--grey); }
@@ -1182,6 +1188,15 @@ a { color: inherit; text-decoration: none; }
           </div>
           <p class="notice__meta micro" data-i18n="notice.jongno.meta">한국 · 서울</p>
         </li>
+
+        <li class="notice__item">
+          <time class="notice__date micro" datetime="2026-01-01">2026.01.01</time>
+          <div class="notice__body">
+            <h3 class="display notice__title">Welcome to PLAN-G</h3>
+            <p class="notice__text" data-i18n="notice.launch.text">PLAN-G Entertainment의 공식 웹사이트가 오픈했습니다. 새로운 음악적 여정의 시작, 그리고 아티스트와 팬을 잇는 특별한 공간. 지금 바로 만나보세요.</p>
+          </div>
+          <p class="notice__meta micro" data-i18n="notice.launch.meta">공식 웹사이트</p>
+        </li>
       </ul>
 
       <!-- JS 가 켜져야 페이저를 보여준다. 없으면 4건이 전부 그냥 보이면 될 뿐이다 -->
@@ -1269,7 +1284,11 @@ a { color: inherit; text-decoration: none; }
   <!-- ================= 07 FOOTER ================= -->
   <footer class="foot" id="inquiry">
     <div class="foot__inner">
-      <p class="foot__mark">PLAN-G</p>
+      <p class="foot__mark">
+        <img src="images/logo-white.png"
+             srcset="images/logo-white.png 1x, images/logo-white-2x.png 2x"
+             alt="PLAN-G" width="460" height="141" loading="lazy">
+      </p>
 
       <!-- 연락처는 bbj(운영 사이트) Contact 섹션 그대로 -->
       <div class="foot__cols micro">
@@ -1547,11 +1566,29 @@ document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
   const pad = (n) => String(n).padStart(2, '0');
   let page = 0;
 
+  const show = (p) => items.forEach((li, i) => { li.hidden = Math.floor(i / PER_PAGE) !== p; });
+
   const render = () => {
-    items.forEach((li, i) => { li.hidden = Math.floor(i / PER_PAGE) !== page; });
+    show(page);
     status.textContent = pad(page + 1) + ' / ' + pad(pages);
     prev.disabled = page === 0;
     next.disabled = page === pages - 1;
+  };
+
+  /* 목록 높이를 가장 긴 페이지에 맞춰 고정한다.
+     마지막 페이지에 한 건만 남으면 섹션이 갑자기 쪼그라들고, 그 아래 Press 까지
+     통째로 밀려 올라온다 — 페이지를 넘길 때마다 지면이 출렁이는 셈이다.
+     행 높이는 글자 수에 따라 달라지므로 상수로 박지 않고 실제로 재서 넣는다. */
+  const measure = () => {
+    const keep = page;
+    list.style.minHeight = '';
+    let tallest = 0;
+    for (let p = 0; p < pages; p++) {
+      show(p);
+      tallest = Math.max(tallest, list.offsetHeight);
+    }
+    show(keep);
+    list.style.minHeight = tallest + 'px';
   };
 
   const go = (delta) => {
@@ -1566,6 +1603,15 @@ document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
 
   pager.hidden = false;
   render();
+
+  // 서체가 도착하기 전에 재면 높이가 틀어진다
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  else measure();
+
+  // 폭이 바뀌면 줄바꿈이 바뀌고, 언어가 바뀌면 글자 수가 바뀐다. 둘 다 다시 잰다.
+  let t;
+  addEventListener('resize', () => { clearTimeout(t); t = setTimeout(measure, 150); });
+  document.addEventListener('langchange', measure);
 })();
 
 /* ==========================================================================
@@ -1585,6 +1631,8 @@ document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
 const I18N = {
   ko: {},   // 마크업에 있는 원문이 곧 한국어다 — 중복해서 적지 않는다
   en: {
+    'notice.launch.text': 'PLAN-G Entertainment launches its official website. A new chapter begins where music meets vision. Discover our artists and their latest releases.',
+    'notice.launch.meta': 'Official website',
     'notice.brazil.text': 'Gaho opens in São Paulo on 22 August and travels through eight Brazilian cities, closing the tour in Curitiba on 5 September.',
     'notice.brazil.meta': 'Brazil · 8 cities',
     'notice.japan.text': 'Gaho’s first solo event in Japan. Held at Hikousen Theater in Tokyo across two parts — a fanmeeting and a live show.',
@@ -1632,6 +1680,8 @@ const I18N = {
     'foot.company': 'PLAN-G Entertainment Co., Ltd.'
   },
   ja: {
+    'notice.launch.text': 'PLAN-G Entertainment の公式ウェブサイトがオープンしました。新しい音楽の旅の始まり、そしてアーティストとファンをつなぐ特別な場所。ぜひご覧ください。',
+    'notice.launch.meta': '公式ウェブサイト',
     'notice.brazil.text': 'ガホが8月22日のサンパウロを皮切りに、ブラジル8都市をまわります。9月5日のクリチバ公演でツアーを締めくくります。',
     'notice.brazil.meta': 'ブラジル · 8都市',
     'notice.japan.text': 'ガホ初の日本単独イベント。東京・飛行船シアターで、ファンミーティングとライブの二部に分けて開催しました。',
@@ -1679,6 +1729,8 @@ const I18N = {
     'foot.company': '株式会社プランジエンターテインメント'
   },
   es: {
+    'notice.launch.text': 'PLAN-G Entertainment lanza su sitio web oficial. Comienza un nuevo viaje musical, un espacio especial que conecta artistas y fans. Descúbrelo ahora.',
+    'notice.launch.meta': 'Sitio web oficial',
     'notice.brazil.text': 'Gaho arranca en São Paulo el 22 de agosto y recorre ocho ciudades de Brasil, cerrando la gira en Curitiba el 5 de septiembre.',
     'notice.brazil.meta': 'Brasil · 8 ciudades',
     'notice.japan.text': 'Primer evento en solitario de Gaho en Japón. En el Hikousen Theater de Tokio, repartido en dos partes: fanmeeting y directo.',
