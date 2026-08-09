@@ -593,21 +593,49 @@ a { color: inherit; text-decoration: none; }
 
 
 /* ==========================================================================
-   04 STAGE
-   ========================================================================== */
+   04 NOTICE — 소식 한 건이 한 줄.
 
-/* ---- 투어 단위 ----
-   개별 공연을 낱개로 늘어놓지 않고 투어로 묶는다. 다가오는 투어가 위. */
-.tour + .tour { margin-top: clamp(40px, 6vw, 88px); padding-top: clamp(30px, 4.5vw, 60px); border-top: 1px solid rgba(255,255,255,.25); }
-.tour__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: clamp(16px, 2.4vw, 30px); }
-.tour__title { font-size: clamp(1.4rem, 3.4vw, 2.8rem); }
-.tour__span { margin: 0; text-align: right; color: var(--grey); }
-.stage { list-style: none; margin: 0; padding: 0; }
-.stage li { display: grid; grid-template-columns: minmax(84px, 130px) minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(12px, 2.4vw, 40px); align-items: baseline; padding: clamp(15px, 2.2vw, 26px) 0; border-top: 1px solid rgba(255,255,255,.22); }
-.stage li:last-child { border-bottom: 1px solid rgba(255,255,255,.22); }
-.stage h4 { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.05rem, 2.2vw, 1.9rem); line-height: 1; margin: 0; }
-.stage p { margin: 0; }
-@media (max-width: 760px) { .stage li { grid-template-columns: 1fr auto; } .stage__date, .stage__place { grid-column: 1 / -1; } }
+   날짜 · 내용 · 지역 세 칸으로 끊는다. 왼쪽에서 언제인지, 가운데에서 무엇인지,
+   오른쪽에서 어디인지가 한 번에 읽힌다.
+   ========================================================================== */
+.notice { list-style: none; margin: 0; padding: 0; }
+/* 아래 선은 목록에 건다 — 항목에 :last-child 로 걸면 페이징으로 감춰진 항목이
+   마지막이 될 때 선이 사라진다 */
+.notice { border-bottom: 1px solid rgba(255,255,255,.22); }
+.notice__item {
+  display: grid;
+  grid-template-columns: minmax(96px, 148px) minmax(0, 1fr) minmax(0, 220px);
+  gap: clamp(14px, 2.6vw, 44px);
+  align-items: start;
+  padding: clamp(20px, 2.8vw, 36px) 0;
+  border-top: 1px solid rgba(255,255,255,.22);
+}
+.notice__date { color: var(--grey); padding-top: .35em; }
+.notice__title { font-size: clamp(1.15rem, 2.4vw, 2rem); margin: 0 0 clamp(8px, 1vw, 14px); }
+.notice__text { margin: 0; }
+.notice__meta { margin: 0; padding-top: .35em; text-align: right; color: var(--grey); }
+
+@media (max-width: 760px) {
+  /* 날짜가 맨 위, 지역이 맨 아래. 좁은 화면에서 3단은 각 칸이 다 뭉개진다 */
+  .notice__item { grid-template-columns: 1fr; gap: clamp(8px, 2vw, 14px); }
+  .notice__meta { text-align: left; padding-top: 0; }
+}
+
+/* ---- 페이저 ----
+   3건씩 끊는다. 버튼은 지면의 다른 글자와 같은 마이크로 라벨이고,
+   테두리 대신 밑줄로만 눌린다는 것을 알린다. */
+.pager { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 32px); margin-top: clamp(24px, 3.2vw, 46px); }
+.pager__btn {
+  font: inherit; letter-spacing: inherit; text-transform: inherit;
+  background: none; border: 0; padding: 0 0 3px;
+  color: inherit; cursor: pointer;
+  border-bottom: 1px solid currentColor;
+  transition: opacity .25s var(--ease);
+}
+.pager__btn:hover { opacity: .6; }
+/* 끝에 닿으면 눌러도 소용없다는 것을 보이게 한다 — 사라지지는 않는다(위치가 흔들린다) */
+.pager__btn:disabled { opacity: .22; cursor: default; border-bottom-color: transparent; }
+.pager__status { margin: 0 0 0 auto; color: var(--grey); }
 /* ==========================================================================
    05 PRESS — 사진만. 여백이 주인공.
 
@@ -833,7 +861,7 @@ a { color: inherit; text-decoration: none; }
     <li><a href="#now">Now</a></li>
     <li><a href="#artists">Artists</a></li>
     <li><a href="#releases">Releases</a></li>
-    <li><a href="#stage">Stage</a></li>
+    <li><a href="#notice">Notice</a></li>
     <li><a href="#press">Press</a></li>
   </ul>
   <p class="micro nav__lang" style="margin:0" role="group" aria-label="언어 선택"><button type="button" class="lang" data-lang="ko" aria-pressed="true">KO</button><span aria-hidden="true">/</span><button type="button" class="lang" data-lang="en" aria-pressed="false">EN</button><span aria-hidden="true">/</span><button type="button" class="lang" data-lang="ja" aria-pressed="false">JA</button><span aria-hidden="true">/</span><button type="button" class="lang" data-lang="es" aria-pressed="false">ES</button></p>
@@ -849,7 +877,7 @@ a { color: inherit; text-decoration: none; }
     <li><a href="#now"><span class="idx">01</span>Now</a></li>
     <li><a href="#artists"><span class="idx">02</span>Artists</a></li>
     <li><a href="#releases"><span class="idx">03</span>Releases</a></li>
-    <li><a href="#stage"><span class="idx">04</span>Stage</a></li>
+    <li><a href="#notice"><span class="idx">04</span>Notice</a></li>
     <li><a href="#press"><span class="idx">05</span>Press</a></li>
     <li><a href="#inquiry"><span class="idx">06</span>Inquiry</a></li>
   </ul>
@@ -1107,159 +1135,61 @@ a { color: inherit; text-decoration: none; }
     </ul>
   </section>
 
-  <!-- ================= 04 STAGE ================= -->
-  <section class="sec sec--ink" id="stage">
+  <!-- ================= 04 NOTICE ================= -->
+  <!-- 공연 소식을 한 건당 한 줄로 알린다. 공연장 목록을 통째로 늘어놓던 이전 구성은
+       정보량은 많지만 '무엇이 새로운가'가 보이지 않았다.
+       3건씩 끊어 보여주되 마크업에는 전부 남긴다 — 크롤러는 JS로 감춘 것도 다 읽는다. -->
+  <section class="sec sec--ink" id="notice">
     <div class="sec__inner">
       <div class="sec__head">
-        <h2 class="display sec__title" data-reveal>Stage</h2>
+        <h2 class="display sec__title" data-reveal>Notice</h2>
         <p class="sec__no">04</p>
       </div>
 
-      <!-- 다가오는 투어를 위에 둔다 -->
-      <article class="tour" data-reveal>
-        <div class="tour__head">
-          <div>
-            <p class="micro" style="color:var(--grey);margin:0 0 6px"><span data-i18n="tour.brazil.label">가호 (Gaho) · Brazil Tour 2026</span></p>
-            <h3 class="display tour__title">To Mars Tour</h3>
+      <ul class="notice" data-reveal>
+        <li class="notice__item">
+          <time class="notice__date micro" datetime="2026-08-22">2026.08.22</time>
+          <div class="notice__body">
+            <h3 class="display notice__title">To Mars Tour</h3>
+            <p class="notice__text" data-i18n="notice.brazil.text">가호가 8월 22일 상파울루를 시작으로 브라질 8개 도시를 돕니다. 9월 5일 쿠리치바 공연으로 투어를 마칩니다.</p>
           </div>
-          <p class="micro tour__span">22 AUG—05 SEP 2026<br data-i18n="tour.brazil.span">브라질 · 8개 도시</p>
-        </div>
+          <p class="notice__meta micro" data-i18n="notice.brazil.meta">브라질 · 8개 도시</p>
+        </li>
 
-        <ul class="stage">
-          <li>
-            <span class="stage__date micro">22 AUG</span>
-            <h4>São Paulo</h4>
-            <p class="stage__place micro">Studio Stage · SP</p>
-          </li>
-          <li>
-            <span class="stage__date micro">23 AUG</span>
-            <h4>São Luís</h4>
-            <p class="stage__place micro">Humberto de Maracanã · MA</p>
-          </li>
-          <li>
-            <span class="stage__date micro">28 AUG</span>
-            <h4>Belém</h4>
-            <p class="stage__place micro">Teatro It Center · PA</p>
-          </li>
-          <li>
-            <span class="stage__date micro">30 AUG</span>
-            <h4>Fortaleza</h4>
-            <p class="stage__place micro">Teatro Brasil Tropical · CE</p>
-          </li>
-          <li>
-            <span class="stage__date micro">01 SEP</span>
-            <h4>Salvador</h4>
-            <p class="stage__place micro">Teatro da Cidade · BA</p>
-          </li>
-          <li>
-            <span class="stage__date micro">03 SEP</span>
-            <h4>Florianópolis</h4>
-            <p class="stage__place micro">John Bull · SC</p>
-          </li>
-          <li>
-            <span class="stage__date micro">04 SEP</span>
-            <h4>Porto Alegre</h4>
-            <p class="stage__place micro">Centro de Eventos CIEE · RS</p>
-          </li>
-          <li>
-            <span class="stage__date micro">05 SEP</span>
-            <h4>Curitiba</h4>
-            <p class="stage__place micro">Igloo Super Hall · PR</p>
-          </li>
-        </ul>
-      </article>
-      <!-- 단발 공연 — 도시가 하나뿐이라 회차를 목록으로 둔다 -->
-      <article class="tour" data-reveal>
-        <div class="tour__head">
-          <div>
-            <p class="micro" style="color:var(--grey);margin:0 0 6px"><span data-i18n="tour.japan.label">가호 (Gaho) · 1st Japan Event</span></p>
-            <h3 class="display tour__title">Start Over</h3>
+        <li class="notice__item">
+          <time class="notice__date micro" datetime="2026-07-26">2026.07.26</time>
+          <div class="notice__body">
+            <h3 class="display notice__title">Start Over</h3>
+            <p class="notice__text" data-i18n="notice.japan.text">가호의 첫 일본 단독 행사. 도쿄 히코센 극장에서 팬미팅과 라이브 두 차례로 나눠 진행했습니다.</p>
           </div>
-          <p class="micro tour__span">26 JUL 2026<br data-i18n="tour.japan.span">일본 · 도쿄</p>
-        </div>
+          <p class="notice__meta micro" data-i18n="notice.japan.meta">일본 · 도쿄</p>
+        </li>
 
-        <ul class="stage">
-          <li>
-            <span class="stage__date micro">26 JUL</span>
-            <h4>Japan</h4>
-            <p class="stage__place micro">Tokyo · Hikousen Theater — Chapter 1. Special Fanmeeting</p>
-          </li>
-          <li>
-            <span class="stage__date micro">26 JUL</span>
-            <h4>Japan</h4>
-            <p class="stage__place micro">Tokyo · Hikousen Theater — Chapter 2. Special Live</p>
-          </li>
-        </ul>
-      </article>
-
-
-      <!-- 하나의 투어를 한 덩어리로 묶는다. 개별 공연은 그 안의 목록. -->
-      <article class="tour" data-reveal>
-        <div class="tour__head">
-          <div>
-            <p class="micro" style="color:var(--grey);margin:0 0 6px">Gaho &amp; KAVE · Europe Tour 2026</p>
-            <h3 class="display tour__title">Cityscapes — New Horizons</h3>
+        <li class="notice__item">
+          <time class="notice__date micro" datetime="2026-04-05">2026.04.05</time>
+          <div class="notice__body">
+            <h3 class="display notice__title">Cityscapes — New Horizons</h3>
+            <p class="notice__text" data-i18n="notice.europe.text">가호와 KAVE가 유럽 6개국 7개 도시를 돌았습니다. 로잔에서 시작해 런던 The Underworld에서 마무리했습니다.</p>
           </div>
-          <p class="micro tour__span">05—18 APR 2026<br data-i18n="tour.europe.span">6개국 · 7개 도시</p>
-        </div>
+          <p class="notice__meta micro" data-i18n="notice.europe.meta">유럽 · 7개 도시</p>
+        </li>
 
-        <ul class="stage">
-          <li>
-            <span class="stage__date micro">05—06 APR</span>
-            <h4>Switzerland</h4>
-            <p class="stage__place micro">Lausanne · Polymanga</p>
-          </li>
-          <li>
-            <span class="stage__date micro">08 APR</span>
-            <h4>Poland</h4>
-            <p class="stage__place micro">Warsaw · Hybrydy</p>
-          </li>
-          <li>
-            <span class="stage__date micro">09 APR</span>
-            <h4>Germany</h4>
-            <p class="stage__place micro">Berlin · Columbia Theater</p>
-          </li>
-          <li>
-            <span class="stage__date micro">11 APR</span>
-            <h4>Germany</h4>
-            <p class="stage__place micro">Cologne · CBE</p>
-          </li>
-          <li>
-            <span class="stage__date micro">15 APR</span>
-            <h4>France</h4>
-            <p class="stage__place micro">Paris · Café de la Danse</p>
-          </li>
-          <li>
-            <span class="stage__date micro">16 APR</span>
-            <h4>Netherlands</h4>
-            <p class="stage__place micro">Amsterdam · P60</p>
-          </li>
-          <li>
-            <span class="stage__date micro">18 APR</span>
-            <h4>United Kingdom</h4>
-            <p class="stage__place micro">London · The Underworld</p>
-          </li>
-        </ul>
-      </article>
-
-      <!-- 단독 공연 -->
-      <article class="tour" data-reveal>
-        <div class="tour__head">
-          <div>
-            <p class="micro" style="color:var(--grey);margin:0 0 6px"><span data-i18n="tour.jongno.label">가호 (Gaho) · AL!VE 월간종로</span></p>
-            <h3 class="display tour__title">Monthly Jongno</h3>
+        <li class="notice__item">
+          <time class="notice__date micro" datetime="2026-02-14">2026.02.14</time>
+          <div class="notice__body">
+            <h3 class="display notice__title">Monthly Jongno</h3>
+            <p class="notice__text" data-i18n="notice.jongno.text">가호가 월간종로 AL!VE 무대에 섰습니다. CGV 피카디리1958, 오후 6시.</p>
           </div>
-          <p class="micro tour__span">14 FEB 2026<br data-i18n="tour.jongno.span">한국 · 서울</p>
-        </div>
+          <p class="notice__meta micro" data-i18n="notice.jongno.meta">한국 · 서울</p>
+        </li>
+      </ul>
 
-        <ul class="stage">
-          <li>
-            <span class="stage__date micro">14 FEB</span>
-            <h4>Korea</h4>
-            <p class="stage__place micro"><span data-i18n="tour.jongno.place">Seoul · CGV 피카디리1958 — 18:00</span></p>
-          </li>
-        </ul>
-      </article>
+      <!-- JS 가 켜져야 페이저를 보여준다. 없으면 4건이 전부 그냥 보이면 될 뿐이다 -->
+      <nav class="pager micro" aria-label="공지 페이지" hidden>
+        <button class="pager__btn" type="button" data-dir="prev">← Prev</button>
+        <button class="pager__btn" type="button" data-dir="next">Next →</button>
+        <p class="pager__status" role="status" aria-live="polite">01 / 01</p>
+      </nav>
     </div>
   </section>
 
@@ -1350,10 +1280,6 @@ a { color: inherit; text-decoration: none; }
         <div>
           <p style="margin:0 0 8px;color:var(--grey)" data-i18n="foot.press">Press &amp; Media</p>
           <a class="lower" href="mailto:contact@plan-g.io">contact@plan-g.io</a>
-        </div>
-        <div>
-          <p style="margin:0 0 8px;color:var(--grey)" data-i18n="foot.mgmt">Artist Management</p>
-          <a href="tel:+821064033823">010-6403-3823</a>
         </div>
         <div>
           <p style="margin:0 0 8px;color:var(--grey)" data-i18n="foot.artists">Artists</p>
@@ -1602,6 +1528,46 @@ document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
   }
 })();
 
+/* Notice 페이저 — 3건씩 끊어 보여준다.
+   감추는 것은 화면뿐이다. 마크업에는 전부 남아 있으므로 크롤러는 모든 소식을 읽는다.
+   JS가 없으면 페이저 자체가 hidden 이라 4건이 그냥 다 보인다 — 그래도 아무것도 깨지지 않는다. */
+(function noticePager() {
+  const list = document.querySelector('.notice');
+  const pager = document.querySelector('.pager');
+  if (!list || !pager) return;
+
+  const items = [...list.children];
+  const PER_PAGE = 3;
+  const pages = Math.ceil(items.length / PER_PAGE);
+  if (pages <= 1) return;          // 한 페이지면 페이저를 띄우지 않는다
+
+  const prev = pager.querySelector('[data-dir="prev"]');
+  const next = pager.querySelector('[data-dir="next"]');
+  const status = pager.querySelector('.pager__status');
+  const pad = (n) => String(n).padStart(2, '0');
+  let page = 0;
+
+  const render = () => {
+    items.forEach((li, i) => { li.hidden = Math.floor(i / PER_PAGE) !== page; });
+    status.textContent = pad(page + 1) + ' / ' + pad(pages);
+    prev.disabled = page === 0;
+    next.disabled = page === pages - 1;
+  };
+
+  const go = (delta) => {
+    const target = Math.min(pages - 1, Math.max(0, page + delta));
+    if (target === page) return;
+    page = target;
+    render();
+  };
+
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+
+  pager.hidden = false;
+  render();
+})();
+
 /* ==========================================================================
    다국어 — KO / EN / JA / ES
 
@@ -1619,6 +1585,14 @@ document.querySelectorAll('.teaser[data-yt]').forEach((fig) => {
 const I18N = {
   ko: {},   // 마크업에 있는 원문이 곧 한국어다 — 중복해서 적지 않는다
   en: {
+    'notice.brazil.text': 'Gaho opens in São Paulo on 22 August and travels through eight Brazilian cities, closing the tour in Curitiba on 5 September.',
+    'notice.brazil.meta': 'Brazil · 8 cities',
+    'notice.japan.text': 'Gaho’s first solo event in Japan. Held at Hikousen Theater in Tokyo across two parts — a fanmeeting and a live show.',
+    'notice.japan.meta': 'Japan · Tokyo',
+    'notice.europe.text': 'Gaho and KAVE played seven cities across six European countries, opening in Lausanne and closing at The Underworld in London.',
+    'notice.europe.meta': 'Europe · 7 cities',
+    'notice.jongno.text': 'Gaho performed at AL!VE Monthly Jongno. CGV Piccadilly 1958, 6 PM.',
+    'notice.jongno.meta': 'Korea · Seoul',
     'skip': 'Skip to content',
     'menu.open': 'Open menu',
     'hero.meta1': '2026 APR / EUROPE / 7 CITIES',
@@ -1651,22 +1625,21 @@ const I18N = {
     'members.head': 'Members',
     'rel.start.title': 'Start Over',
     'rel.start.from': 'Itaewon Class OST Part 2',
-    'tour.brazil.label': 'Gaho · Brazil Tour 2026',
-    'tour.brazil.span': 'Brazil · 8 cities',
-    'tour.japan.label': 'Gaho · 1st Japan Event',
-    'tour.japan.span': 'Japan · Tokyo',
-    'tour.europe.span': '6 countries · 7 cities',
-    'tour.jongno.label': 'Gaho · AL!VE Monthly Jongno',
-    'tour.jongno.span': 'Korea · Seoul',
-    'tour.jongno.place': 'Seoul · CGV Piccadilly 1958 — 18:00',
     'foot.business': 'Business Inquiries',
     'foot.press': 'Press & Media',
-    'foot.mgmt': 'Artist Management',
     'foot.artists': 'Artists',
     'foot.rights': '© 2026 PLAN-G Entertainment. All rights reserved.',
     'foot.company': 'PLAN-G Entertainment Co., Ltd.'
   },
   ja: {
+    'notice.brazil.text': 'ガホが8月22日のサンパウロを皮切りに、ブラジル8都市をまわります。9月5日のクリチバ公演でツアーを締めくくります。',
+    'notice.brazil.meta': 'ブラジル · 8都市',
+    'notice.japan.text': 'ガホ初の日本単独イベント。東京・飛行船シアターで、ファンミーティングとライブの二部に分けて開催しました。',
+    'notice.japan.meta': '日本 · 東京',
+    'notice.europe.text': 'ガホとKAVEがヨーロッパ6か国7都市をまわりました。ローザンヌで幕を開け、ロンドンのThe Underworldで締めくくりました。',
+    'notice.europe.meta': 'ヨーロッパ · 7都市',
+    'notice.jongno.text': 'ガホがAL!VE 月刊鍾路のステージに立ちました。CGVピカデリー1958、18時。',
+    'notice.jongno.meta': '韓国 · ソウル',
     'skip': '本文へスキップ',
     'menu.open': 'メニューを開く',
     'hero.meta1': '2026 APR / EUROPE / 7 CITIES',
@@ -1699,22 +1672,21 @@ const I18N = {
     'members.head': 'メンバー',
     'rel.start.title': '시작 (Start Over)',
     'rel.start.from': '梨泰院クラス OST Part 2',
-    'tour.brazil.label': 'ガホ (Gaho) · Brazil Tour 2026',
-    'tour.brazil.span': 'ブラジル · 8都市',
-    'tour.japan.label': 'ガホ (Gaho) · 1st Japan Event',
-    'tour.japan.span': '日本 · 東京',
-    'tour.europe.span': '6か国 · 7都市',
-    'tour.jongno.label': 'ガホ (Gaho) · AL!VE 月刊鍾路',
-    'tour.jongno.span': '韓国 · ソウル',
-    'tour.jongno.place': 'ソウル · CGV ピカデリー1958 — 18:00',
     'foot.business': 'ビジネスのお問い合わせ',
     'foot.press': 'プレス・メディア',
-    'foot.mgmt': 'アーティストマネジメント',
     'foot.artists': 'アーティスト',
     'foot.rights': '© 2026 PLAN-G Entertainment. All rights reserved.',
     'foot.company': '株式会社プランジエンターテインメント'
   },
   es: {
+    'notice.brazil.text': 'Gaho arranca en São Paulo el 22 de agosto y recorre ocho ciudades de Brasil, cerrando la gira en Curitiba el 5 de septiembre.',
+    'notice.brazil.meta': 'Brasil · 8 ciudades',
+    'notice.japan.text': 'Primer evento en solitario de Gaho en Japón. En el Hikousen Theater de Tokio, repartido en dos partes: fanmeeting y directo.',
+    'notice.japan.meta': 'Japón · Tokio',
+    'notice.europe.text': 'Gaho y KAVE recorrieron siete ciudades de seis países europeos, empezando en Lausana y cerrando en The Underworld de Londres.',
+    'notice.europe.meta': 'Europa · 7 ciudades',
+    'notice.jongno.text': 'Gaho actuó en AL!VE Jongno Mensual. CGV Piccadilly 1958, 18:00.',
+    'notice.jongno.meta': 'Corea · Seúl',
     'skip': 'Saltar al contenido',
     'menu.open': 'Abrir menú',
     'hero.meta1': '2026 ABR / EUROPA / 7 CIUDADES',
@@ -1747,17 +1719,8 @@ const I18N = {
     'members.head': 'Integrantes',
     'rel.start.title': 'Start Over',
     'rel.start.from': 'Itaewon Class BSO Parte 2',
-    'tour.brazil.label': 'Gaho · Gira Brasil 2026',
-    'tour.brazil.span': 'Brasil · 8 ciudades',
-    'tour.japan.label': 'Gaho · 1.er evento en Japón',
-    'tour.japan.span': 'Japón · Tokio',
-    'tour.europe.span': '6 países · 7 ciudades',
-    'tour.jongno.label': 'Gaho · AL!VE Jongno Mensual',
-    'tour.jongno.span': 'Corea · Seúl',
-    'tour.jongno.place': 'Seúl · CGV Piccadilly 1958 — 18:00',
     'foot.business': 'Consultas comerciales',
     'foot.press': 'Prensa y medios',
-    'foot.mgmt': 'Management de artistas',
     'foot.artists': 'Artistas',
     'foot.rights': '© 2026 PLAN-G Entertainment. Todos los derechos reservados.',
     'foot.company': 'PLAN-G Entertainment, S.L.'
