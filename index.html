@@ -340,12 +340,24 @@ a { color: inherit; text-decoration: none; }
    아이콘으로 간다 (bbj 운영 사이트와 같은 방식). 글자보다 짧고,
    브랜드 마크라 번역이 필요 없어 4개 언어에서 폭이 흔들리지 않는다.
    글자가 사라졌으므로 aria-label 이 유일한 이름이다 — 반드시 남긴다. */
-.artist__links { display: flex; gap: clamp(14px, 1.6vw, 22px); flex-wrap: wrap; margin-top: 24px; }
+/* 터치 영역(44px)이 아이콘 위아래로 12px 씩을 이미 품고 있다.
+   앞서 그 12px 을 링크마다 margin:-12px 로 상쇄했더니 위쪽 여백까지 같이 깎여
+   SNS 줄이 Role 에 달라붙어 보였다. 상쇄는 왼쪽에만 남긴다 —
+   첫 아이콘의 왼쪽 여백만 걷어내 위 텍스트와 좌측 선을 맞추기 위한 것이다.
+   아래 -12px 은 블록 끝의 군더더기 높이를 없앤다. */
+/* 선택자에 .artist__facts 를 붙여야 한다 — 위의 `.artist__facts dd`(0,1,1)가
+   `.artist__links`(0,1,0)를 이겨서 여기 적힌 margin 이 통째로 무시된다.
+   실제로 그래서 여백이 3px 로 붙어 있었다. */
+.artist__facts .artist__links {
+  display: flex; flex-wrap: wrap;
+  gap: clamp(2px, .8vw, 10px);
+  margin: clamp(22px, 2.4vw, 34px) 0 -12px -12px;
+}
 .artist__links a {
   display: grid; place-items: center;
   color: var(--grey);
   /* 아이콘 자체는 20px 이지만 손가락으로 누를 수 있어야 한다 */
-  min-width: 44px; min-height: 44px; margin: -12px;
+  width: 44px; height: 44px;
   transition: color .3s var(--ease), transform .4s var(--ease);
 }
 .artist__links a:hover { color: var(--ink); transform: translateY(-2px); }
