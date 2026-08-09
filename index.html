@@ -336,8 +336,22 @@ a { color: inherit; text-decoration: none; }
 .artist__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(18px, 3vw, 50px); align-items: start; }
 .artist__facts dt { font-size: .6875rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--grey); margin-top: 14px; }
 .artist__facts dd { margin: 3px 0 0; }
-.artist__links { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 22px; }
-.artist__links a { border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+/* ---- SNS ----
+   아이콘으로 간다 (bbj 운영 사이트와 같은 방식). 글자보다 짧고,
+   브랜드 마크라 번역이 필요 없어 4개 언어에서 폭이 흔들리지 않는다.
+   글자가 사라졌으므로 aria-label 이 유일한 이름이다 — 반드시 남긴다. */
+.artist__links { display: flex; gap: clamp(14px, 1.6vw, 22px); flex-wrap: wrap; margin-top: 24px; }
+.artist__links a {
+  display: grid; place-items: center;
+  color: var(--grey);
+  /* 아이콘 자체는 20px 이지만 손가락으로 누를 수 있어야 한다 */
+  min-width: 44px; min-height: 44px; margin: -12px;
+  transition: color .3s var(--ease), transform .4s var(--ease);
+}
+.artist__links a:hover { color: var(--ink); transform: translateY(-2px); }
+.artist__links svg { display: block; }
+/* 키보드 초점은 반드시 보여야 한다 — 글자 밑줄이 사라진 만큼 더 중요하다 */
+.artist__links a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; color: var(--ink); }
 
 /* ---- 아티스트 사진 구성 ----
    규칙: 대표컷 1장(가로) + 멤버 1인당 1장(세로).
@@ -970,12 +984,10 @@ a { color: inherit; text-decoration: none; }
 
           <dl class="artist__facts" style="margin:0">
             <dt data-i18n="fact.role">Role</dt><dd data-i18n="gaho.role">가수</dd>
-            <dt data-i18n="fact.knownFor">Known for</dt><dd data-i18n="gaho.knownFor">&lt;시작&gt; — 이태원 클라쓰 OST Part 2</dd>
-            <dt data-i18n="fact.also">Also</dt><dd data-i18n="gaho.also">KAVE 멤버 (2024~)</dd>
             <dd class="artist__links micro">
-              <a href="https://www.instagram.com/ad_gaho" target="_blank" rel="noopener noreferrer">Instagram</a>
-              <a href="https://www.youtube.com/gaho_official" target="_blank" rel="noopener noreferrer">YouTube</a>
-              <a href="https://open.spotify.com/artist/3ybZTNrlK0QhL4rBxfLHOc" target="_blank" rel="noopener noreferrer">Spotify</a>
+              <a href="https://www.instagram.com/ad_gaho" target="_blank" rel="noopener noreferrer" aria-label="가호 (Gaho) Instagram"><svg viewBox="0 0 448 512" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
+              <a href="https://www.youtube.com/gaho_official" target="_blank" rel="noopener noreferrer" aria-label="가호 (Gaho) YouTube"><svg viewBox="0 0 576 512" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg></a>
+              <a href="https://open.spotify.com/artist/3ybZTNrlK0QhL4rBxfLHOc" target="_blank" rel="noopener noreferrer" aria-label="가호 (Gaho) Spotify"><svg viewBox="0 0 496 512" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8zm100.7 364.9c-4.2 0-6.8-1.3-10.7-3.6-62.4-37.6-135-39.2-206.7-24.5-3.9 1-9 2.6-11.9 2.6-9.7 0-15.8-7.7-15.8-15.8 0-10.3 6.1-15.2 13.6-16.8 81.9-18.1 165.6-16.5 237 26.2 6.1 3.9 9.7 7.4 9.7 16.5s-7.1 15.4-15.2 15.4zm26.9-65.6c-5.2 0-8.7-2.3-12.3-4.2-62.5-37-155.7-51.9-238.6-29.4-4.8 1.3-7.4 2.6-11.9 2.6-10.7 0-19.4-8.7-19.4-19.4s5.2-17.8 15.5-20.7c27.8-7.8 56.2-13.6 97.8-13.6 64.9 0 127.6 16.1 177 45.5 8.1 4.8 11.3 11 11.3 19.7-.1 10.8-8.5 19.5-19.4 19.5zm31-76.2c-5.2 0-8.4-1.3-12.9-3.9-71.2-42.5-198.5-52.7-280.9-29.7-3.6 1-8.1 2.6-12.9 2.6-13.2 0-23.3-10.3-23.3-23.6 0-13.6 8.4-21.3 17.4-23.9 35.2-10.3 74.6-15.2 117.5-15.2 73 0 149.5 15.2 205.4 47.8 7.8 4.5 12.9 10.7 12.9 22.6 0 13.6-11 23.3-23.2 23.3z"/></svg></a>
             </dd>
           </dl>
         </div>
@@ -1003,9 +1015,9 @@ a { color: inherit; text-decoration: none; }
             <dt data-i18n="fact.formed">Formed</dt><dd>2024</dd>
             <dt data-i18n="fact.members">Members</dt><dd data-i18n="kave.members">가호 · 지상 · 현 · 오너 · 준</dd>
             <dd class="artist__links micro">
-              <a href="https://www.instagram.com/kave_official_" target="_blank" rel="noopener noreferrer">Instagram</a>
-              <a href="https://www.youtube.com/@KAVE_Official" target="_blank" rel="noopener noreferrer">YouTube</a>
-              <a href="https://open.spotify.com/artist/2ULfZAs05dyyWxznOPua14" target="_blank" rel="noopener noreferrer">Spotify</a>
+              <a href="https://www.instagram.com/kave_official_" target="_blank" rel="noopener noreferrer" aria-label="KAVE Instagram"><svg viewBox="0 0 448 512" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
+              <a href="https://www.youtube.com/@KAVE_Official" target="_blank" rel="noopener noreferrer" aria-label="KAVE YouTube"><svg viewBox="0 0 576 512" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg></a>
+              <a href="https://open.spotify.com/artist/2ULfZAs05dyyWxznOPua14" target="_blank" rel="noopener noreferrer" aria-label="KAVE Spotify"><svg viewBox="0 0 496 512" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8zm100.7 364.9c-4.2 0-6.8-1.3-10.7-3.6-62.4-37.6-135-39.2-206.7-24.5-3.9 1-9 2.6-11.9 2.6-9.7 0-15.8-7.7-15.8-15.8 0-10.3 6.1-15.2 13.6-16.8 81.9-18.1 165.6-16.5 237 26.2 6.1 3.9 9.7 7.4 9.7 16.5s-7.1 15.4-15.2 15.4zm26.9-65.6c-5.2 0-8.7-2.3-12.3-4.2-62.5-37-155.7-51.9-238.6-29.4-4.8 1.3-7.4 2.6-11.9 2.6-10.7 0-19.4-8.7-19.4-19.4s5.2-17.8 15.5-20.7c27.8-7.8 56.2-13.6 97.8-13.6 64.9 0 127.6 16.1 177 45.5 8.1 4.8 11.3 11 11.3 19.7-.1 10.8-8.5 19.5-19.4 19.5zm31-76.2c-5.2 0-8.4-1.3-12.9-3.9-71.2-42.5-198.5-52.7-280.9-29.7-3.6 1-8.1 2.6-12.9 2.6-13.2 0-23.3-10.3-23.3-23.6 0-13.6 8.4-21.3 17.4-23.9 35.2-10.3 74.6-15.2 117.5-15.2 73 0 149.5 15.2 205.4 47.8 7.8 4.5 12.9 10.7 12.9 22.6 0 13.6-11 23.3-23.2 23.3z"/></svg></a>
             </dd>
           </dl>
         </div>
@@ -1611,12 +1623,10 @@ const I18N = {
     'gaho.ko': 'Gaho',
     'gaho.full': 'Gaho',
     'gaho.role': 'Singer',
-    'gaho.knownFor': '<Start Over> — Itaewon Class OST Part 2',
-    'gaho.also': 'Member of KAVE (2024–)',
     'kave.ko': 'KAVE',
     'kave.role': 'Singer',
     'kave.members': 'Gaho · Jisang · Hyun · Owner · Jun',
-    'fact.role': 'Role', 'fact.knownFor': 'Known for', 'fact.also': 'Also',
+    'fact.role': 'Role',
     'fact.formed': 'Formed', 'fact.members': 'Members',
     'members.head': 'Members',
     'releases.count': '2 releases',
@@ -1661,12 +1671,10 @@ const I18N = {
     'gaho.ko': 'ガホ',
     'gaho.full': 'ガホ (Gaho)',
     'gaho.role': '歌手',
-    'gaho.knownFor': '<시작 (Start Over)> — 梨泰院クラス OST Part 2',
-    'gaho.also': 'KAVE メンバー (2024〜)',
     'kave.ko': 'ケイブ',
     'kave.role': '歌手',
     'kave.members': 'ガホ · ジサン · ヒョン · オーナー · ジュン',
-    'fact.role': 'ロール', 'fact.knownFor': '代表曲', 'fact.also': 'その他',
+    'fact.role': 'ロール',
     'fact.formed': '結成', 'fact.members': 'メンバー',
     'members.head': 'メンバー',
     'releases.count': '2 releases',
@@ -1711,12 +1719,10 @@ const I18N = {
     'gaho.ko': 'Gaho',
     'gaho.full': 'Gaho',
     'gaho.role': 'Cantante',
-    'gaho.knownFor': '<Start Over> — Itaewon Class BSO Parte 2',
-    'gaho.also': 'Integrante de KAVE (2024–)',
     'kave.ko': 'KAVE',
     'kave.role': 'Cantante',
     'kave.members': 'Gaho · Jisang · Hyun · Owner · Jun',
-    'fact.role': 'Rol', 'fact.knownFor': 'Conocido por', 'fact.also': 'Además',
+    'fact.role': 'Rol',
     'fact.formed': 'Formada', 'fact.members': 'Integrantes',
     'members.head': 'Integrantes',
     'releases.count': '2 lanzamientos',
