@@ -18,29 +18,32 @@
 | `type1.html` | 안 1 — **브루탈리스트 컬러**. 채도 높은 컬러 블록, 초대형 컨덴스드 대문자 (참조: OFEN) |
 | `index.html` | 안 2 — **흑백 편집형 + 영상 히어로**. 워드마크가 영상 경계를 가로지름, 텍스트 애니메이션 (참조: Peter Lindbergh) |
 
-두 안 모두 정보구조는 동일하다 (00 Opening · 01 Now · 02 Roster · 03 Catalog · 04 Stage · 05 Press · 06 Studio · 07 Inquiry).
-시각 방향만 다르므로 나란히 비교할 수 있다.
+`index.html` 이 현재 진행 중인 안이다. `type1.html` 은 초기 비교용으로 남겨둔 것으로,
+아래 정보구조 변경은 반영돼 있지 않다.
 
-### type2 조절 포인트
+현재 정보구조 (index.html):
+**00 Opening · 01 Now · 02 Artists · 03 Releases · 04 Notice · 05 Press · 06 Contact**
+
+- Roster → **Artists**, Catalog → **Releases**, Stage → **Notice**, Inquiry → **Contact** 로 개명
+- **Studio 삭제** — 서비스 라인을 채울 실제 내용이 없었다. 빈 섹션은 신뢰를 깎는다
+- Notice 는 공연 소식을 한 건당 한 줄로, 3건씩 페이징
+
+### index.html 조절 포인트
 
 ```css
 --stage-h:  74vh;   /* 히어로 영상 높이 */
 --straddle: 50%;    /* 워드마크가 영상 쪽으로 걸치는 비율. 50% = 영상/지면 반반 */
 ```
 
-### type2 히어로 영상 준비
+### 히어로 영상 준비
 
-영상은 **git에 넣지 않는다** (`media/` 는 .gitignore 대상). 각자 로컬에 아래 두 파일을 만들어 둔다.
-
-```
-media/hero.mp4          # 루프 영상
-media/hero-poster.jpg   # 첫 프레임 (로드 전 검은 화면 방지)
-```
+`media/` 는 기본적으로 .gitignore 대상이고, 배포에 필요한 것만 예외로 커밋한다
+(`hero.mp4` · `hero-poster.jpg` · `flowerburn.mp4` · `flowerburn-poster.jpg`).
 
 원본에서 만드는 절차 (ffmpeg 필요 — `brew install ffmpeg`):
 
 ```bash
-ffmpeg -ss 8 -t 12 -i 원본.MP4 -an -c:v libx264 -crf 25 -preset slow -pix_fmt yuv420p -movflags +faststart media/hero.mp4
+ffmpeg -ss 8 -t 12 -i 원본.MP4 -an -c:v libx264 -crf 30 -preset slow -pix_fmt yuv420p -movflags +faststart media/hero.mp4
 ```
 
 ```bash
@@ -48,11 +51,25 @@ ffmpeg -ss 1 -i media/hero.mp4 -frames:v 1 -q:v 3 media/hero-poster.jpg
 ```
 
 - `-ss 8 -t 12` — 8초 지점부터 12초. 가장 좋은 구간으로 바꿔서 쓴다
-- `-an` — **오디오 제거.** 히어로는 항상 muted라 소리는 절대 안 들리는데 용량만 차지한다
+- `-an` — **오디오 제거.** 히어로는 항상 muted라 소리는 절대 안 들리는데 용량만 차지한다.
+  실제로 오디오가 섞여 들어간 적이 있고, 빼면서 화질을 건드리지 않고 용량이 줄었다
+- `-crf 30` — 어두운 조명 클립에서는 25와 육안 차이가 없고 용량은 절반이다
 - `-movflags +faststart` — 메타데이터를 앞으로 보내 다운로드 도중 재생 시작
-- `muted` `loop` `playsinline` 속성은 모바일 자동재생 조건이라 지우면 안 된다
+- `muted` `loop` `playsinline` 은 모바일 자동재생 조건이라 지우면 안 된다
 
-**목표치**: 8~15초 · 2~4MB. 히어로 영상이 무거우면 첫인상이 검은 화면이 된다.
+**목표치**: 8~15초 · **2MB 이하**. 히어로가 무거우면 첫인상이 검은 화면이 된다.
+
+⚠ `index.html` 은 `src` 대신 `data-src` 로 영상을 들고 있다가 첫 화면 자원이
+다 내려온 뒤에 붙인다. 영상과 이미지가 대역폭을 다투면 둘 다 늦어지기 때문이다.
+영상을 교체할 때 `src=` 로 되돌리지 말 것.
+
+### 이미지 규칙
+
+- **표시 폭 × 2(레티나)** 를 넘는 파일을 두지 않는다. 넘으면 느린 회선에서 그대로 손해다
+- `loading="lazy" decoding="async"` 를 붙이고, `width`/`height` 로 자리를 미리 잡는다
+- 사진은 컨테이너의 reveal 이 아니라 **자기 자신의 `load`** 에 맞춰 나타난다
+  (그렇지 않으면 느린 회선에서 빈 상자가 먼저 떠올라 깜빡이는 것처럼 보인다)
+- 쓰지 않게 된 이미지는 남기지 않는다 — 페이지는 요청하지 않아도 배포에는 실린다
 
 ## 배포 (GitHub Pages)
 
