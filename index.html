@@ -37,6 +37,25 @@
   --hair:   #d8d8d8;
   --stage:  #0a0a0a;
 
+  /* ---- 어두운 지면 위의 값 ----
+     흰 지면에는 --hair / --grey 가 있는데 검은 지면에는 대응짝이 없어서
+     rgba(255,255,255,.22) 같은 값을 그때그때 적어 넣고 있었다.
+     같은 역할인데 알파가 .22 / .25 로 갈리는 등 조금씩 어긋나 있었으므로
+     이름을 붙여 하나로 모은다. */
+  --hair-on-dark:  rgba(255, 255, 255, .22);   /* 검은 지면의 구분선 */
+  --on-dark-1:     rgba(255, 255, 255, .78);   /* 영상 위 테두리 등 또렷해야 하는 선 */
+  --on-dark-2:     rgba(255, 255, 255, .62);   /* 보조 텍스트 */
+  --on-dark-3:     rgba(255, 255, 255, .48);   /* 더 물러난 텍스트 */
+
+  /* ---- 사진·영상 위에 얹는 층 ---- */
+  --scrim:         rgba(0, 0, 0, .55);         /* 버튼·배지 바탕 */
+  --scrim-strong:  rgba(0, 0, 0, .8);          /* 눌렀을 때 */
+  --scrim-edge:    rgba(0, 0, 0, .16);         /* 커버 안쪽 테두리 */
+  --scrim-vignette:rgba(0, 0, 0, .22);         /* 커버 가장자리 비네트 */
+
+  /* 사진이 도착하기 전 자리 */
+  --placeholder:   #e9e9e9;
+
   --font-display: 'Anton', 'Black Han Sans', Impact, sans-serif;
   --font-ko:      'Black Han Sans', 'Anton', sans-serif;
   /* Archivo 는 라틴 전용이다. 한글·일본어는 각 OS의 기본 고딕으로 떨어지므로
@@ -83,14 +102,11 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Type ---------- */
 .display { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; letter-spacing: -.01em; line-height: .82; margin: 0; }
 /* 한글 디스플레이는 전각이라 0.96 미만이면 행이 겹친다 */
-.display--ko { font-family: var(--font-ko); line-height: .98; letter-spacing: -.02em; }
 
 .micro { font-size: .6875rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; line-height: 1.5; }
-.micro--plain { font-weight: 400; letter-spacing: 0; text-transform: none; font-size: .8125rem; }
 /* 이메일·URL 은 대문자 변환에서 제외한다 — 소문자가 정식 표기이고 읽기도 쉽다 */
 .lower { text-transform: none; letter-spacing: .02em; }
 .body-lg { font-size: clamp(1rem, 1.35vw, 1.25rem); line-height: 1.6; max-width: 58ch; }
-.credits { font-size: .6875rem; font-style: italic; line-height: 1.9; color: var(--grey); }
 
 /* 세로 회전 레이블 */
 .vert { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); }
@@ -98,6 +114,8 @@ a { color: inherit; text-decoration: none; }
 /* ==========================================================================
    Placeholder frames
    ========================================================================== */
+/* 개발용 자리표시 프레임. 실제 에셋이 들어오면 통째로 사라지므로
+   토큰 체계에 넣지 않는다 — 여기 색상값은 의도적으로 일회용이다 */
 .ph {
   --ar: 1; position: relative; aspect-ratio: var(--ar);
   background:
@@ -109,13 +127,12 @@ a { color: inherit; text-decoration: none; }
   content: attr(data-label);
   position: relative; z-index: 2;      /* 애니메이션 오버레이(::before) 위로 */
   font-size: .625rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
-  color: rgba(0,0,0,.55); text-align: center; padding: 5px 9px;
+  color: var(--scrim); text-align: center; padding: 5px 9px;
   background: rgba(255,255,255,.88); max-width: 88%;
 }
 .ph--dark { --ph-bg: #1c1c1c;
   background: repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 10px, rgba(255,255,255,.09) 10px 20px), var(--ph-bg); }
 .ph--dark::after { color: rgba(255,255,255,.7); background: rgba(0,0,0,.7); }
-.ph--fill { height: 100%; aspect-ratio: auto; }
 
 /* ==========================================================================
    Nav — hairline, all-caps, spread across the width
@@ -125,7 +142,7 @@ a { color: inherit; text-decoration: none; }
   display: flex; align-items: center; justify-content: space-between; gap: 14px;
   padding: 16px var(--gut);
   mix-blend-mode: difference;           /* 영상 위에서도 대비가 유지된다 */
-  color: #fff;
+  color: var(--paper);
 }
 .nav a, .nav p { color: inherit; }
 /* 로고는 흰 글자 + 투명 배경 PNG.
@@ -177,8 +194,9 @@ a { color: inherit; text-decoration: none; }
   font-size: clamp(2rem, 11vw, 3.5rem); line-height: 1.12;
   padding: 4px 0;
 }
-.menu .idx { font-family: var(--font-body); font-size: .6875rem; font-weight: 600; letter-spacing: .1em; color: var(--grey); }
-.menu__foot { margin-top: auto; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.25); display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+/* 01~06 이 세로로 쌓이므로 여기도 고정폭 숫자 */
+.menu .idx { font-family: var(--font-body); font-size: .6875rem; font-weight: 600; letter-spacing: .1em; color: var(--grey); font-variant-numeric: tabular-nums; }
+.menu__foot { margin-top: auto; padding-top: 28px; border-top: 1px solid var(--hair-on-dark); display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
 
 @media (max-width: 820px) {
   .nav__links { display: none; }
@@ -201,7 +219,9 @@ a { color: inherit; text-decoration: none; }
 /* 영상이 없을 때 자리를 지키는 모션 플레이스홀더.
    position+z-index로 스태킹 컨텍스트를 만들어야 내부 라벨(::after, z-index 2)이
    영상(z-index 1) 위로 뚫고 나오지 않는다. */
-.hero__stage .ph { position: relative; z-index: 0; height: 100%; aspect-ratio: auto; }
+.hero__stage /* 개발용 자리표시 프레임. 실제 에셋이 들어오면 통째로 사라지므로
+   토큰 체계에 넣지 않는다 — 여기 색상값은 의도적으로 일회용이다 */
+.ph { position: relative; z-index: 0; height: 100%; aspect-ratio: auto; }
 .hero__stage .ph::before {
   content: ''; position: absolute; inset: -20%;
   background: radial-gradient(ellipse at 30% 40%, rgba(255,255,255,.16), transparent 55%),
@@ -214,7 +234,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* 모서리 메타 — 좌상단 기간, 우상단 장소 */
-.hero__meta { position: absolute; top: clamp(54px, 8vh, 92px); left: var(--gut); right: var(--gut); display: flex; justify-content: flex-end; gap: 20px; color: #fff; z-index: 3; pointer-events: none; }
+.hero__meta { position: absolute; top: clamp(54px, 8vh, 92px); left: var(--gut); right: var(--gut); display: flex; justify-content: flex-end; gap: 20px; color: var(--paper); z-index: 3; pointer-events: none; }
 .hero__meta .right { text-align: right; }
 
 /* 워드마크 — 같은 글자를 두 벌 겹쳐 두고, '영상 영역'과 '지면 영역'을
@@ -223,7 +243,7 @@ a { color: inherit; text-decoration: none; }
 .hero__mark { position: absolute; inset: 0; margin: 0; z-index: 4; pointer-events: none; }
 
 .mark__clip { position: absolute; left: 0; right: 0; overflow: hidden; }
-.mark__clip--light { top: 0; height: var(--stage-h); color: #fff; }      /* 영상 위 */
+.mark__clip--light { top: 0; height: var(--stage-h); color: var(--paper); }      /* 영상 위 */
 .mark__clip--dark  { top: var(--stage-h); bottom: 0; color: var(--ink); } /* 지면 위 */
 
 .mark__inner { position: absolute; left: 0; right: 0; padding-inline: var(--gut); }
@@ -276,9 +296,11 @@ a { color: inherit; text-decoration: none; }
 .sec { padding: clamp(56px, 9vw, 140px) var(--gut); max-width: var(--maxw); margin-inline: auto; }
 .sec--ink { background: var(--ink); color: var(--paper); max-width: none; }
 .sec--ink .sec__inner { max-width: var(--maxw); margin-inline: auto; }
-.sec__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-bottom: clamp(26px, 4vw, 60px); }
+/* 섹션 번호(01~05)를 뺐다. 제목-좌 / 번호-우 2단 헤드는 편집물처럼 보이지만
+   모든 섹션에 붙으면 위계를 만들기는커녕 지워버린다 — 전부 챕터면 아무것도 챕터가 아니다.
+   이 섹션들은 순서대로 밟는 단계도 아니었다. 이제 제목 하나만 선다. */
+.sec__head { margin-bottom: clamp(26px, 4vw, 60px); }
 .sec__title { font-size: clamp(2rem, 6.5vw, 5.5rem); }
-.sec__no { font-family: var(--font-display); font-size: clamp(1rem, 2vw, 1.75rem); color: var(--grey); }
 
 /* ==========================================================================
    01 NOW — 큰 좌측 프레임 + 우측 텍스트
@@ -289,23 +311,12 @@ a { color: inherit; text-decoration: none; }
 .teaser { margin: 0; }
 .teaser__frame { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--stage); }
 .teaser__video { width: 100%; height: 100%; object-fit: cover; }
-.teaser__poster { width: 100%; height: 100%; object-fit: cover; }
 /* 앨범 커버형 — 1:1 커버를 16:9 프레임 가운데 두고, 같은 이미지를 흐리게 깔아 배경을 채운다 */
-.teaser--cover .teaser__frame { display: block; }
-.teaser__blur { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(30px) brightness(.5) saturate(1.1); transform: scale(1.2); }
-.teaser__art {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  height: 84%; width: auto; aspect-ratio: 1; object-fit: cover;
-  box-shadow: 0 20px 54px rgba(0,0,0,.55);
-  transition: transform .6s var(--ease);
-}
-.teaser--cover .teaser__frame:hover .teaser__art { transform: translate(-50%, -50%) scale(1.035); }
-.teaser--cover .teaser__toggle { pointer-events: none; }
 .teaser__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .teaser__toggle, .teaser__mute {
   position: absolute; bottom: 14px;
-  background: rgba(0,0,0,.55); color: var(--paper);
-  border: 1px solid rgba(255,255,255,.5); padding: 9px 18px;
+  background: var(--scrim); color: var(--paper);
+  border: 1px solid var(--on-dark-1); padding: 9px 18px;
   cursor: pointer; backdrop-filter: blur(6px);
   transition: background .25s var(--ease), color .25s var(--ease);
 }
@@ -323,7 +334,7 @@ a { color: inherit; text-decoration: none; }
 /* 검은 지면 위이므로 헤어라인은 --hair(밝은 회색)가 아니라 흰색 반투명이다.
    Stage 의 구분선과 같은 값 — 두 어두운 섹션의 선이 서로 달라 보이면 안 된다.
    (--grey 글자색은 그대로 둔다. 검정 위 대비가 6.4:1 로 흰 지면일 때보다 오히려 높다) */
-.now__meta { display: flex; gap: clamp(12px, 2.4vw, 34px); flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.22); padding-top: 14px; margin-top: 22px; }
+.now__meta { display: flex; gap: clamp(12px, 2.4vw, 34px); flex-wrap: wrap; border-top: 1px solid var(--hair-on-dark); padding-top: 14px; margin-top: 22px; }
 @media (max-width: 820px) {
   .now { grid-template-columns: 1fr; }
 
@@ -336,7 +347,6 @@ a { color: inherit; text-decoration: none; }
 .artist { padding: clamp(28px, 4.5vw, 64px) 0; border-top: 1px solid var(--hair); }
 .artist__name { font-size: clamp(2.4rem, 9vw, 8rem); margin: 0 0 4px; }
 .artist__ko { font-family: var(--font-ko); font-size: clamp(.9rem, 1.6vw, 1.35rem); color: var(--grey); margin: 0 0 20px; }
-.artist__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(18px, 3vw, 50px); align-items: start; }
 .artist__facts dt { font-size: .6875rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--grey); margin-top: 14px; }
 .artist__facts dd { margin: 3px 0 0; }
 /* ---- SNS ----
@@ -374,42 +384,15 @@ a { color: inherit; text-decoration: none; }
      · 5인조 → 단체컷 1 + 멤버 5 = 6장
    멤버 줄은 개수 고정이 아니라 auto-fit이라 3인조든 7인조든 같은 코드로 채워진다.
    멤버가 여럿이면 이름 캡션이 필수 — 없으면 누가 누군지 알 수 없다. */
-.artist__media { display: grid; gap: clamp(10px, 1.4vw, 18px); }
-.artist__lead { margin: 0; }
-.artist__lead .ph { --ar: 3/2; }
-.artist__lead figcaption { margin-top: 7px; color: var(--grey); }
+.artist__lead /* 개발용 자리표시 프레임. 실제 에셋이 들어오면 통째로 사라지므로
+   토큰 체계에 넣지 않는다 — 여기 색상값은 의도적으로 일회용이다 */
+.ph { --ar: 3/2; }
 
 /* ---- 세로 대표컷 ----
    단체컷이 세로(2:3)면 가로 프레임에 넣는 순간 머리나 발이 잘린다.
    세로 그대로 두고, 옆의 빈 공간을 세로 회전 캡션으로 채워 의도된 여백으로 만든다. */
-.lead--portrait { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(12px, 1.6vw, 24px); align-items: stretch; }
-.lead--portrait__img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  background: #ededed;
-}
-.lead--portrait__img img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  /* 소스가 이미 4:5로 잘려 있어 데스크톱에서는 추가 크롭이 없다.
-     모바일(3:4)에서만 아주 약간 좌우가 잘린다. */
-  object-position: center 58%;
-  filter: grayscale(1) contrast(1.04);
-  transform: scale(1.01);
-  transition: filter .7s var(--ease), transform 1s var(--ease);
-}
-.lead--portrait:hover .lead--portrait__img img { filter: grayscale(0); transform: scale(1); }
 
-.lead--portrait__side { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding-bottom: 2px; }
-.lead--portrait__side .vert { color: var(--grey); }
-.lead--portrait__rule { width: 100%; border-top: 1px solid var(--hair); }
 
-@media (max-width: 640px) {
-  .lead--portrait { grid-template-columns: 1fr; }
-  .lead--portrait__img { width: 100%; aspect-ratio: 3 / 4; }
-  .lead--portrait__side .vert { writing-mode: horizontal-tb; transform: none; }
-}
 
 /* 멤버 줄은 아티스트 블록 전체 폭을 쓴다 — 오른쪽 컬럼 안에 가두면
    좌측 하단에 목적 없는 빈 공간이 남는다.
@@ -476,7 +459,7 @@ a { color: inherit; text-decoration: none; }
 /* 살짝 겹치기 */
 .strip__item + .strip__item { margin-left: clamp(-16px, -1.1vw, -4px); }
 .strip__item:hover { transform: translateY(-10px); z-index: 3; }
-.strip__item:hover img { filter: grayscale(0); box-shadow: 0 22px 46px rgba(0,0,0,.28); }
+.strip__item:hover img { filter: grayscale(0); box-shadow: 0 22px 46px var(--scrim-vignette); }
 
 /* 이름표는 사진 '안'에 얹는다 — 사진 밖에 두면 옆 사진에 가려 읽히지 않는다.
    자기 사진 위에 놓이므로 어떤 겹침에서도 항상 보인다. */
@@ -485,13 +468,13 @@ a { color: inherit; text-decoration: none; }
   margin: 0;
   display: inline-flex; align-items: baseline; gap: 7px;
   padding: 6px 10px;
-  background: rgba(0, 0, 0, .62);
+  background: var(--scrim);
   color: var(--paper);
   backdrop-filter: blur(6px);
   transition: background .4s var(--ease);
 }
-.strip__item:hover .strip__name { background: rgba(0, 0, 0, .8); }
-.strip__no { color: rgba(255, 255, 255, .55); }
+.strip__item:hover .strip__name { background: var(--scrim-strong); }
+.strip__no { color: var(--on-dark-2); }
 
 @media (max-width: 760px) {
   /* 좁은 화면에서 5장을 겹쳐 놓으면 아무것도 안 보인다 — 격자로 되돌린다 */
@@ -500,27 +483,7 @@ a { color: inherit; text-decoration: none; }
   .strip__item + .strip__item { margin-left: 0 !important; }
   .strip__name { left: 7px; bottom: 7px; padding: 5px 8px; }
 }
-.artist__people {
-  list-style: none; margin: 0; padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(clamp(104px, 11vw, 170px), 1fr));
-  gap: clamp(6px, .8vw, 12px);
-}
-.artist__people li { margin: 0; }
-.artist__people .ph { --ar: 3/4; }
-.artist__people img {
-  width: 100%; height: auto; aspect-ratio: 3/4; object-fit: cover;
-  filter: grayscale(1) contrast(1.04);
-  transition: filter .6s var(--ease);
-}
-.artist__people li:hover img { filter: grayscale(0); }
-.artist__people figcaption,
-.artist__people span { display: block; margin-top: 6px; }
 
-@media (max-width: 820px) {
-  .artist__row { grid-template-columns: 1fr; }
-  .artist__people { grid-template-columns: repeat(auto-fit, minmax(88px, 1fr)); }
-}
 
 /* ==========================================================================
    03 RELEASES
@@ -539,7 +502,7 @@ a { color: inherit; text-decoration: none; }
   gap: clamp(8px, 1.2vw, 18px);
   max-width: 300px;
 }
-.disc { position: relative; overflow: hidden; background: #ececec; }
+.disc { position: relative; overflow: hidden; background: var(--placeholder); }
 /* 커버는 흑백으로 죽이지 않는다.
    Press 사진은 인물이라 흑백이 편집 언어가 되지만, 앨범 재킷은 그 자체가 디자인이다.
    채도를 빼면 아트워크가 만든 색 선택이 통째로 사라져 '못 쓴 이미지'처럼 보인다.
@@ -556,8 +519,8 @@ a { color: inherit; text-decoration: none; }
 .disc__art::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   box-shadow:
-    inset 0 0 0 1px rgba(0, 0, 0, .16),
-    inset 0 0 clamp(16px, 2.6vw, 38px) rgba(0, 0, 0, .22);
+    inset 0 0 0 1px var(--scrim-edge),
+    inset 0 0 clamp(16px, 2.6vw, 38px) var(--scrim-vignette);
   transition: opacity .6s var(--ease);
 }
 .disc:hover .disc__art img { filter: none; transform: scale(1.06); }
@@ -566,24 +529,17 @@ a { color: inherit; text-decoration: none; }
 .disc__info {
   position: absolute; inset: auto 0 0 0;
   display: block; padding: 12px 12px 11px;
-  background: linear-gradient(to top, rgba(0,0,0,.86), rgba(0,0,0,.5) 60%, transparent);
+  background: linear-gradient(to top, var(--scrim-strong), var(--scrim) 60%, transparent);
   color: var(--paper);
   transform: translateY(101%);
   transition: transform .5s var(--ease);
 }
 .disc:hover .disc__info, .disc:focus-within .disc__info { transform: translateY(0); }
 .disc__title { display: block; font-family: var(--font-display); text-transform: uppercase; font-size: clamp(.85rem, 1.1vw, 1.05rem); line-height: 1.05; }
-.disc__meta { display: block; margin-top: 3px; color: rgba(255,255,255,.62); }
+.disc__meta { display: block; margin-top: 3px; color: var(--on-dark-2); font-variant-numeric: tabular-nums; }
 /* 수록처 — 싱글이면 실린 OST·앨범명, 앨범이면 수록곡 목록.
    이 줄이 없으면 '2020 · Single' 만 남아 카탈로그가 비어 보인다.
    두 줄에서 자른다 — 커버 위 오버레이라 높이가 자라면 그림을 덮는다. */
-.disc__from {
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
-  overflow: hidden;
-  margin-top: 4px;
-  color: rgba(255,255,255,.48);
-  text-transform: none; letter-spacing: .02em; line-height: 1.35;
-}
 
 /* 필터로 걸러진 항목 */
 .disc[hidden] { display: none; }
@@ -592,7 +548,6 @@ a { color: inherit; text-decoration: none; }
 @media (hover: none) {
   .disc__info { position: static; transform: none; background: none; color: var(--ink); padding: 9px 0 0; }
   .disc__meta { color: var(--grey); }
-  .disc__from { color: var(--grey); opacity: .8; }
   .disc { background: none; overflow: visible; }
 }
 
@@ -606,16 +561,17 @@ a { color: inherit; text-decoration: none; }
 .notice { list-style: none; margin: 0; padding: 0; }
 /* 아래 선은 목록에 건다 — 항목에 :last-child 로 걸면 페이징으로 감춰진 항목이
    마지막이 될 때 선이 사라진다 */
-.notice { border-bottom: 1px solid rgba(255,255,255,.22); }
+.notice { border-bottom: 1px solid var(--hair-on-dark); }
 .notice__item {
   display: grid;
   grid-template-columns: minmax(96px, 148px) minmax(0, 1fr) minmax(0, 220px);
   gap: clamp(14px, 2.6vw, 44px);
   align-items: start;
   padding: clamp(20px, 2.8vw, 36px) 0;
-  border-top: 1px solid rgba(255,255,255,.22);
+  border-top: 1px solid var(--hair-on-dark);
 }
-.notice__date { color: var(--grey); padding-top: .35em; }
+/* 날짜가 세로로 다섯 줄 쌓인다. 비례숫자로 두면 자릿수가 어긋나 열이 흔들린다 */
+.notice__date { color: var(--grey); padding-top: .35em; font-variant-numeric: tabular-nums; }
 .notice__title { font-size: clamp(1.15rem, 2.4vw, 2rem); margin: 0 0 clamp(8px, 1vw, 14px); }
 /* ---- 라틴 밖 글자가 들어가는 제목 ----
    기본값은 다른 제목과 같은 Anton 이다. 실제로 CJK 가 들어가는 언어에서만 바꾼다.
@@ -747,14 +703,7 @@ html[lang="ja"] .notice__title--intl {
 /* ---- 절제된 텍스트 모션 ----
    한 번, 짧게, 아래에서 밀려 올라온다. 화면에 들어올 때만.
    부모의 data-shown 이 신호이므로, reveal 안전장치(3초)가 이 요소도 함께 살린다. */
-.js .rise { opacity: 0; transform: translateY(14px); }
-.js [data-shown="true"] .rise,
-.js .rise[data-shown="true"] {
-  opacity: 1; transform: none;
-  transition: opacity .7s var(--ease) var(--d, 0s), transform .7s var(--ease) var(--d, 0s);
-}
 @media (prefers-reduced-motion: reduce) {
-  .js .rise { opacity: 1 !important; transform: none !important; }
   .press figure:hover { transform: none; }
 }
 
@@ -783,7 +732,7 @@ html[lang="ja"] .notice__title--intl {
   .split__media:hover img { filter: grayscale(1) contrast(1.04); }
   .strip__item:hover { transform: none; z-index: auto; }
   .strip__item:hover img { filter: grayscale(1) contrast(1.05); box-shadow: none; }
-  .strip__item:hover .strip__name { background: rgba(0, 0, 0, .62); }
+  .strip__item:hover .strip__name { background: var(--scrim); }
   .artist__links a:hover { transform: none; }
   .nav__links a:hover::after { transform: scaleX(0); }
 }
@@ -800,35 +749,14 @@ html[lang="ja"] .notice__title--intl {
       SVG 원본을 확보하면 이 상한이 사라진다. */
 .foot__mark { margin: 0 0 clamp(24px, 4vw, 56px); line-height: 0; }
 .foot__mark img { display: block; width: min(420px, 62%); height: auto; }
-.foot__cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: clamp(20px, 3vw, 48px); border-top: 1px solid rgba(255,255,255,.25); padding-top: 20px; }
+.foot__cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: clamp(20px, 3vw, 48px); border-top: 1px solid var(--hair-on-dark); padding-top: 20px; }
 .foot__cols a { display: block; }
 .foot__bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: clamp(30px, 5vw, 60px); color: var(--grey); }
 
 /* ==========================================================================
    투어 일정 표 — 레퍼런스의 헤어라인 목록 톤
    ========================================================================== */
-.dates { list-style: none; margin: 0; padding: 0; }
-.dates li {
-  display: grid;
-  grid-template-columns: minmax(76px, 110px) minmax(0, 1fr) minmax(0, 1.1fr) minmax(64px, auto);
-  gap: clamp(10px, 2vw, 36px);
-  align-items: baseline;
-  padding: clamp(14px, 2vw, 24px) 0;
-  border-top: 1px solid var(--hair);
-}
-.dates li:last-child { border-bottom: 1px solid var(--hair); }
-.dates .d-city { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.1rem, 2.4vw, 2.1rem); line-height: 1; }
-.dates .d-venue, .dates .d-day { color: var(--grey); }
-.dates .d-ticket { justify-self: end; border-bottom: 1px solid currentColor; }
 /* 히어로 영상이 촬영된 공연 */
-.dates li[data-featured] { background: rgba(0,0,0,.04); }
-.dates li[data-featured] .d-venue { color: var(--ink); }
-.dates .d-tag { display: inline-block; margin-left: 8px; font-size: .625rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; border: 1px solid currentColor; padding: 2px 6px; vertical-align: middle; }
-@media (max-width: 760px) {
-  .dates li { grid-template-columns: 1fr auto; row-gap: 4px; }
-  .dates .d-day { grid-column: 1 / -1; order: -1; }
-  .dates .d-venue { grid-column: 1 / -1; }
-}
 
 /* ==========================================================================
    STATEMENT BAND — 가변 폰트 width 축 웨이브
@@ -893,6 +821,11 @@ html[lang="ja"] .notice__title--intl {
 
 /* ==========================================================================
    Scroll reveal — 기본 노출, JS가 애니메이션을 덧입힌다
+
+   ⚠ 페이지 전체에 걸지 않는다. 예전에는 22개 요소가 전부 같은 페이드로 떠올라
+      스크롤 내내 지면이 가라앉지 않았다. 지금은 첫 화면의 intro 한 덩어리에만 건다.
+      아래 사진들은 스크롤이 아니라 '이미지 자신의 load' 에 맞춰 나타나므로
+      (아래 블록 참고) 굳이 여기에 얹을 필요가 없다.
    ========================================================================== */
 [data-reveal] { opacity: 1; transform: none; }
 .js [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
@@ -920,7 +853,7 @@ html[lang="ja"] .notice__title--intl {
    실제 사진이 대부분 어두운 흑백이라 옅은 회색이 가장 덜 튄다. */
 .press figure,
 .split__media,
-.strip__item { background: #e9e9e9; }
+.strip__item { background: var(--placeholder); }
 /* 사진 아래 캡션까지 회색이 깔리면 안 된다 — 배경은 이미지 칸에만 */
 .press figcaption, .split__media figcaption { background: var(--paper); }
 
@@ -1052,12 +985,11 @@ html[lang="ja"] .notice__title--intl {
   <section class="sec sec--ink" id="now">
     <div class="sec__inner">
     <div class="sec__head">
-      <h2 class="display sec__title" data-reveal>Now</h2>
-      <p class="sec__no">01</p>
+      <h2 class="display sec__title">Now</h2>
     </div>
 
     <div class="now">
-      <figure class="teaser" data-reveal>
+      <figure class="teaser">
         <div class="teaser__frame">
           <!-- 음악 티저이므로 muted 를 걸지 않는다. 사용자가 눌러서 재생하는 방식이라
                브라우저 자동재생 정책에 걸리지 않고 소리가 그대로 난다. -->
@@ -1071,7 +1003,7 @@ html[lang="ja"] .notice__title--intl {
         <figcaption class="micro"><span data-i18n="teaser.caption">KAVE — &lt;FLOWERBURN&gt; Teaser</span></figcaption>
       </figure>
 
-      <div data-reveal>
+      <div>
         <p class="now__kicker micro"><span class="now__pulse" aria-hidden="true"></span> <span data-i18n="now.kicker">신곡 발매 — 2026.08.12</span></p>
 
         <p class="micro" style="color:var(--grey);margin:0 0 8px" data-i18n="now.label">KAVE — New Single</p>
@@ -1098,12 +1030,11 @@ html[lang="ja"] .notice__title--intl {
   <!-- ================= 02 ROSTER ================= -->
   <section class="sec" id="artists">
     <div class="sec__head">
-      <h2 class="display sec__title" data-reveal>Artists</h2>
-      <p class="sec__no">02</p>
+      <h2 class="display sec__title">Artists</h2>
     </div>
 
     <!-- 솔로 — KAVE와 같은 2단 분할. 프레임 3개를 한 장으로 합쳤다 -->
-    <article class="artist artist--split artist--flip" data-reveal>
+    <article class="artist artist--split artist--flip">
       <div class="split">
         <figure class="split__media split__media--natural">
           <img src="images/artists/gaho-profile.jpg"
@@ -1133,7 +1064,7 @@ html[lang="ja"] .notice__title--intl {
 
 
     <!-- 밴드 5인조 — 좌측에 단체컷이 세로로 가득, 우측에 정보. 그 아래 멤버 스트립 -->
-    <article class="artist artist--split" data-reveal>
+    <article class="artist artist--split">
       <div class="split">
         <figure class="split__media">
           <img src="images/artists/kave-group.jpg"
@@ -1206,13 +1137,12 @@ html[lang="ja"] .notice__title--intl {
   <!-- ================= 03 RELEASES ================= -->
   <section class="sec" id="releases">
     <div class="sec__head">
-      <h2 class="display sec__title" data-reveal>Releases</h2>
-      <p class="sec__no">03</p>
+      <h2 class="display sec__title">Releases</h2>
     </div>
 
     <!-- 커버가 주인공. 제목은 올려놓았을 때만 덮어 올라온다.
          두 장뿐이라 필터는 두지 않는다 — Album 을 누르면 결과가 0이다. -->
-    <ul class="discs" data-reveal>
+    <ul class="discs">
       <li class="disc" data-type="single" data-year="2026">
         <span class="disc__art"><img src="images/releases/to-mars.jpg" alt="To Mars" width="600" height="600" loading="lazy" decoding="async"></span>
         <span class="disc__info"><span class="disc__title">To Mars</span><span class="disc__meta micro">2026.04.08 · <span data-i18n="type.single">Single</span></span></span>
@@ -1227,11 +1157,10 @@ html[lang="ja"] .notice__title--intl {
   <section class="sec sec--ink" id="notice">
     <div class="sec__inner">
       <div class="sec__head">
-        <h2 class="display sec__title" data-reveal>Notice</h2>
-        <p class="sec__no">04</p>
+        <h2 class="display sec__title">Notice</h2>
       </div>
 
-      <ul class="notice" data-reveal>
+      <ul class="notice">
         <li class="notice__item">
           <time class="notice__date micro" datetime="2026-08-22">2026.08.22</time>
           <div class="notice__body">
@@ -1290,14 +1219,13 @@ html[lang="ja"] .notice__title--intl {
   <!-- ================= 05 PRESS ================= -->
   <section class="sec" id="press">
     <div class="sec__head">
-      <h2 class="display sec__title" data-reveal>Press</h2>
-      <p class="sec__no">05</p>
+      <h2 class="display sec__title">Press</h2>
     </div>
 
     <!-- 사진만으로 간다. 텍스트 패널을 붙이면 편집물이 아니라 소개 블록이 된다.
          캡션은 작게, 세로 레이블 하나로 맥락만 준다. -->
     <div class="press">
-      <figure class="press__a" data-reveal>
+      <figure class="press__a">
         <img src="images/press/gaho-live.jpg"
              srcset="images/press/gaho-live-700.jpg 700w, images/press/gaho-live.jpg 900w"
              sizes="(max-width: 860px) 66vw, 30vw"
@@ -1305,7 +1233,7 @@ html[lang="ja"] .notice__title--intl {
              width="900" height="599" loading="lazy" decoding="async">
       </figure>
 
-      <figure class="press__b" data-reveal>
+      <figure class="press__b">
         <img src="images/press/kave-motion.jpg"
              srcset="images/press/kave-motion-900.jpg 900w, images/press/kave-motion.jpg 1400w"
              sizes="(max-width: 860px) 88vw, 46vw"
@@ -1314,7 +1242,7 @@ html[lang="ja"] .notice__title--intl {
         <figcaption class="micro">TMRW Magazine · 2026</figcaption>
       </figure>
 
-      <figure class="press__c" data-reveal>
+      <figure class="press__c">
         <img src="images/press/gaho-suit.jpg"
              srcset="images/press/gaho-suit-700.jpg 700w, images/press/gaho-suit.jpg 1100w"
              sizes="(max-width: 860px) 60vw, 38vw"
@@ -1322,14 +1250,14 @@ html[lang="ja"] .notice__title--intl {
              width="1100" height="1649" loading="lazy" decoding="async">
       </figure>
 
-      <figure class="press__d" data-reveal>
+      <figure class="press__d">
         <img src="images/press/gaho-warsaw.jpg"
              alt="가호 (Gaho) 라이브 — 바르샤바, Cityscapes Europe Tour 2026"
              width="700" height="1050" loading="lazy" decoding="async">
       </figure>
 
       <!-- 인물이 오른쪽에 있고 왼쪽은 무대 트러스뿐이라 지면 밖으로 흘려도 잃을 게 없다 -->
-      <figure class="press__e" data-reveal>
+      <figure class="press__e">
         <img src="images/press/kave-warsaw.jpg"
              srcset="images/press/kave-warsaw-600.jpg 600w, images/press/kave-warsaw.jpg 900w"
              sizes="(max-width: 860px) 66vw, 33vw"
@@ -1337,14 +1265,14 @@ html[lang="ja"] .notice__title--intl {
              width="900" height="1350" loading="lazy" decoding="async">
       </figure>
 
-      <figure class="press__f" data-reveal>
+      <figure class="press__f">
         <img src="images/press/gaho-camera-up.jpg"
              alt="가호 (Gaho) 화보"
              width="700" height="1049" loading="lazy" decoding="async">
       </figure>
 
       <!-- 마지막 한 장. 가운데에 크게 놓여 섹션이 얼굴로 끝난다 -->
-      <figure class="press__g" data-reveal>
+      <figure class="press__g">
         <img src="images/press/gaho-live-eu.jpg"
              srcset="images/press/gaho-live-eu-700.jpg 700w, images/press/gaho-live-eu.jpg 1350w"
              sizes="(max-width: 860px) 84vw, 46vw"
